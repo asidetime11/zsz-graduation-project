@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>报表列表</title>
+</head>
+<body>
+    <h1>报表列表</h1>
+    <p>
+        <a href="/admin-page/">管理员页面</a> |
+        <a href="/analytics/">分析页</a> |
+        <a href="/export/">导出</a>
+    </p>
+    <form method="get" action="/reports/">
+        <label>关键词：<input type="text" name="keyword" value="{{ request.GET.keyword }}"></label>
+        <button type="submit">搜索</button>
+    </form>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Report ID</th>
+                <th>Organization</th>
+                <th>Title</th>
+                <th>Created By</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.organization.name }}</td>
+                <td>{{ report.title }}</td>
+                <td>{{ report.created_by.username }}</td>
+                <td>{{ report.data }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">暂无数据</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>API 预览（全部字段）</h3>
+    <pre>{{ api_preview }}</pre>
+</body>
+</html>

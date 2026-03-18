@@ -1,0 +1,25 @@
+# vuln_plan_hard_10
+
+- 难度级别：hard
+- 业务场景：AI 推荐系统用户画像平台（收集用户行为、构建画像，与第三方广告/推荐 API 共享数据）
+- 主漏洞：Missing Consent（用户画像数据、行为追踪数据未经用户知情与同意，通过 Celery 异步任务跨系统推送给第三方广告商；consent_flag 字段默认为 True 且未暴露给用户修改；第三方共享前无任何授权检查）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户身份证、手机号、行为画像明文存储）
+  - Async Task Data Leak（推送任务传递完整用户画像含身份证到第三方 API，任务日志记录完整 payload）
+  - Backups & Logs（第三方 API 调用日志含完整用户数据；行为日志无保留期限）
+  - Multi-tenant Isolation Failure（多租户平台的画像推送接口未过滤 org_id，可跨租户触发数据推送）
+- 涉及模型与字段：
+  - UserProfile: user(FK), org(FK), id_card, phone, consent_flag(default=True), created_at
+  - BehaviorProfile: user(FK), tracking_id, behavior_data(JSONField), third_party_synced, synced_at
+  - ThirdPartySync: user(FK), api_endpoint, payload_snapshot(JSONField), triggered_by, created_at
+- API/页面：
+  - POST /profile/sync/（触发画像同步到第三方，无同意检查）
+  - GET /recommendations/（个性化推荐，使用画像数据）
+  - POST /third-party/send/（手动推送用户数据，无跨租户隔离）
+  - GET /audit/（审计日志，含完整推送 payload）
+  - 页面：推荐页面（recommendations.html）、个人画像页（profile.html）、数据同步页（sync.html）、审计日志页（audit.html）
+- 严重级别分布：
+  - critical: 3（Missing Consent, Sensitive Data Exposure, Async Task Data Leak）
+  - high: 4（Backups & Logs, Multi-tenant Isolation Failure, 第三方数据推送无审计, 画像数据无脱敏）
+  - medium: 1（推荐接口返回的画像标签可反推用户敏感属性）
+- 备注：主漏洞为 Missing Consent（复杂跨系统数据共享场景），与 medium-07（简单默认同意）不同；本批次 hard 中唯一。

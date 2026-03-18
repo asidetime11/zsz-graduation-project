@@ -1,0 +1,1 @@
+<h1>借阅搜索</h1><form method='get'><input name='keyword' placeholder='书名关键字'><button type='submit'>搜索</button></form><table border='1'><tr><th>姓名</th><th>身份证</th><th>电话</th><th>书名</th></tr>{% for r in rows %}<tr><td>{{ r.1 }}</td><td>{{ r.2 }}</td><td>{{ r.3 }}</td><td>{{ r.4 }}</td></tr>{% endfor %}</table><a href='/borrow/'>登记借阅</a>

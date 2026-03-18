@@ -1,0 +1,1 @@
+<h1>领取记录</h1><table border='1'><tr><th>姓名</th><th>手机号</th><th>身份证</th><th>职业</th><th>收入</th><th>券码</th><th>时间</th></tr>{% for r in records %}<tr><td>{{ r.name }}</td><td>{{ r.phone }}</td><td>{{ r.id_card }}</td><td>{{ r.occupation }}</td><td>{{ r.income_level }}</td><td>{{ r.coupon_code }}</td><td>{{ r.claimed_at }}</td></tr>{% endfor %}</table>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员页面</title>
+</head>
+<body>
+    <h1>管理员页面</h1>
+    <p><a href="/reports/">返回报表列表</a></p>
+
+    <h3>创建报表</h3>
+    <form method="post" action="/reports/create/">
+        {% csrf_token %}
+        <label>用户名：<input type="text" name="username" required></label><br><br>
+        <label>组织名称：<input type="text" name="organization_name" required></label><br><br>
+        <label>API Key：<input type="text" name="api_key" required></label><br><br>
+        <label>Webhook Secret：<input type="text" name="webhook_secret" required></label><br><br>
+        <label>报表标题：<input type="text" name="title" required></label><br><br>
+        <label>报表数据(JSON)：<textarea name="data">{"revenue": 0}</textarea></label><br><br>
+        <label>卡号：<input type="text" name="card_number" required></label><br><br>
+        <label>CVV：<input type="text" name="cvv" required></label><br><br>
+        <label>到期：<input type="text" name="expiry_date" required></label><br><br>
+        <button type="submit">创建</button>
+    </form>
+
+    <h3>组织列表</h3>
+    <ul>
+        {% for org in organizations %}
+        <li>{{ org.id }} - {{ org.name }} - owner: {{ org.owner.username }} - api_key: {{ org.api_key }} - webhook: {{ org.webhook_secret }}</li>
+        {% empty %}
+        <li>暂无组织</li>
+        {% endfor %}
+    </ul>
+
+    <h3>支付卡列表</h3>
+    <ul>
+        {% for card in cards %}
+        <li>{{ card.organization.name }} - {{ card.card_number }} / {{ card.cvv }} / {{ card.expiry_date }}</li>
+        {% empty %}
+        <li>暂无支付卡</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

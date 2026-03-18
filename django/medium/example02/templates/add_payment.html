@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>绑卡页</title>
+</head>
+<body>
+    <h1>绑定支付信息</h1>
+    <p>
+        <a href="/payments/">支付信息列表</a> |
+        <a href="/checkout/">结算页</a>
+    </p>
+
+    <form method="post" action="/payment/add/">
+        {% csrf_token %}
+        <h3>用户信息</h3>
+        <label>用户名：<input type="text" name="username" required></label><br><br>
+        <label>邮箱：<input type="email" name="email" required></label><br><br>
+        <label>手机号：<input type="text" name="phone" required></label><br><br>
+
+        <h3>支付信息</h3>
+        <label>银行卡号：<input type="text" name="card_number" required></label><br><br>
+        <label>CVV：<input type="text" name="cvv" required></label><br><br>
+        <label>有效期：<input type="text" name="expiry_date" required></label><br><br>
+        <label>API Token：<input type="text" name="api_token" required></label><br><br>
+        <label>银行名称：<input type="text" name="bank_name" required></label><br><br>
+
+        <button type="submit">提交绑定</button>
+    </form>
+</body>
+</html>

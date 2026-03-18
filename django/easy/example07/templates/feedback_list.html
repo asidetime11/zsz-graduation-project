@@ -1,0 +1,1 @@
+{% load static %}<h1>反馈列表</h1><ul>{% for i in items %}<li><b>{{ i.name }}</b> {{ i.phone }} {{ i.email }}<div>{{ i.feedback_content|safe }}</div></li>{% endfor %}</ul>

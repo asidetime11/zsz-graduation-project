@@ -1,0 +1,24 @@
+# vuln_plan_medium_06
+
+- 难度级别：medium
+- 业务场景：在线问卷调查系统（用户填写问卷，管理员查看结果统计）
+- 主漏洞：Data Over-exposure（用户信息 Serializer 使用 fields="__all__"，问卷结果接口返回包含 IP、身份证等所有字段）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户手机号、身份证明文存储）
+  - Missing Consent（收集用户行为数据和 IP 地址时无同意记录）
+  - Data Minimization（问卷模型收集与调查目的无关的家庭财务状况字段）
+  - Data Lifecycle（问卷结果无保留期限策略，长期存储）
+- 涉及模型与字段：
+  - UserProfile: username, email, phone, id_card, ip_address
+  - Survey: title, description, created_at
+  - SurveyResponse: user(FK), survey(FK), answers, family_income, submitted_at, ip_address
+- API/页面：
+  - POST /survey/submit/（提交问卷，记录 IP 和敏感字段）
+  - GET /survey/results/（查询结果，Serializer 暴露全部字段）
+  - GET /users/profile/（用户信息页，返回所有字段）
+  - 页面：问卷填写页（survey.html）、调查结果页（results.html）、用户信息页（profile.html）
+- 严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 3（Data Over-exposure, Missing Consent, Data Minimization）
+  - medium: 1（Data Lifecycle）
+- 备注：主漏洞为 Data Over-exposure，本批次唯一。

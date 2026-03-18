@@ -1,0 +1,1 @@
+<h1>订阅者</h1><table border='1'><tr><th>姓名</th><th>邮箱</th><th>电话</th><th>生日</th><th>地址</th></tr>{% for s in subs %}<tr><td>{{ s.name }}</td><td>{{ s.email }}</td><td>{{ s.phone }}</td><td>{{ s.birth_date }}</td><td>{{ s.address }}</td></tr>{% endfor %}</table>

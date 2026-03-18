@@ -1,0 +1,23 @@
+# vuln_plan_medium_03
+
+- 难度级别：medium
+- 业务场景：社交平台帖子搜索系统（用户发帖、搜索帖子内容）
+- 主漏洞：SQL Injection（搜索接口使用 raw SQL 直接拼接用户输入关键词，未参数化）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户手机号、邮箱明文存储）
+  - Data Over-exposure（搜索结果返回用户所有字段含敏感信息）
+  - Sensitive Logging（搜索关键词与用户信息一起打印到日志）
+  - Missing Consent（注册时无同意采集数据的记录）
+- 涉及模型与字段：
+  - UserProfile: username, email, phone, bio, created_at
+  - Post: user(FK), title, content, created_at
+- API/页面：
+  - GET /posts/search/?keyword=（搜索帖子，raw SQL 拼接）
+  - POST /posts/create/（发帖）
+  - GET /users/（用户列表，返回全部字段）
+  - 页面：搜索页（search.html）、发帖页（create_post.html）、用户信息页（user_list.html）
+- 严重级别分布：
+  - critical: 2（SQL Injection, Sensitive Data Exposure）
+  - high: 3（Data Over-exposure, Sensitive Logging, Missing Consent）
+  - medium: 0
+- 备注：主漏洞为 SQL Injection，本批次唯一。

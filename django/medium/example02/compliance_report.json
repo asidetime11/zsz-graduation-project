@@ -1,0 +1,99 @@
+{
+  "project_name": "medium_example02",
+  "difficulty_level": "medium",
+  "source_vuln_plan": "vuln_plan_medium_02.md",
+  "generated_date": "2026-03-18",
+  "total_issues": 5,
+  "summary": {
+    "by_severity": {
+      "critical": 3,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "by_category": {
+      "Sensitive Data Exposure": 1,
+      "Data Over-exposure": 1,
+      "Hardcoded Secrets": 1,
+      "Missing Consent": 1,
+      "SQL Injection": 1,
+      "Data Minimization": 0,
+      "Unauthorized Access": 0,
+      "Sensitive Logging": 0,
+      "Data Lifecycle": 0,
+      "XSS": 0
+    }
+  },
+  "issues": [
+    {
+      "issue_id": "DC-001",
+      "location": {
+        "file": "core/models.py",
+        "line": 15,
+        "class_or_function": "PaymentInfo"
+      },
+      "category": "Sensitive Data Exposure",
+      "description": "card_number, cvv, expiry_date and api_token are stored in plaintext in database.",
+      "severity": "critical",
+      "related_fields": ["card_number", "cvv", "expiry_date", "api_token"],
+      "impact": "Database leakage reveals payment credentials directly.",
+      "code_snippet": "card_number = models.CharField(max_length=32)"
+    },
+    {
+      "issue_id": "DC-002",
+      "location": {
+        "file": "core/views.py",
+        "line": 9,
+        "class_or_function": "module scope"
+      },
+      "category": "Hardcoded Secrets",
+      "description": "Third-party payment gateway secret is hardcoded in source code.",
+      "severity": "critical",
+      "related_fields": ["PAYMENT_GATEWAY_SECRET"],
+      "impact": "Leaked repository discloses gateway secret and allows unauthorized calls.",
+      "code_snippet": "PAYMENT_GATEWAY_SECRET = \"sk_test_very_hardcoded_secret_2026\""
+    },
+    {
+      "issue_id": "DC-003",
+      "location": {
+        "file": "core/views.py",
+        "line": 59,
+        "class_or_function": "payment_search"
+      },
+      "category": "SQL Injection",
+      "description": "Card search API builds SQL using string interpolation with untrusted query parameter.",
+      "severity": "critical",
+      "related_fields": ["card_number"],
+      "impact": "Attackers can manipulate SQL and read arbitrary payment rows.",
+      "code_snippet": "sql = f\"SELECT ... WHERE card_number LIKE '%{card}%'\""
+    },
+    {
+      "issue_id": "DC-004",
+      "location": {
+        "file": "core/serializers.py",
+        "line": 9,
+        "class_or_function": "PaymentInfoSerializer.Meta"
+      },
+      "category": "Data Over-exposure",
+      "description": "Serializer uses fields='__all__' and returns sensitive card data fields.",
+      "severity": "high",
+      "related_fields": ["fields"],
+      "impact": "Clients receive unnecessary sensitive payment attributes.",
+      "code_snippet": "fields = \"__all__\""
+    },
+    {
+      "issue_id": "DC-005",
+      "location": {
+        "file": "core/views.py",
+        "line": 24,
+        "class_or_function": "add_payment"
+      },
+      "category": "Missing Consent",
+      "description": "Card binding flow records payment data without explicit user consent tracking.",
+      "severity": "high",
+      "related_fields": ["card_number", "cvv", "api_token"],
+      "impact": "Data processing lacks auditable legal consent evidence.",
+      "code_snippet": "PaymentInfo.objects.create("
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+<h1>工单列表</h1><table border='1'><tr><th>姓名</th><th>身份证</th><th>电话</th><th>邮箱</th><th>内容</th><th>状态</th></tr>{% for t in tickets %}<tr><td>{{ t.name }}</td><td>{{ t.id_card }}</td><td>{{ t.phone }}</td><td>{{ t.email }}</td><td>{{ t.ticket_content }}</td><td>{{ t.status }}</td></tr>{% endfor %}</table>

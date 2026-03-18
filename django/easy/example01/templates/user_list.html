@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>用户列表</title>
+</head>
+<body>
+    <h1>用户列表</h1>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>姓名</th>
+                <th>证件号</th>
+                <th>手机号</th>
+                <th>银行卡号</th>
+                <th>家庭成员数量</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.id_card }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.bank_account }}</td>
+                <td>{{ user.family_members }}</td>
+                <td>{{ user.created_at }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">暂无数据</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="/register/">返回注册</a></p>
+</body>
+</html>

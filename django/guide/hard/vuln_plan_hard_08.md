@@ -1,0 +1,25 @@
+# vuln_plan_hard_08
+
+- 难度级别：hard
+- 业务场景：社交网络用户信息与关系管理平台（用户管理资料、互相关注，管理员可查询用户信息）
+- 主漏洞：Field-level Authorization（接口资源级权限检查正确（已过滤 organization），但 Serializer 仍然暴露 password_hash、failed_login_count、last_login、internal_flags 等不应对外公开的内部字段）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户身份证、SSN、银行账户明文存储）
+  - Multi-tenant Isolation Failure（关注关系接口缺少租户隔离，可查询跨组织用户）
+  - Sensitive Data in Cache（用户资料含敏感字段整体缓存，无过期设置）
+  - Data Export（用户数据导出 Serializer 也暴露内部字段，无字段白名单）
+- 涉及模型与字段：
+  - Organization: name
+  - UserProfile: org(FK), username, email, phone, id_card, ssn, bank_account, password_hash, failed_login_count, last_login, internal_flags
+  - Follow: follower(FK), following(FK), created_at
+- API/页面：
+  - GET /users/user_id_path/（用户详情，资源级权限正确但字段级别暴露）
+  - GET /users/（用户列表，Serializer 暴露内部字段）
+  - POST /users/login/（登录接口）
+  - GET /export/（用户导出，包含内部字段）
+  - 页面：用户详情页（user_detail.html）、用户列表页（user_list.html）、登录页（login.html）、数据导出页（export.html）
+- 严重级别分布：
+  - critical: 2（Field-level Authorization, Sensitive Data Exposure）
+  - high: 4（Multi-tenant Isolation Failure, Sensitive Data in Cache, Data Export, 密码哈希暴露）
+  - medium: 1（登录失败次数可探测账户状态）
+- 备注：主漏洞为 Field-level Authorization，本批次唯一。

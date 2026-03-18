@@ -1,0 +1,23 @@
+# vuln_plan_medium_08
+
+- 难度级别：medium
+- 业务场景：社区活动报名系统（市民报名参加社区活动）
+- 主漏洞：Data Minimization（报名表单收集护照号、病史、婚姻状况、宗教信仰、家庭月收入等与社区活动参与完全无关的字段）
+- 次要漏洞：
+  - Sensitive Data Exposure（护照号、手机号明文存储）
+  - Data Over-exposure（参与者列表 API 返回全部字段）
+  - SQL Injection（活动搜索接口使用拼接 SQL）
+  - Missing Consent（无用户同意采集上述额外字段的记录）
+- 涉及模型与字段：
+  - Activity: name, date, location, max_participants, created_at
+  - Participant: user_name, id_card, phone, passport_no, medical_history, marital_status, religion, family_income, activity(FK), registered_at
+- API/页面：
+  - POST /activity/signup/（活动报名，收集大量非必要字段）
+  - GET /activities/（活动列表，搜索接口拼接 SQL）
+  - GET /participants/（参与者列表，返回全部字段）
+  - 页面：报名表单页（signup.html）、活动列表页（activity_list.html）、参与者列表页（participant_list.html）
+- 严重级别分布：
+  - critical: 2（Sensitive Data Exposure, SQL Injection）
+  - high: 3（Data Minimization, Data Over-exposure, Missing Consent）
+  - medium: 0
+- 备注：主漏洞为 Data Minimization，本批次唯一。

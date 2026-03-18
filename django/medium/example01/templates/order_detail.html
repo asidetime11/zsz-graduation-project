@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+</head>
+<body>
+    <h1>订单详情 #{{ order.id }}</h1>
+    <p><a href="/orders/">返回订单列表</a></p>
+
+    <ul>
+        <li>用户名：{{ order.user.username }}</li>
+        <li>邮箱：{{ order.user.email }}</li>
+        <li>手机号：{{ order.user.phone }}</li>
+        <li>身份证号：{{ order.user.id_card }}</li>
+        <li>护照号：{{ order.user.passport_no }}</li>
+        <li>商品：{{ order.items }}</li>
+        <li>总价：{{ order.total_price }}</li>
+        <li>地址：{{ order.address }}</li>
+        <li>支付卡号：{{ order.payment_card }}</li>
+        <li>订单状态：{{ order.status }}</li>
+    </ul>
+</body>
+</html>

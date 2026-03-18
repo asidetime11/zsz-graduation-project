@@ -1,0 +1,24 @@
+# vuln_plan_hard_03
+
+- 难度级别：hard
+- 业务场景：大数据异步导出与消息通知平台（用户发起数据导出任务，Celery 异步处理并通知结果）
+- 主漏洞：Async Task Data Leak（Celery 任务参数直接包含明文卡号、CVV、身份证号；任务日志用 logging.info 打印完整敏感参数；导出文件明文写入 /tmp 且无访问控制）
+- 次要漏洞：
+  - Sensitive Data Exposure（身份证、卡号明文存储）
+  - Backups & Logs（任务队列消息体含敏感字段，可在 broker 中直接读取）
+  - Data Export（导出文件路径可预测且公开可访问）
+  - Fine-grained Authorization（任务状态查询接口仅检查登录，任意用户可查任意任务进度）
+- 涉及模型与字段：
+  - ExportTask: user(FK), status, file_path, task_payload(JSONField，含明文敏感数据), created_at
+  - UserProfile: name, id_card, phone, card_number, cvv
+  - Notification: user(FK), message, sent_at
+- API/页面：
+  - POST /export/start/（发起导出，Celery 任务传递明文敏感参数）
+  - GET /export/status/task_id_path/（查询任务状态，无对象级权限）
+  - GET /notifications/（通知记录，含敏感摘要）
+  - 页面：导出任务页（export.html）、任务状态页（task_status.html）、通知记录页（notification_list.html）、管理员页面（admin.html）
+- 严重级别分布：
+  - critical: 3（Async Task Data Leak, Sensitive Data Exposure, 文件未保护）
+  - high: 3（Backups & Logs, Data Export, Fine-grained Authorization）
+  - medium: 1（通知消息含部分敏感摘要）
+- 备注：主漏洞为 Async Task Data Leak，本批次唯一。

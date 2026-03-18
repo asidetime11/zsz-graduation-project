@@ -1,0 +1,25 @@
+# vuln_plan_hard_01
+
+- 难度级别：hard
+- 业务场景：SaaS 多租户报表分析平台（多个企业客户共用一套系统，各自管理报表）
+- 主漏洞：Multi-tenant Isolation Failure（报表查询接口缺少租户过滤，任意租户用户可查看其他租户报表；缓存键也缺少 organization_id 前缀导致跨租户缓存污染）
+- 次要漏洞：
+  - Sensitive Data Exposure（API Key、支付卡号、webhook_secret 明文存储）
+  - Fine-grained Authorization（仅检查登录状态，未校验报表所属组织）
+  - Sensitive Data in Cache（报表敏感数据缓存无过期时间、无租户隔离键）
+  - Data Export（导出接口无权限校验，任意用户可导出所有租户数据）
+- 涉及模型与字段：
+  - Organization: name, owner(FK), api_key, webhook_secret
+  - Report: organization(FK), title, data(JSONField), created_by(FK), created_at
+  - PaymentCard: organization(FK), card_number, cvv, expiry_date
+- API/页面：
+  - GET /reports/（查询报表，缺少租户过滤）
+  - POST /reports/create/（创建报表）
+  - GET /analytics/（分析页，缓存数据无租户隔离）
+  - GET /export/（数据导出，无权限校验）
+  - 页面：报表列表页（report_list.html）、分析页面（analytics.html）、数据导出页（export.html）、管理员页面（admin.html）
+- 严重级别分布：
+  - critical: 3（Multi-tenant Isolation Failure, Sensitive Data Exposure, Fine-grained Authorization）
+  - high: 3（Sensitive Data in Cache, Data Export, 缓存污染）
+  - medium: 1（日志泄露报表 ID）
+- 备注：主漏洞为 Multi-tenant Isolation Failure，本批次唯一。

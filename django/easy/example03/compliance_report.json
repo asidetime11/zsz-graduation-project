@@ -1,0 +1,77 @@
+{
+  "project_name": "easy_03",
+  "difficulty_level": "easy",
+  "source_vuln_plan": "vuln_plan_easy_03.md",
+  "generated_date": "2026-03-18",
+  "total_issues": 3,
+  "summary": {
+    "by_severity": {
+      "critical": 1,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "by_category": {
+      "Sensitive Data Exposure": 1,
+      "Data Minimization": 0,
+      "Data Over-exposure": 1,
+      "Missing Consent": 1,
+      "Unauthorized Access": 0,
+      "Data Lifecycle": 0,
+      "SQL Injection": 0,
+      "XSS": 0,
+      "Sensitive Logging": 0,
+      "Hardcoded Secrets": 0
+    }
+  },
+  "issues": [
+    {
+      "issue_id": "DC-001",
+      "location": {
+        "file": "core/views.py",
+        "line": 6,
+        "class_or_function": "search_students"
+      },
+      "category": "Data Over-exposure",
+      "description": "Student query returns all fields including id_card and family_income.",
+      "severity": "high",
+      "related_fields": [
+        "id_card",
+        "family_income"
+      ],
+      "impact": "Sensitive student data exposed.",
+      "code_snippet": "students = StudentProfile.objects.all()"
+    },
+    {
+      "issue_id": "DC-002",
+      "location": {
+        "file": "core/models.py",
+        "line": 6,
+        "class_or_function": "StudentProfile"
+      },
+      "category": "Sensitive Data Exposure",
+      "description": "Sensitive fields are plaintext in database.",
+      "severity": "critical",
+      "related_fields": [
+        "id_card",
+        "family_income"
+      ],
+      "impact": "Sensitive data leakage risk.",
+      "code_snippet": "id_card = models.CharField(max_length=20)"
+    },
+    {
+      "issue_id": "DC-003",
+      "location": {
+        "file": "core/models.py",
+        "line": 4,
+        "class_or_function": "StudentProfile"
+      },
+      "category": "Missing Consent",
+      "description": "No consent flag for student data query/sharing.",
+      "severity": "high",
+      "related_fields": [],
+      "impact": "Cannot prove lawful processing basis.",
+      "code_snippet": "class StudentProfile(models.Model):"
+    }
+  ]
+}

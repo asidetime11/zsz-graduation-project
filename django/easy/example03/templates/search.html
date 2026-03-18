@@ -1,0 +1,1 @@
+<h1>学生查询</h1><ul>{% for s in students %}<li><a href='/students/{{ s.id }}/'>{{ s.name }} - {{ s.id_card }} - {{ s.family_income }}</a></li>{% endfor %}</ul>

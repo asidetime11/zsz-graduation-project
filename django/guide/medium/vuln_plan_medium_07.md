@@ -1,0 +1,23 @@
+# vuln_plan_medium_07
+
+- 难度级别：medium
+- 业务场景：医疗预约系统（患者预约医生，系统记录健康信息）
+- 主漏洞：Missing Consent（marketing_agree 字段默认为 True，data_collection_consent 字段默认为 True，未记录同意时间与具体内容，无法撤回授权）
+- 次要漏洞：
+  - Sensitive Data Exposure（患者身份证号、病史、过敏史明文存储）
+  - Data Minimization（收集与预约无关的患者家属证件号字段）
+  - Unauthorized Access（预约列表接口仅检查登录状态，任意登录用户可查询所有患者预约）
+  - Sensitive Logging（预约创建时打印包含病史的完整请求体）
+- 涉及模型与字段：
+  - PatientProfile: name, id_card, phone, medical_history, allergies, emergency_contact_id, marketing_agree(default=True), data_collection_consent(default=True)
+  - Appointment: patient(FK), doctor_name, date, reason, created_at
+- API/页面：
+  - POST /appointment/book/（预约挂号，默认同意所有数据采集）
+  - GET /appointments/（预约列表，无细粒度权限检查）
+  - GET /patients/（患者信息列表）
+  - 页面：预约登记页（book.html）、预约列表页（appointment_list.html）、患者信息页（patient_list.html）
+- 严重级别分布：
+  - critical: 2（Sensitive Data Exposure, Unauthorized Access）
+  - high: 3（Missing Consent, Data Minimization, Sensitive Logging）
+  - medium: 0
+- 备注：主漏洞为 Missing Consent，本批次唯一。

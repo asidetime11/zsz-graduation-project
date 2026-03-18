@@ -1,0 +1,23 @@
+# vuln_plan_medium_01
+
+- 难度级别：medium
+- 业务场景：电商平台订单系统（用户下单、查询订单，支持多用户）
+- 主漏洞：Unauthorized Access（通过 URL 中的 order_id 直接访问他人订单，未验证当前用户权限）
+- 次要漏洞：
+  - Sensitive Data Exposure（支付卡号、手机号、身份证明文存储）
+  - Data Over-exposure（订单列表 Serializer 使用 fields="__all__"）
+  - Data Minimization（订单模型收集与购物无关的用户护照号字段）
+  - Missing Consent（无用户数据处理同意记录）
+- 涉及模型与字段：
+  - User: username, email, phone, id_card, passport_no
+  - Order: user(FK), items, total_price, address, payment_card, status
+- API/页面：
+  - GET /orders/order_id_path/（查询订单，无权限校验）
+  - POST /orders/create/（创建订单）
+  - GET /users/（用户列表，Serializer 暴露全部字段）
+  - 页面：订单详情页（order_detail.html）、订单列表页（order_list.html）、创建订单页（create_order.html）
+- 严重级别分布：
+  - critical: 2（Unauthorized Access, Sensitive Data Exposure）
+  - high: 3（Data Over-exposure, Data Minimization, Missing Consent）
+  - medium: 0
+- 备注：主漏洞为 Unauthorized Access，本批次唯一。

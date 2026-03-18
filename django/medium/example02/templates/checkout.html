@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>结算页</title>
+</head>
+<body>
+    <h1>结算页</h1>
+    <p>
+        <a href="/payment/add/">绑卡页</a> |
+        <a href="/payments/">支付信息列表</a>
+    </p>
+
+    {% if latest_payment %}
+    <h3>最近一次支付信息</h3>
+    <ul>
+        <li>用户：{{ latest_payment.user.username }}</li>
+        <li>银行卡号：{{ latest_payment.card_number }}</li>
+        <li>CVV：{{ latest_payment.cvv }}</li>
+        <li>有效期：{{ latest_payment.expiry_date }}</li>
+        <li>API Token：{{ latest_payment.api_token }}</li>
+        <li>银行：{{ latest_payment.bank_name }}</li>
+    </ul>
+    {% else %}
+    <p>暂无支付信息，请先绑定。</p>
+    {% endif %}
+</body>
+</html>

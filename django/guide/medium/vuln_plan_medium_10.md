@@ -1,0 +1,23 @@
+# vuln_plan_medium_10
+
+- 难度级别：medium
+- 业务场景：用户行为追踪与统计系统（记录用户操作行为、IP、设备信息用于分析）
+- 主漏洞：Data Lifecycle（用户删除账户后，行为日志、IP 记录、User-Agent 等数据无任何清除或匿名化机制，长期保留）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户手机号、身份证明文存储）
+  - Data Over-exposure（行为记录 API 返回全部字段含 IP 和完整 User-Agent）
+  - Missing Consent（行为追踪无单独的用户知情同意记录）
+  - Unauthorized Access（任意登录用户可查看所有人的行为记录）
+- 涉及模型与字段：
+  - UserProfile: username, email, phone, id_card, created_at
+  - UserActivity: user(FK), action, ip_address, user_agent, timestamp, session_id
+- API/页面：
+  - POST /track/（记录行为，存储 IP 和 User-Agent）
+  - GET /activities/（行为记录列表，无权限过滤，返回全部字段）
+  - DELETE /users/user_id_path/（删除用户，但行为记录不删除）
+  - 页面：活动记录页（activity_list.html）、用户管理页（user_manage.html）、数据统计页（stats.html）
+- 严重级别分布：
+  - critical: 2（Sensitive Data Exposure, Unauthorized Access）
+  - high: 2（Data Over-exposure, Missing Consent）
+  - medium: 1（Data Lifecycle）
+- 备注：主漏洞为 Data Lifecycle，本批次唯一。

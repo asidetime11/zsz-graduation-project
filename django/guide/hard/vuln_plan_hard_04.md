@@ -1,0 +1,24 @@
+# vuln_plan_hard_04
+
+- 难度级别：hard
+- 业务场景：高并发用户信息查询与缓存平台（通过 Redis 缓存热点用户数据，提升查询性能）
+- 主漏洞：Sensitive Data in Cache（敏感数据（身份证、SSN、银行账户）直接缓存，无过期时间，缓存键缺少用户/租户隔离，同一缓存键可被其他用户的请求命中）
+- 次要漏洞：
+  - Sensitive Data Exposure（身份证、SSN、银行账户明文存储）
+  - Multi-tenant Isolation Failure（缓存键只用 user_id，不含 org_id，可跨租户命中缓存）
+  - Fine-grained Authorization（仅检查登录态，任意用户可查询任意 user_id 的缓存数据）
+  - Backups & Logs（Redis 持久化配置未加密，快照中含明文敏感数据；SQL 查询日志级别为 DEBUG）
+- 涉及模型与字段：
+  - Organization: name, owner(FK)
+  - UserProfile: user(FK), org(FK), id_card, ssn, bank_account, phone
+  - CacheRecord: cache_key, cached_data(JSONField), created_at（审计用）
+- API/页面：
+  - GET /user/user_id_path/sensitive/（查询敏感信息，命中 Redis 缓存无隔离）
+  - GET /reports/cached/（报表数据，跨租户缓存污染）
+  - POST /refresh/（手动刷新缓存，触发无过期时间写入）
+  - 页面：用户信息页（user_info.html）、缓存报表页（cached_report.html）、刷新缓存页（refresh.html）、管理员页面（admin.html）
+- 严重级别分布：
+  - critical: 3（Sensitive Data in Cache, Sensitive Data Exposure, Multi-tenant Isolation Failure）
+  - high: 3（Fine-grained Authorization, Backups & Logs, 缓存无过期）
+  - medium: 1（缓存监控页暴露键名）
+- 备注：主漏洞为 Sensitive Data in Cache，本批次唯一。

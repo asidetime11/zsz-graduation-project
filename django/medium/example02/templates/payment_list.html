@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>支付列表页</title>
+</head>
+<body>
+    <h1>支付信息列表</h1>
+    <p>
+        <a href="/payment/add/">去绑卡</a> |
+        <a href="/checkout/">结算页</a>
+    </p>
+
+    <form method="get" action="/payments/">
+        <label>银行关键词：<input type="text" name="bank_name" value="{{ request.GET.bank_name }}"></label>
+        <button type="submit">筛选</button>
+    </form>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>卡号</th>
+                <th>CVV</th>
+                <th>有效期</th>
+                <th>API Token</th>
+                <th>银行</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in payments %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.user.username }}</td>
+                <td>{{ p.card_number }}</td>
+                <td>{{ p.cvv }}</td>
+                <td>{{ p.expiry_date }}</td>
+                <td>{{ p.api_token }}</td>
+                <td>{{ p.bank_name }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">暂无数据</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>API 预览（全部字段）</h3>
+    <pre>{{ api_preview }}</pre>
+</body>
+</html>

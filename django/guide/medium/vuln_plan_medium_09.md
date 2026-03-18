@@ -1,0 +1,22 @@
+# vuln_plan_medium_09
+
+- 难度级别：medium
+- 业务场景：用户认证与登录系统（支持注册、登录、查看用户信息）
+- 主漏洞：Sensitive Logging（登录操作使用 logging.info 打印明文密码、API Token、完整请求体；注册时打印身份证号）
+- 次要漏洞：
+  - Sensitive Data Exposure（密码未哈希，手机号、身份证明文存储）
+  - Data Over-exposure（用户列表 Serializer 暴露密码字段和内部状态字段）
+  - Hardcoded Secrets（JWT 签名密钥硬编码在 views.py）
+  - Missing Consent（注册时无数据采集同意勾选）
+- 涉及模型与字段：
+  - UserAccount: username, password(明文), email, phone, id_card, api_token, created_at
+- API/页面：
+  - POST /login/（登录，日志打印密码）
+  - POST /register/（注册，日志打印身份证）
+  - GET /users/（用户列表，Serializer 暴露 password 和 token 字段）
+  - 页面：登录页（login.html）、注册页（register.html）、用户列表页（user_list.html）
+- 严重级别分布：
+  - critical: 3（Sensitive Data Exposure, Hardcoded Secrets, Sensitive Logging）
+  - high: 2（Data Over-exposure, Missing Consent）
+  - medium: 0
+- 备注：主漏洞为 Sensitive Logging，本批次唯一。

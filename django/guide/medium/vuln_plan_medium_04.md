@@ -1,0 +1,24 @@
+# vuln_plan_medium_04
+
+- 难度级别：medium
+- 业务场景：内容管理系统评论区（用户发表文章与评论，前端展示评论列表）
+- 主漏洞：XSS（评论内容在模板中使用 mark_safe 或 |safe 直接渲染，存储型 XSS）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户手机号、身份证明文存储）
+  - Data Minimization（用户模型收集与评论无关的病史、职业字段）
+  - Missing Consent（注册时默认同意营销邮件，无显式确认）
+  - Data Over-exposure（用户列表 API 返回全部字段）
+- 涉及模型与字段：
+  - UserProfile: username, email, phone, id_card, occupation, medical_history, marketing_agree(default=True)
+  - Article: title, content, author(FK), created_at
+  - Comment: article(FK), author(FK), content, created_at
+- API/页面：
+  - POST /comments/create/（发表评论）
+  - GET /articles/article_id_path/（文章详情，含评论，|safe 渲染）
+  - GET /users/（用户列表，暴露全部字段）
+  - 页面：文章详情页（article_detail.html）、发表评论页（add_comment.html）、用户列表页（user_list.html）
+- 严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 4（XSS, Data Minimization, Missing Consent, Data Over-exposure）
+  - medium: 0
+- 备注：主漏洞为 XSS，本批次唯一。

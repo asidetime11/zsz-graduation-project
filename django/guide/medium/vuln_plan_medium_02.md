@@ -1,0 +1,23 @@
+# vuln_plan_medium_02
+
+- 难度级别：medium
+- 业务场景：支付信息管理系统（用户绑定银行卡与第三方支付账户）
+- 主漏洞：Sensitive Data Exposure（银行卡号、CVV、API Token、支付密钥全部明文存储在数据库）
+- 次要漏洞：
+  - Data Over-exposure（支付列表 Serializer 返回全部字段含卡号 CVV）
+  - Hardcoded Secrets（第三方支付网关密钥写死在 views.py）
+  - Missing Consent（绑卡时无用户授权记录）
+  - SQL Injection（卡号查询接口使用拼接 SQL）
+- 涉及模型与字段：
+  - User: username, email, phone
+  - PaymentInfo: user(FK), card_number, cvv, expiry_date, api_token, bank_name
+- API/页面：
+  - POST /payment/add/（绑定支付信息，硬编码密钥调用第三方）
+  - GET /payments/（支付信息列表，暴露全部字段）
+  - GET /payment/search/?card=（搜索接口，SQL 拼接）
+  - 页面：绑卡页（add_payment.html）、支付列表页（payment_list.html）、结算页（checkout.html）
+- 严重级别分布：
+  - critical: 3（Sensitive Data Exposure, Hardcoded Secrets, SQL Injection）
+  - high: 2（Data Over-exposure, Missing Consent）
+  - medium: 0
+- 备注：主漏洞为 Sensitive Data Exposure，本批次唯一。

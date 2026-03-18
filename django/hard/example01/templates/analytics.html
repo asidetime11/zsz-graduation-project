@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>分析页面</title>
+</head>
+<body>
+    <h1>分析页面</h1>
+    <p><a href="/reports/">返回报表列表</a></p>
+
+    <form method="get" action="/analytics/">
+        <label>关键词：<input type="text" name="keyword" value="{{ keyword }}"></label>
+        <button type="submit">分析</button>
+    </form>
+
+    <h3>分析结果（来自缓存）</h3>
+    <pre>{{ analytics }}</pre>
+</body>
+</html>

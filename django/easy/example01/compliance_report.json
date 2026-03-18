@@ -1,0 +1,71 @@
+{
+  "project_name": "easy_01",
+  "difficulty_level": "easy",
+  "source_vuln_plan": "vuln_plan_easy_01.md",
+  "generated_date": "2026-03-18",
+  "total_issues": 3,
+  "summary": {
+    "by_severity": {
+      "critical": 1,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "by_category": {
+      "Sensitive Data Exposure": 1,
+      "Data Minimization": 1,
+      "Missing Consent": 1,
+      "Data Over-exposure": 0,
+      "Unauthorized Access": 0,
+      "Data Lifecycle": 0,
+      "SQL Injection": 0,
+      "XSS": 0,
+      "Sensitive Logging": 0,
+      "Hardcoded Secrets": 0
+    }
+  },
+  "issues": [
+    {
+      "issue_id": "DC-001",
+      "location": {
+        "file": "core/models.py",
+        "line": 8,
+        "class_or_function": "UserProfile"
+      },
+      "category": "Sensitive Data Exposure",
+      "description": "ID card, phone and bank account are stored in plaintext without encryption.",
+      "severity": "critical",
+      "related_fields": ["id_card", "phone", "bank_account"],
+      "impact": "Sensitive personal data can be directly leaked once database is exposed.",
+      "code_snippet": "id_card = models.CharField(max_length=20)\\nphone = models.CharField(max_length=20)\\nbank_account = models.CharField(max_length=50)"
+    },
+    {
+      "issue_id": "DC-002",
+      "location": {
+        "file": "core/models.py",
+        "line": 11,
+        "class_or_function": "UserProfile"
+      },
+      "category": "Data Minimization",
+      "description": "Registration collects family_members which is not necessary for basic account registration.",
+      "severity": "high",
+      "related_fields": ["family_members"],
+      "impact": "Collecting excessive personal data increases privacy and compliance risk.",
+      "code_snippet": "family_members = models.IntegerField(default=0)"
+    },
+    {
+      "issue_id": "DC-003",
+      "location": {
+        "file": "core/models.py",
+        "line": 6,
+        "class_or_function": "UserProfile"
+      },
+      "category": "Missing Consent",
+      "description": "No consent field or consent timestamp exists for data collection traceability.",
+      "severity": "high",
+      "related_fields": [],
+      "impact": "Cannot prove user authorization for collecting and processing sensitive personal data.",
+      "code_snippet": "class UserProfile(models.Model):\n    name = models.CharField(max_length=100)"
+    }
+  ]
+}

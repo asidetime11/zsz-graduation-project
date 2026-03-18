@@ -1,0 +1,80 @@
+{
+  "project_name": "easy_02",
+  "difficulty_level": "easy",
+  "source_vuln_plan": "vuln_plan_easy_02.md",
+  "generated_date": "2026-03-18",
+  "total_issues": 3,
+  "summary": {
+    "by_severity": {
+      "critical": 1,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "by_category": {
+      "Sensitive Data Exposure": 1,
+      "Data Minimization": 1,
+      "Data Over-exposure": 1,
+      "Missing Consent": 0,
+      "Unauthorized Access": 0,
+      "Data Lifecycle": 0,
+      "SQL Injection": 0,
+      "XSS": 0,
+      "Sensitive Logging": 0,
+      "Hardcoded Secrets": 0
+    }
+  },
+  "issues": [
+    {
+      "issue_id": "DC-001",
+      "location": {
+        "file": "core/models.py",
+        "line": 7,
+        "class_or_function": "CandidateProfile"
+      },
+      "category": "Data Minimization",
+      "description": "Collects marital status, religion and medical history irrelevant to resume submission.",
+      "severity": "high",
+      "related_fields": [
+        "marital_status",
+        "religion",
+        "medical_history"
+      ],
+      "impact": "Excessive collection increases compliance risk.",
+      "code_snippet": "marital_status = models.CharField(max_length=30)"
+    },
+    {
+      "issue_id": "DC-002",
+      "location": {
+        "file": "core/models.py",
+        "line": 6,
+        "class_or_function": "CandidateProfile"
+      },
+      "category": "Sensitive Data Exposure",
+      "description": "ID card stored in plaintext.",
+      "severity": "critical",
+      "related_fields": [
+        "id_card"
+      ],
+      "impact": "Identity data leak risk.",
+      "code_snippet": "id_card = models.CharField(max_length=20)"
+    },
+    {
+      "issue_id": "DC-003",
+      "location": {
+        "file": "core/views.py",
+        "line": 20,
+        "class_or_function": "resume_list"
+      },
+      "category": "Data Over-exposure",
+      "description": "Resume list page exposes all fields including sensitive attributes.",
+      "severity": "high",
+      "related_fields": [
+        "id_card",
+        "medical_history"
+      ],
+      "impact": "Sensitive resume data exposed to broad viewers.",
+      "code_snippet": "resumes = CandidateProfile.objects.all()"
+    }
+  ]
+}

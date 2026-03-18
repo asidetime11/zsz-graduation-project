@@ -1,0 +1,23 @@
+# vuln_plan_medium_05
+
+- 难度级别：medium
+- 业务场景：第三方支付集成平台（系统集成 Stripe 等支付网关，处理用户交易）
+- 主漏洞：Hardcoded Secrets（Stripe API Key、数据库密码、加密密钥直接写死在 settings.py 和 views.py 中）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户银行账户、手机号明文存储）
+  - Data Over-exposure（交易记录 API 返回全部字段含卡号）
+  - Unauthorized Access（管理员用户列表接口无权限校验）
+  - Sensitive Logging（支付请求日志打印完整卡号与金额）
+- 涉及模型与字段：
+  - UserProfile: username, email, phone, bank_account
+  - Transaction: user(FK), amount, card_number, status, created_at
+- API/页面：
+  - POST /pay/（调用支付接口，使用硬编码密钥）
+  - GET /transactions/（交易记录，暴露全部字段）
+  - GET /admin/users/（管理接口，无权限校验）
+  - 页面：支付页面（payment.html）、交易记录页（transaction_list.html）、管理员用户页（admin_users.html）
+- 严重级别分布：
+  - critical: 3（Hardcoded Secrets, Sensitive Data Exposure, Unauthorized Access）
+  - high: 2（Data Over-exposure, Sensitive Logging）
+  - medium: 0
+- 备注：主漏洞为 Hardcoded Secrets，本批次唯一。

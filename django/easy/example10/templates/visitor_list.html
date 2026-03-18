@@ -1,0 +1,1 @@
+<h1>访客列表</h1><table border='1'><tr><th>姓名</th><th>身份证</th><th>电话</th><th>单位</th><th>来访事由</th><th>被访人</th><th>来访时间</th></tr>{% for v in visitors %}<tr><td>{{ v.name }}</td><td>{{ v.id_card }}</td><td>{{ v.phone }}</td><td>{{ v.company }}</td><td>{{ v.visit_reason }}</td><td>{{ v.host_name }}</td><td>{{ v.visit_time }}</td></tr>{% endfor %}</table>

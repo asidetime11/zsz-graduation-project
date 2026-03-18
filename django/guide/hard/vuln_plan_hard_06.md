@@ -1,0 +1,25 @@
+# vuln_plan_hard_06
+
+- 难度级别：hard
+- 业务场景：HR 人事管理系统（人事部门管理员工档案、薪资信息，支持数据导出）
+- 主漏洞：Data Export Exposure（CSV 导出接口包含所有员工全量敏感字段（身份证、SSN、薪资、银行账户、病史、家庭住址），无权限校验，无字段过滤，无加密）
+- 次要漏洞：
+  - Sensitive Data Exposure（员工身份证、SSN、银行账号、薪资明文存储）
+  - Field-level Authorization（员工详情 Serializer 暴露 ssn、medical_info、bank_account 等字段给普通接口）
+  - Async Task Data Leak（薪资计算 Celery 任务日志打印员工卡号与薪资）
+  - Multi-tenant Isolation Failure（多公司共用系统，导出接口未过滤 company_id）
+- 涉及模型与字段：
+  - Company: name, admin(FK)
+  - Employee: company(FK), name, id_card, ssn, phone, salary, bank_account, medical_info, home_address, created_at
+  - PayrollTask: employee(FK), amount, card_number, status, task_log
+- API/页面：
+  - GET /employees/export/（CSV 全量导出，无权限、无加密）
+  - POST /employees/create/（创建员工档案，含全部敏感字段）
+  - GET /employees/（员工列表，Serializer 暴露所有字段）
+  - GET /reports/（薪资报表，包含银行账户）
+  - 页面：员工列表页（employee_list.html）、导出页（export.html）、报表页（report.html）、管理员页面（admin.html）
+- 严重级别分布：
+  - critical: 3（Data Export Exposure, Sensitive Data Exposure, Async Task Data Leak）
+  - high: 4（Field-level Authorization, Multi-tenant Isolation Failure, 日志泄露薪资, 无下载鉴权）
+  - medium: 1（导出文件无水印/审计）
+- 备注：主漏洞为 Data Export Exposure，本批次唯一。

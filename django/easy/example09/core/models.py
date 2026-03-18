@@ -1,0 +1,11 @@
+from django.db import models
+
+
+class CouponUser(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    id_card = models.CharField(max_length=20)
+    occupation = models.CharField(max_length=100)
+    income_level = models.CharField(max_length=100)
+    coupon_code = models.CharField(max_length=50)
+    claimed_at = models.DateTimeField(auto_now_add=True)

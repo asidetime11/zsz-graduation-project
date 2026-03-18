@@ -1,0 +1,26 @@
+# vuln_plan_hard_05
+
+- 难度级别：hard
+- 业务场景：企业文档管理系统（多部门用户上传、查看、删除文档，支持导出）
+- 主漏洞：Fine-grained Authorization（接口只检查 is_authenticated，未校验文档所属组织/部门；DELETE 操作无审计日志，任意登录用户可删除任意文档）
+- 次要漏洞：
+  - Sensitive Data Exposure（文档元数据含员工身份证、薪资信息明文存储）
+  - Data Export（导出接口无访问控制，导出所有部门文档含敏感字段）
+  - Field-level Authorization（文档详情 Serializer 暴露 owner_id_card、internal_notes 等内部字段）
+  - Backups & Logs（文档访问日志记录完整文件路径与用户凭证摘要）
+- 涉及模型与字段：
+  - Organization: name, owner(FK)
+  - Department: org(FK), name
+  - Document: dept(FK), uploaded_by(FK), title, file_path, owner_id_card, internal_notes, salary_info, created_at
+  - AccessLog: document(FK), user(FK), action, timestamp, user_credential_hint
+- API/页面：
+  - GET /documents/doc_id_path/（查询文档详情，无部门/组织权限校验）
+  - POST /documents/create/（上传文档，含敏感元数据）
+  - DELETE /documents/doc_id_path/（删除文档，无审计日志）
+  - GET /export/（全量导出，无权限校验）
+  - 页面：文档详情页（document_detail.html）、文档列表页（document_list.html）、创建文档页（create_doc.html）、导出页（export.html）
+- 严重级别分布：
+  - critical: 3（Fine-grained Authorization, Sensitive Data Exposure, 无审计删除）
+  - high: 4（Data Export, Field-level Authorization, Backups & Logs, 访问日志泄露）
+  - medium: 1（文件路径可预测）
+- 备注：主漏洞为 Fine-grained Authorization，本批次唯一。

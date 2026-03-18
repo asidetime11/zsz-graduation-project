@@ -1,0 +1,79 @@
+{
+  "project_name": "easy_10",
+  "difficulty_level": "easy",
+  "source_vuln_plan": "vuln_plan_easy_10.md",
+  "generated_date": "2026-03-18",
+  "total_issues": 3,
+  "summary": {
+    "by_severity": {
+      "critical": 2,
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "by_category": {
+      "Sensitive Data Exposure": 1,
+      "Data Minimization": 0,
+      "Data Over-exposure": 1,
+      "Missing Consent": 0,
+      "Unauthorized Access": 0,
+      "Data Lifecycle": 0,
+      "SQL Injection": 0,
+      "XSS": 0,
+      "Sensitive Logging": 0,
+      "Hardcoded Secrets": 1
+    }
+  },
+  "issues": [
+    {
+      "issue_id": "DC-001",
+      "location": {
+        "file": "core/views.py",
+        "line": 5,
+        "class_or_function": "module scope"
+      },
+      "category": "Hardcoded Secrets",
+      "description": "Notification API key hardcoded in source code.",
+      "severity": "critical",
+      "related_fields": [
+        "NOTIFY_API_KEY"
+      ],
+      "impact": "Key exposure enables unauthorized third-party API usage.",
+      "code_snippet": "NOTIFY_API_KEY = 'hardcoded_notify_key_visitor_001'"
+    },
+    {
+      "issue_id": "DC-002",
+      "location": {
+        "file": "core/models.py",
+        "line": 6,
+        "class_or_function": "VisitorLog"
+      },
+      "category": "Sensitive Data Exposure",
+      "description": "Visitor id card and phone stored in plaintext.",
+      "severity": "critical",
+      "related_fields": [
+        "id_card",
+        "phone"
+      ],
+      "impact": "Identity and contact data can be leaked.",
+      "code_snippet": "id_card = models.CharField(max_length=20)"
+    },
+    {
+      "issue_id": "DC-003",
+      "location": {
+        "file": "core/views.py",
+        "line": 24,
+        "class_or_function": "visitor_list"
+      },
+      "category": "Data Over-exposure",
+      "description": "Visitor list shows all personal fields including ID card.",
+      "severity": "high",
+      "related_fields": [
+        "id_card",
+        "phone"
+      ],
+      "impact": "Overly broad disclosure of visitor data.",
+      "code_snippet": "visitors = VisitorLog.objects.all().order_by('-visit_time')"
+    }
+  ]
+}

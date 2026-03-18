@@ -1,0 +1,80 @@
+{
+  "project_name": "easy_08",
+  "difficulty_level": "easy",
+  "source_vuln_plan": "vuln_plan_easy_08.md",
+  "generated_date": "2026-03-18",
+  "total_issues": 3,
+  "summary": {
+    "by_severity": {
+      "critical": 1,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "by_category": {
+      "Sensitive Data Exposure": 1,
+      "Data Minimization": 0,
+      "Data Over-exposure": 1,
+      "Missing Consent": 0,
+      "Unauthorized Access": 0,
+      "Data Lifecycle": 0,
+      "SQL Injection": 0,
+      "XSS": 0,
+      "Sensitive Logging": 1,
+      "Hardcoded Secrets": 0
+    }
+  },
+  "issues": [
+    {
+      "issue_id": "DC-001",
+      "location": {
+        "file": "core/views.py",
+        "line": 10,
+        "class_or_function": "create_ticket"
+      },
+      "category": "Sensitive Logging",
+      "description": "Logs full request payload containing id card and phone.",
+      "severity": "high",
+      "related_fields": [
+        "id_card",
+        "phone"
+      ],
+      "impact": "Sensitive data leaks to logs.",
+      "code_snippet": "logger.info('ticket request body: %s', request.POST.dict())"
+    },
+    {
+      "issue_id": "DC-002",
+      "location": {
+        "file": "core/models.py",
+        "line": 6,
+        "class_or_function": "SupportTicket"
+      },
+      "category": "Sensitive Data Exposure",
+      "description": "ID card stored in plaintext.",
+      "severity": "critical",
+      "related_fields": [
+        "id_card"
+      ],
+      "impact": "Identity data leakage risk.",
+      "code_snippet": "id_card = models.CharField(max_length=20)"
+    },
+    {
+      "issue_id": "DC-003",
+      "location": {
+        "file": "core/views.py",
+        "line": 24,
+        "class_or_function": "ticket_list"
+      },
+      "category": "Data Over-exposure",
+      "description": "Ticket list displays all sensitive fields.",
+      "severity": "high",
+      "related_fields": [
+        "id_card",
+        "phone",
+        "email"
+      ],
+      "impact": "Unnecessary broad exposure of personal data.",
+      "code_snippet": "tickets = SupportTicket.objects.all().order_by('-id')"
+    }
+  ]
+}

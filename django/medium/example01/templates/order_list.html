@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>订单列表</title>
+</head>
+<body>
+    <h1>订单列表</h1>
+    <p>
+        <a href="/orders/create/">创建订单</a> |
+        <a href="/users/">查看用户 API（JSON）</a>
+    </p>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>商品</th>
+                <th>总价</th>
+                <th>支付卡号（明文）</th>
+                <th>状态</th>
+                <th>详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.items }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.payment_card }}</td>
+                <td>{{ order.status }}</td>
+                <td><a href="/orders/{{ order.id }}/">查看</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">暂无订单</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>API 预览（含全部字段）</h3>
+    <pre>{{ api_preview }}</pre>
+</body>
+</html>

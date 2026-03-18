@@ -1,0 +1,26 @@
+# vuln_plan_hard_07
+
+- 难度级别：hard
+- 业务场景：电商平台操作审计与日志系统（记录交易、用户操作，支持管理员查询审计日志）
+- 主漏洞：Backups & Logs（settings.py 开启 django.db.backends DEBUG 级别日志，记录所有 SQL 含 WHERE card_number='xxxx'；审计日志直接明文记录卡号与用户密码哈希；数据库备份脚本将明文数据 dump 到未加密文件）
+- 次要漏洞：
+  - Sensitive Data Exposure（卡号、密码哈希、API 密钥明文存储）
+  - Data Export（审计日志导出无权限校验，包含全部敏感字段）
+  - Fine-grained Authorization（审计日志查询任意登录用户均可访问）
+  - Sensitive Data in Cache（交易结果含卡号缓存，无过期时间）
+- 涉及模型与字段：
+  - UserAccount: username, password_hash, email, card_number, api_key
+  - Transaction: user(FK), amount, card_number, status, audit_trail(含明文卡号), created_at
+  - AuditLog: user(FK), action, sql_snippet, card_number, timestamp
+  - BackupRecord: file_path, created_at（未加密路径）
+- API/页面：
+  - GET /audit/logs/（审计日志列表，无权限过滤，含明文敏感字段）
+  - GET /admin/db-backup/（数据库备份触发，明文 dump）
+  - GET /reports/（报表页，含缓存卡号数据）
+  - POST /transactions/（交易，记录卡号到审计日志）
+  - 页面：审计日志页（audit_log.html）、备份管理页（backup.html）、报表页（report.html）、交易页面（transaction.html）
+- 严重级别分布：
+  - critical: 3（Backups & Logs, Sensitive Data Exposure, 备份未加密）
+  - high: 4（Data Export, Fine-grained Authorization, Sensitive Data in Cache, 日志可外部访问）
+  - medium: 1（日志文件权限过于宽松）
+- 备注：主漏洞为 Backups & Logs，本批次唯一。

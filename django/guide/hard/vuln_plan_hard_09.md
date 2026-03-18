@@ -1,0 +1,25 @@
+# vuln_plan_hard_09
+
+- 难度级别：hard
+- 业务场景：数据分析报表平台（支持用户自定义动态查询，生成聚合报表并导出）
+- 主漏洞：SQL Injection（动态报表查询接口接受用户传入的 metric、group_by、having 参数，直接拼接进 GROUP BY / HAVING 子句，绕过 ORM 参数化防护）
+- 次要漏洞：
+  - Sensitive Data Exposure（用户 API 密钥、身份证明文存储）
+  - Fine-grained Authorization（报表查询接口无租户/组织级别权限控制）
+  - Data Export（报表导出无权限校验，任意用户可导出任意报表）
+  - Field-level Authorization（用户信息 Serializer 暴露 api_key 等内部字段）
+- 涉及模型与字段：
+  - UserProfile: username, email, id_card, api_key, org_id
+  - Report: user(FK), title, query_params(JSONField), result_data, created_at
+  - ExportRecord: report(FK), user(FK), file_path, created_at
+- API/页面：
+  - GET /analytics/query/?metric=&group_by=&having=（动态查询，SQL 拼接）
+  - GET /reports/（报表列表，无租户隔离）
+  - POST /export/（导出报表，无权限校验）
+  - GET /admin/（管理页面，Serializer 暴露 api_key）
+  - 页面：查询构建页（query_builder.html）、报表页（report_list.html）、导出页（export.html）、管理员页面（admin.html）
+- 严重级别分布：
+  - critical: 3（SQL Injection, Sensitive Data Exposure, Fine-grained Authorization）
+  - high: 3（Data Export, Field-level Authorization, 查询结果未脱敏）
+  - medium: 1（查询历史记录含 SQL 片段可被审阅）
+- 备注：主漏洞为 SQL Injection（复杂动态查询），与 easy-06（简单字符串拼接）场景不同；本批次 hard 中唯一。

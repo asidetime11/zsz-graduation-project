@@ -1,0 +1,25 @@
+# vuln_plan_hard_02
+
+- 难度级别：hard
+- 业务场景：金融系统账户与交易管理（用户管理银行账户、进行转账、查看账单）
+- 主漏洞：Sensitive Data Exposure（银行卡号、CVV、SSN、API 密钥、webhook_secret、加密私钥全部明文存储在数据库，无任何加密或掩码）
+- 次要漏洞：
+  - Data Export（账单导出 CSV 包含所有用户全部敏感字段，无权限校验）
+  - Field-level Authorization（账户详情 Serializer 暴露 api_key、private_key 等内部字段）
+  - Async Task Data Leak（转账异步任务通过 Celery 传递明文卡号和 CVV）
+  - Backups & Logs（启用 SQL DEBUG 日志，记录含卡号的所有查询语句）
+- 涉及模型与字段：
+  - UserAccount: username, email, phone, ssn, bank_account, card_number, cvv
+  - APIIntegration: user(FK), service_name, api_key, api_secret, webhook_secret, private_key
+  - Transaction: from_account(FK), to_account(FK), amount, card_number, status, created_at
+- API/页面：
+  - POST /accounts/create/（开户，存储明文敏感字段）
+  - GET /accounts/（账户列表，Serializer 暴露全部字段）
+  - POST /transactions/（转账，Celery 任务传递明文卡号）
+  - GET /export/（账单 CSV 导出，无权限）
+  - 页面：账户管理页（account.html）、交易记录页（transaction.html）、数据导出页（export.html）、管理员页面（admin.html）
+- 严重级别分布：
+  - critical: 3（Sensitive Data Exposure, Async Task Data Leak, 数据导出）
+  - high: 4（Field-level Authorization, Backups & Logs, Data Export, 缓存未保护）
+  - medium: 1（日志泄露账户摘要）
+- 备注：主漏洞为 Sensitive Data Exposure，本批次唯一。
