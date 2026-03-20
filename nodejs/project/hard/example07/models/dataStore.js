@@ -1,0 +1,1 @@
+module.exports={users:[{id:'u701',name:'A',salary:98000,id_card:'3301********1111',medical_record:'allergy',permission_scope:'self',avatar_border:'blue'},{id:'u702',name:'B',salary:120000,id_card:'3301********2222',medical_record:'none',permission_scope:'admin',avatar_border:'red'}],queries:[],schemas:[{name:'User',fields:['id','salary','id_card','medical_record']}],logs:[]};

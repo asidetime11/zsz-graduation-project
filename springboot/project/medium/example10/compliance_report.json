@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_medium_example10",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_10.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 3,
+            "high": 1,
+            "medium": 0
+        },
+        "by_category": {
+            "Hardcoded Secrets": 1,
+            "Sensitive Data Exposure": 1,
+            "SQL Injection": 1,
+            "Missing Consent": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "M10-001",
+            "location": {
+                "file": "src/main/java/com/example/medium10/service/LoanService.java",
+                "line": 12,
+                "class_or_function": "LoanService"
+            },
+            "category": "Hardcoded Secrets",
+            "description": "代码内硬编码贷款密钥和加密密钥。",
+            "severity": "critical",
+            "related_fields": [],
+            "impact": "密钥泄露导致系统被伪造访问。",
+            "code_snippet": "private static final String LOAN_SECRET = \"loan-prod-secret-raw\";",
+            "fixed_code_snippet": "@Value(\"${loan.secret}\") private String loanSecret;"
+        },
+        {
+            "issue_id": "M10-002",
+            "location": {
+                "file": "src/main/java/com/example/medium10/service/LoanService.java",
+                "line": 20,
+                "class_or_function": "reviewList"
+            },
+            "category": "SQL Injection",
+            "description": "reviewList 拼接 SQL 查询。",
+            "severity": "critical",
+            "related_fields": ["idCard", "phone", "relativeName"],
+            "impact": "攻击者可注入查询条件，获取超范围数据。",
+            "code_snippet": "String sql=\"select * from loan_application where id_card like '%\"+keyword+\"%'\";",
+            "fixed_code_snippet": "Query query = entityManager.createNativeQuery(\"select * from loan_application where id_card like :kw\", LoanApplication.class).setParameter(\"kw\", \"%\" + keyword + \"%\");"
+        },
+        {
+            "issue_id": "M10-003",
+            "location": {
+                "file": "src/main/java/com/example/medium10/dto/LoanReviewDto.java",
+                "line": 4,
+                "class_or_function": "LoanReviewDto"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "复核列表返回 creditReport、bankCard、idCard、phone。",
+            "severity": "critical",
+            "related_fields": ["creditReport", "bankCard", "idCard", "phone", "relativeName"],
+            "impact": "核心征信与身份数据暴露。",
+            "code_snippet": "public String creditReport; public String bankCard; public String idCard; public String phone;",
+            "fixed_code_snippet": "public String idMasked; public String phoneMasked; public String status;"
+        },
+        {
+            "issue_id": "M10-004",
+            "location": {
+                "file": "src/main/java/com/example/medium10/controller/LoanController.java",
+                "line": 13,
+                "class_or_function": "apply"
+            },
+            "category": "Missing Consent",
+            "description": "申请接口未验证用户同意。",
+            "severity": "high",
+            "related_fields": ["creditReport", "bankCard", "idCard", "phone", "relativeName"],
+            "impact": "无同意即处理贷款敏感信息。",
+            "code_snippet": "public LoanApplication apply(@RequestBody LoanApplication request)",
+            "fixed_code_snippet": "if (!request.isConsentGiven()) { throw new IllegalArgumentException(\"consent required\"); }"
+        }
+    ]
+}

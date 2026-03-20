@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>员工详情</title></head><body>
+<h2>员工详情</h2>
+<div th:if="${employee != null}">
+<p>ID: <span th:text="${employee.id}"></span></p>
+<p>姓名: <span th:text="${employee.name}"></span></p>
+<p>身份证: <span th:text="${employee.idCard}"></span></p>
+<p>薪资: <span th:text="${employee.salary}"></span></p>
+<p>银行卡: <span th:text="${employee.bankAccount}"></span></p>
+<p>家庭住址: <span th:text="${employee.familyAddress}"></span></p>
+</div>
+</body></html>

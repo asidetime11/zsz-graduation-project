@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>文章详情页</title></head>
+<body>
+  <h1>{{ article.title }}</h1>
+  <div>{{ article.content }}</div>
+  <h3>评论</h3>
+  <ul>
+    {% for c in comments %}
+      <li><strong>{{ c.author.username }}</strong>：{{ c.content|safe }}</li>
+    {% empty %}
+      <li>暂无评论</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/comments/create/">发表评论</a> | <a href="/users/">用户列表</a></p>
+</body>
+</html>

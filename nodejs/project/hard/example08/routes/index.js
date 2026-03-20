@@ -1,0 +1,1 @@
+const express=require('express');const c=require('../controllers/authController');const r=express.Router();r.get('/',c.loginPage);r.get('/login',c.loginPage);r.get('/user_search',c.searchPage);r.get('/user/:id',c.detail);r.post('/api/auth/login',c.login);r.get('/api/users/search',c.searchUsers);module.exports=r;

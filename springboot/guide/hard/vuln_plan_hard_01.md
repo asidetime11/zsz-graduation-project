@@ -1,0 +1,23 @@
+# vuln_plan_hard_01
+
+- 难度级别：hard
+- 业务场景：跨区域医疗数据协作平台
+- 主漏洞：Sensitive Data Exposure（多表患者敏感数据明文存储并可导出）
+- 次要漏洞：
+  - Unauthorized Access（医生可通过患者ID越权查看）
+  - SQL Injection（检索接口拼接条件）
+  - Data Over-exposure（详情接口返回全字段）
+- 关键数据字段：
+  - 敏感字段：idCard, phone, diagnosis, prescription, insuranceNo
+  - 非必要字段：employerAddress
+- 预期接口与页面范围：
+  - POST /patients/create
+  - GET /patients/{id}
+  - GET /patients/search
+  - GET /patients/export
+  - 页面：patient_form.html、patient_list.html、patient_detail.html
+- 预期严重级别分布：
+  - critical: 3（Sensitive Data Exposure, Unauthorized Access, SQL Injection）
+  - high: 1（Data Over-exposure）
+  - medium: 0
+- 备注：主漏洞 Sensitive Data Exposure 为 hard 批次唯一主漏洞

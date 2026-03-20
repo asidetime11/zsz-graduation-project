@@ -1,0 +1,22 @@
+# vuln_plan_medium_03
+
+- 难度级别：medium
+- 业务场景：在线问诊系统
+- 主漏洞：Missing Consent（问诊提交前未获取患者数据处理同意）
+- 次要漏洞：
+  - Data Over-exposure（医生端返回患者完整敏感档案）
+  - Sensitive Data Exposure（病历明文）
+  - Data Lifecycle（过期病历不清理）
+- 关键数据字段：
+  - 敏感字段：idCard, phone, diagnosis, prescription
+  - 非必要字段：workUnit
+- 预期接口与页面范围：
+  - POST /consultations/submit
+  - GET /consultations/{id}
+  - GET /patients/list
+  - 页面：consult_form.html、consult_detail.html
+- 预期严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 3（Missing Consent, Data Over-exposure, Data Lifecycle）
+  - medium: 0
+- 备注：主漏洞 Missing Consent 为 medium 批次唯一主漏洞

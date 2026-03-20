@@ -1,0 +1,9 @@
+<!doctype html>
+<html><body>
+<h2>营销控制台</h2>
+<ul>
+<% resumes.forEach(function(r){ %>
+<li><%= r.email %> | <%= r.phone %> | <%= r.resume_file %></li>
+<% }) %>
+</ul>
+</body></html>

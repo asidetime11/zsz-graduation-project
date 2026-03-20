@@ -1,0 +1,1 @@
+const express=require('express');const c=require('../controllers/loanController');const r=express.Router();r.get('/',c.workflow);r.get('/loan_workflow',c.workflow);r.get('/approval_console',c.consoleView);r.get('/loan/:loanId',c.detail);r.post('/api/loan/submit',c.submit);r.post('/api/loan/approve',c.approve);r.post('/api/loan/disburse',c.disburse);module.exports=r;

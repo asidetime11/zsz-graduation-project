@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"><body>
+<h3>Export Result</h3>
+<ul>
+    <li th:each="c : ${claims}" th:text="${c.claimNo} + ' / ' + ${c.claimant.idCard} + ' / ' + ${c.medicalRecord}"></li>
+</ul>
+</body></html>

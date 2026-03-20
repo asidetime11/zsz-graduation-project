@@ -1,0 +1,1 @@
+module.exports={loans:[{loan_id:'L001',approval_state:'submitted',amount:120000,borrower_id_card:'3301********1234',borrower_social_note:'note'}],events:[],users:[{id:'u601',roles:['reviewer','disburser']}],snapshots:[]};

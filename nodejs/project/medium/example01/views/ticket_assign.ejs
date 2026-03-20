@@ -1,0 +1,27 @@
+<html>
+<head><title>ticket_assign</title></head>
+<body>
+    <h1>ticket_assign.ejs</h1>
+    <ul>
+        <% tickets.forEach(function(t){ %>
+            <li><%= t.ticket_id %> - <%= t.status %></li>
+        <% }) %>
+    </ul>
+    <form id="assignForm">
+        <input name="supervisor_agent_id" placeholder="supervisor_agent_id" />
+        <input name="ticket_id" placeholder="ticket_id" />
+        <button type="button" onclick="assignNow()">assign</button>
+    </form>
+    <script>
+        function assignNow() {
+            const ticketId = document.querySelector('input[name="ticket_id"]').value;
+            const body = 'supervisor_agent_id=' + encodeURIComponent(document.querySelector('input[name="supervisor_agent_id"]').value);
+            fetch('/api/tickets/' + ticketId + '/assign', {
+                method: 'PATCH',
+                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                body
+            }).then(r => r.json()).then(d => alert(JSON.stringify(d)));
+        }
+    </script>
+</body>
+</html>

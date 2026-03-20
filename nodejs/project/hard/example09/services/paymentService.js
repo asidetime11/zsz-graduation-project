@@ -1,0 +1,1 @@
+const store=require('../models/dataStore');function verify(payload){return payload.signature&&payload.signature.startsWith('sig-');}function apply(payload){store.ledger.push({payment_id:payload.payment_id,amount:payload.amount,at:Date.now()});return {ok:true};}module.exports={verify,apply};

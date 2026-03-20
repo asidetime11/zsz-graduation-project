@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Application List</h2>
+<table>
+    <tr><th>id</th><th>name</th><th>idCard</th><th>phone</th></tr>
+    <tr th:each="a : ${apps}">
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.applicantName}"></td>
+        <td th:text="${a.idCard}"></td>
+        <td th:text="${a.phone}"></td>
+    </tr>
+</table>
+</body>
+</html>

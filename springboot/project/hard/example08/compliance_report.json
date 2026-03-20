@@ -1,0 +1,78 @@
+{
+    "project_name": "springboot_hard_example08",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_08.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 5,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 2,
+            "medium": 2
+        },
+        "by_category": {
+            "Unauthorized Access": 1,
+            "XSS": 1,
+            "Missing Consent": 1,
+            "Sensitive Logging": 1,
+            "Sensitive Data Exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H08-001",
+            "location": {"file": "src/main/java/com/example/hard08/service/TicketService.java", "line": 40, "class_or_function": "detail"},
+            "category": "Unauthorized Access",
+            "description": "按工单ID直接查询，未校验工单归属。",
+            "severity": "critical",
+            "related_fields": ["id", "ownerUser"],
+            "impact": "用户可越权查看他人工单。",
+            "code_snippet": "return ticketRepository.findById(id).orElseThrow();",
+            "fixed_code_snippet": "return ticketRepository.findByIdAndOwnerUser(id, currentUser).orElseThrow();"
+        },
+        {
+            "issue_id": "H08-002",
+            "location": {"file": "src/main/resources/templates/ticket_detail.html", "line": 5, "class_or_function": "ticket_detail"},
+            "category": "XSS",
+            "description": "标题和描述使用未编码输出。",
+            "severity": "high",
+            "related_fields": ["title", "description"],
+            "impact": "攻击脚本可在详情页执行。",
+            "code_snippet": "<div th:utext=\"${ticket.title}\"></div>",
+            "fixed_code_snippet": "<div th:text=\"${ticket.title}\"></div>"
+        },
+        {
+            "issue_id": "H08-003",
+            "location": {"file": "src/main/resources/templates/ticket_form.html", "line": 5, "class_or_function": "ticket_form"},
+            "category": "Missing Consent",
+            "description": "提交工单未提供隐私同意字段。",
+            "severity": "high",
+            "related_fields": ["phone", "email", "companyAddress"],
+            "impact": "采集个人信息时缺少同意记录。",
+            "code_snippet": "<form method=\"post\" action=\"/tickets/create\">",
+            "fixed_code_snippet": "<input type=\"checkbox\" name=\"privacyConsent\" required />"
+        },
+        {
+            "issue_id": "H08-004",
+            "location": {"file": "src/main/java/com/example/hard08/service/TicketService.java", "line": 42, "class_or_function": "detail"},
+            "category": "Sensitive Logging",
+            "description": "异常日志可拼接敏感上下文。",
+            "severity": "medium",
+            "related_fields": ["phone", "email"],
+            "impact": "日志系统暴露个人联系方式。",
+            "code_snippet": "log.error(\"ticket detail error phone/email leaked: {}\", ex.getMessage());",
+            "fixed_code_snippet": "log.error(\"ticket detail error\", ex);"
+        },
+        {
+            "issue_id": "H08-005",
+            "location": {"file": "src/main/java/com/example/hard08/entity/Ticket.java", "line": 15, "class_or_function": "Ticket"},
+            "category": "Sensitive Data Exposure",
+            "description": "联系方式与地址明文存储。",
+            "severity": "medium",
+            "related_fields": ["phone", "email", "companyAddress"],
+            "impact": "数据库泄露直接暴露工单提交人信息。",
+            "code_snippet": "private String phone; private String email; private String companyAddress;",
+            "fixed_code_snippet": "private String phoneCipher; private String emailCipher; private String companyAddressCipher;"
+        }
+    ]
+}

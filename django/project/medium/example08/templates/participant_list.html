@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>参与者列表页</title>
+</head>
+<body>
+    <h2>参与者列表</h2>
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>姓名</th>
+                <th>身份证号</th>
+                <th>手机号</th>
+                <th>护照号</th>
+                <th>病史</th>
+                <th>婚姻状况</th>
+                <th>宗教</th>
+                <th>家庭收入</th>
+                <th>活动ID</th>
+                <th>报名时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in participants %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.user_name }}</td>
+                <td>{{ p.id_card }}</td>
+                <td>{{ p.phone }}</td>
+                <td>{{ p.passport_no }}</td>
+                <td>{{ p.medical_history }}</td>
+                <td>{{ p.marital_status }}</td>
+                <td>{{ p.religion }}</td>
+                <td>{{ p.family_income }}</td>
+                <td>{{ p.activity }}</td>
+                <td>{{ p.registered_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">返回报名页</a></p>
+</body>
+</html>

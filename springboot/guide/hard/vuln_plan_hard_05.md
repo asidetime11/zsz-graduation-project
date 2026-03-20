@@ -1,0 +1,22 @@
+# vuln_plan_hard_05
+
+- 难度级别：hard
+- 业务场景：跨机构理赔系统
+- 主漏洞：Unauthorized Access（理赔详情按claimId读取，无机构归属校验）
+- 次要漏洞：
+  - Sensitive Data Exposure（病历、银行卡信息明文）
+  - SQL Injection（高级筛选参数拼接）
+  - Data Over-exposure（导出返回全字段）
+- 关键数据字段：
+  - 敏感字段：claimNo, idCard, medicalRecord, bankAccount
+  - 非必要字段：relativeEmployer
+- 预期接口与页面范围：
+  - GET /claims/{claimId}
+  - GET /claims/search
+  - GET /claims/export
+  - 页面：claim_list.html、claim_detail.html、claim_export.html
+- 预期严重级别分布：
+  - critical: 3（Unauthorized Access, Sensitive Data Exposure, SQL Injection）
+  - high: 1（Data Over-exposure）
+  - medium: 0
+- 备注：主漏洞 Unauthorized Access 为 hard 批次唯一主漏洞

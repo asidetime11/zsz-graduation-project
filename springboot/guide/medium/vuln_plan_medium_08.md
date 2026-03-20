@@ -1,0 +1,21 @@
+# vuln_plan_medium_08
+
+- 难度级别：medium
+- 业务场景：工单评论系统
+- 主漏洞：XSS（评论内容与工单标题未转义输出）
+- 次要漏洞：
+  - Missing Consent（评论提交无隐私同意）
+  - Sensitive Logging（异常日志记录邮箱与手机号）
+  - Data Minimization（收集与评论无关的家庭住址）
+- 关键数据字段：
+  - 敏感字段：email, phone
+  - 非必要字段：homeAddress
+- 预期接口与页面范围：
+  - POST /tickets/comment
+  - GET /tickets/{id}
+  - 页面：ticket_detail.html、comment_list.html
+- 预期严重级别分布：
+  - critical: 0
+  - high: 3（XSS, Missing Consent, Data Minimization）
+  - medium: 1（Sensitive Logging）
+- 备注：主漏洞 XSS 为 medium 批次唯一主漏洞

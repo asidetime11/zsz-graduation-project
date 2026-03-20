@@ -1,0 +1,11 @@
+<html>
+<head><title>otp_result</title></head>
+<body>
+    <h1>otp_result.ejs</h1>
+    <ul>
+        <% records.forEach(function(r){ %>
+            <li><%= r.phone %> - <%= r.otp_code %> - <%= r.login_token %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

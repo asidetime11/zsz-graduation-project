@@ -1,0 +1,22 @@
+# vuln_plan_medium_09
+
+- 难度级别：medium
+- 业务场景：财务报销系统
+- 主漏洞：Sensitive Logging（审批日志打印身份证、银行卡、报销附件路径）
+- 次要漏洞：
+  - Data Over-exposure（报销详情返回全部字段）
+  - Unauthorized Access（按报销ID可直接读取）
+  - Data Lifecycle（历史报销无限期保留）
+- 关键数据字段：
+  - 敏感字段：idCard, bankAccount, invoiceImage
+  - 非必要字段：familyPhone
+- 预期接口与页面范围：
+  - POST /reimburse/apply
+  - GET /reimburse/{id}
+  - GET /reimburse/list
+  - 页面：reimburse_form.html、reimburse_detail.html
+- 预期严重级别分布：
+  - critical: 1（Unauthorized Access）
+  - high: 3（Sensitive Logging, Data Over-exposure, Data Lifecycle）
+  - medium: 0
+- 备注：主漏洞 Sensitive Logging 为 medium 批次唯一主漏洞

@@ -1,0 +1,13 @@
+<h1>帖子搜索</h1>
+<form method="get" action="/posts/search/">
+  <input type="text" name="keyword" placeholder="关键词" value="{{ keyword }}">
+  <button type="submit">搜索</button>
+</form>
+<a href="/posts/create/">去发帖</a> | <a href="/users/">用户信息</a>
+<ul>
+  {% for item in results %}
+    <li>{{ item.title }} - {{ item.user.username }} - {{ item.user.phone }}</li>
+  {% empty %}
+    <li>暂无结果</li>
+  {% endfor %}
+</ul>

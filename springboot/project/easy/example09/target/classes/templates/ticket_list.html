@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>工单列表</title></head><body>
+<h2>工单列表</h2>
+<table border="1"><tr><th>编号</th><th>主题</th><th>身份证</th><th>手机号</th><th>地址</th><th>家庭住址</th></tr>
+<tr th:each="t : ${tickets}"><td th:text="${t.id}"></td><td th:text="${t.subject}"></td><td th:text="${t.idCard}"></td><td th:text="${t.phone}"></td><td th:text="${t.address}"></td><td th:text="${t.familyAddress}"></td></tr>
+</table></body></html>

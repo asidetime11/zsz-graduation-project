@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_hard_example05",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_05.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 3,
+            "high": 1,
+            "medium": 0
+        },
+        "by_category": {
+            "Unauthorized Access": 1,
+            "Sensitive Data Exposure": 1,
+            "SQL Injection": 1,
+            "Data Over-exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H05-001",
+            "location": {
+                "file": "src/main/java/com/example/hard05/service/ClaimService.java",
+                "line": 37,
+                "class_or_function": "detail"
+            },
+            "category": "Unauthorized Access",
+            "description": "理赔详情按 claimId 读取，无机构归属校验。",
+            "severity": "critical",
+            "related_fields": ["claimId"],
+            "impact": "跨机构越权访问理赔数据。",
+            "code_snippet": "return claimCaseRepository.findById(claimId).orElseThrow();",
+            "fixed_code_snippet": "return claimCaseRepository.findByIdAndInstitution_InstitutionCode(claimId, currentInstitutionCode).orElseThrow();"
+        },
+        {
+            "issue_id": "H05-002",
+            "location": {
+                "file": "src/main/java/com/example/hard05/entity/Claimant.java",
+                "line": 13,
+                "class_or_function": "Claimant"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "idCard、bankAccount 与 medicalRecord 明文存储。",
+            "severity": "critical",
+            "related_fields": ["idCard", "bankAccount", "medicalRecord"],
+            "impact": "身份与医疗信息可被直接导出。",
+            "code_snippet": "private String idCard; private String bankAccount; private String medicalRecord;",
+            "fixed_code_snippet": "private String idCardMasked; private String bankAccountCipher; private String medicalRecordCipher;"
+        },
+        {
+            "issue_id": "H05-003",
+            "location": {
+                "file": "src/main/java/com/example/hard05/service/ClaimService.java",
+                "line": 43,
+                "class_or_function": "search"
+            },
+            "category": "SQL Injection",
+            "description": "高级筛选使用字符串拼接 keyword、institutionCode、status、sortBy。",
+            "severity": "critical",
+            "related_fields": ["keyword", "institutionCode", "status", "sortBy"],
+            "impact": "可注入条件与排序表达式读取非授权数据。",
+            "code_snippet": "\"... where ... '%\" + keyword + \"%' ... order by \" + sortBy;",
+            "fixed_code_snippet": "entityManager.createNativeQuery(\"... where ...\", ClaimCase.class).setParameter(\"keyword\", \"%\" + keyword + \"%\").setParameter(\"institutionCode\", institutionCode).setParameter(\"status\", \"%\" + status + \"%\");"
+        },
+        {
+            "issue_id": "H05-004",
+            "location": {
+                "file": "src/main/java/com/example/hard05/service/ClaimService.java",
+                "line": 54,
+                "class_or_function": "export"
+            },
+            "category": "Data Over-exposure",
+            "description": "导出接口返回 ClaimCase 全字段，包含病历与银行卡信息。",
+            "severity": "high",
+            "related_fields": ["claimNo", "idCard", "medicalRecord", "bankAccount", "relativeEmployer"],
+            "impact": "导出链路放大敏感数据扩散。",
+            "code_snippet": "return entityManager.createNativeQuery(sql, ClaimCase.class).getResultList();",
+            "fixed_code_snippet": "return entityManager.createNativeQuery(\"select c.claim_no,c.status from claim_case c ...\").getResultList();"
+        }
+    ]
+}

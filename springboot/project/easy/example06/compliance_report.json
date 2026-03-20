@@ -1,0 +1,16 @@
+{
+    "project_name": "springboot_easy_example06",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_06.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 1, "high": 2, "medium": 0},
+        "by_category": {"Data Lifecycle": 1, "Sensitive Data Exposure": 1, "Missing Consent": 1}
+    },
+    "issues": [
+        {"issue_id": "E06-001", "location": {"file": "src/main/java/com/example/easy06/controller/SubscriptionController.java", "line": 36, "class_or_function": "cancel"}, "category": "Data Lifecycle", "description": "注销仅标记 canceled，不删除且无保留策略。", "severity": "high", "related_fields": ["canceled"], "impact": "超期保留个人信息。", "code_snippet": "s.setCanceled(true); repository.save(s);", "fixed_code_snippet": "repository.deleteById(id);"},
+        {"issue_id": "E06-002", "location": {"file": "src/main/java/com/example/easy06/controller/SubscriptionController.java", "line": 27, "class_or_function": "create"}, "category": "Sensitive Data Exposure", "description": "phone、address 明文存储。", "severity": "critical", "related_fields": ["phone", "address"], "impact": "联系方式泄露。", "code_snippet": "s.setPhone(phone); s.setAddress(address);", "fixed_code_snippet": "s.setPhone(CryptoUtil.encrypt(phone)); s.setAddress(CryptoUtil.encrypt(address));"},
+        {"issue_id": "E06-003", "location": {"file": "src/main/resources/templates/subscribe_form.html", "line": 4, "class_or_function": "form"}, "category": "Missing Consent", "description": "未记录营销授权。", "severity": "high", "related_fields": ["marketingConsent"], "impact": "营销处理缺少合法依据。", "code_snippet": "<form method=\"post\" action=\"/subscriptions/create\">", "fixed_code_snippet": "<input type=\"checkbox\" name=\"marketingConsent\" required> 我同意接收营销信息"}
+    ]
+}

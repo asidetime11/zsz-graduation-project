@@ -1,0 +1,9 @@
+server:
+  port: 8105
+spring:
+  datasource:
+    url: jdbc:h2:mem:easy05db
+    username: sa
+  jpa:
+    hibernate:
+      ddl-auto: update

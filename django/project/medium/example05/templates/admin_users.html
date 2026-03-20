@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员用户页</title>
+</head>
+<body>
+    <h2>管理员用户页</h2>
+    <form method="get" action="/admin/users/">
+        <label>搜索用户名: <input type="text" name="q" value="{{ request.GET.q }}"></label>
+        <button type="submit">查询</button>
+    </form>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>邮箱</th>
+                <th>手机号</th>
+                <th>银行账户</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.phone }}</td>
+                <td>{{ u.bank_account }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">返回支付页</a></p>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>反馈列表</title></head><body>
+<h2>反馈列表</h2>
+<div th:each="f : ${list}">
+<p>昵称：<span th:text="${f.nickname}"></span></p>
+<p>内容：<span th:utext="${f.content}"></span></p>
+<hr/>
+</div>
+</body></html>

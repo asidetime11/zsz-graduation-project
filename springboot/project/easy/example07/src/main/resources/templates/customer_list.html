@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>客户列表</title></head><body>
+<h2>客户列表</h2>
+<table border="1"><tr><th>ID</th><th>姓名</th><th>身份证</th><th>手机号</th><th>银行卡</th><th>备注</th></tr>
+<tr th:each="c : ${customers}"><td th:text="${c.id}"></td><td th:text="${c.name}"></td><td th:text="${c.idCard}"></td><td th:text="${c.phone}"></td><td th:text="${c.bankAccount}"></td><td th:text="${c.remark}"></td></tr>
+</table></body></html>

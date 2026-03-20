@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>文档列表页</title></head>
+<body>
+<h1>文档列表页（document_list.html）</h1>
+<a href="/documents/create-page/">创建文档</a> | <a href="/export-page/">导出页面</a>
+<ul>
+{% for d in docs %}
+  <li><a href="/documents/{{ d.id }}/">{{ d.title }}</a> - {{ d.file_path }}</li>
+{% empty %}
+  <li>暂无数据</li>
+{% endfor %}
+</ul>
+</body>
+</html>

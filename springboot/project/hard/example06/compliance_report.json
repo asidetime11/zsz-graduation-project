@@ -1,0 +1,78 @@
+{
+    "project_name": "springboot_hard_example06",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_06.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 5,
+    "summary": {
+        "by_severity": {
+            "critical": 0,
+            "high": 4,
+            "medium": 1
+        },
+        "by_category": {
+            "Data Lifecycle": 1,
+            "Missing Consent": 1,
+            "Sensitive Logging": 1,
+            "Data Over-exposure": 1,
+            "Sensitive Data Exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H06-001",
+            "location": {"file": "src/main/java/com/example/hard06/service/MemberService.java", "line": 31, "class_or_function": "deactivate"},
+            "category": "Data Lifecycle",
+            "description": "注销仅更新状态并归档，无清理或匿名化流程。",
+            "severity": "high",
+            "related_fields": ["idCard", "phone", "email", "address", "purchaseHistory"],
+            "impact": "冻结/注销账户长期保留全量个人信息。",
+            "code_snippet": "member.setStatus(\"DEACTIVATED\"); ... memberArchiveRepository.save(archive);",
+            "fixed_code_snippet": "member.setIdCard(mask(member.getIdCard())); member.setPhone(mask(member.getPhone())); member.setEmail(hash(member.getEmail())); member.setAddress(null); member.setPurchaseHistory(null);"
+        },
+        {
+            "issue_id": "H06-002",
+            "location": {"file": "src/main/resources/templates/member_form.html", "line": 5, "class_or_function": "form"},
+            "category": "Missing Consent",
+            "description": "注册页面未提供用途与保留期限同意。",
+            "severity": "high",
+            "related_fields": ["phone", "email", "idCard"],
+            "impact": "收集个人信息缺乏可证明同意。",
+            "code_snippet": "<form method=\"post\" action=\"/members/register\">",
+            "fixed_code_snippet": "<input type=\"checkbox\" name=\"privacyConsent\" required />"
+        },
+        {
+            "issue_id": "H06-003",
+            "location": {"file": "src/main/java/com/example/hard06/service/MemberService.java", "line": 49, "class_or_function": "archive"},
+            "category": "Sensitive Logging",
+            "description": "归档输出携带敏感字段对象。",
+            "severity": "high",
+            "related_fields": ["idCard", "phone"],
+            "impact": "日志系统泄漏身份数据。",
+            "code_snippet": "rows.forEach(r -> log.info(\"archive row idCard/phone output enabled: {}\", r));",
+            "fixed_code_snippet": "rows.forEach(r -> log.info(\"archive row id={}\", r.getId()));"
+        },
+        {
+            "issue_id": "H06-004",
+            "location": {"file": "src/main/java/com/example/hard06/service/MemberService.java", "line": 53, "class_or_function": "report"},
+            "category": "Data Over-exposure",
+            "description": "报表返回实体全字段。",
+            "severity": "high",
+            "related_fields": ["idCard", "phone", "email", "address", "purchaseHistory", "interestScore"],
+            "impact": "运营视图获取超范围个人信息。",
+            "code_snippet": "return memberRepository.findAll(PageRequest.of(page, size)).getContent();",
+            "fixed_code_snippet": "return memberRepository.findMaskedReport(PageRequest.of(page, size));"
+        },
+        {
+            "issue_id": "H06-005",
+            "location": {"file": "src/main/java/com/example/hard06/entity/Member.java", "line": 15, "class_or_function": "Member"},
+            "category": "Sensitive Data Exposure",
+            "description": "敏感字段明文持久化。",
+            "severity": "medium",
+            "related_fields": ["idCard", "phone", "email", "address", "purchaseHistory"],
+            "impact": "数据库泄露时可直接读取个人信息。",
+            "code_snippet": "private String idCard; private String phone; private String email;",
+            "fixed_code_snippet": "private String idCardCipher; private String phoneCipher; private String emailCipher;"
+        }
+    ]
+}

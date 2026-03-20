@@ -1,0 +1,22 @@
+# vuln_plan_medium_06
+
+- 难度级别：medium
+- 业务场景：会员注销与历史记录系统
+- 主漏洞：Data Lifecycle（注销后仍长期保留完整个人信息，无清理策略）
+- 次要漏洞：
+  - Missing Consent（无保留时长告知）
+  - Sensitive Logging（删除任务日志含明文手机号）
+  - Sensitive Data Exposure（会员档案明文）
+- 关键数据字段：
+  - 敏感字段：phone, idCard, address
+  - 非必要字段：interestTags
+- 预期接口与页面范围：
+  - POST /members/register
+  - POST /members/cancel
+  - GET /members/history
+  - 页面：member_register.html、member_history.html
+- 预期严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 3（Data Lifecycle, Missing Consent, Sensitive Logging）
+  - medium: 0
+- 备注：主漏洞 Data Lifecycle 为 medium 批次唯一主漏洞

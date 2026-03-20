@@ -1,0 +1,14 @@
+<html>
+<head><title>post_detail</title></head>
+<body>
+    <h1>post_detail.ejs</h1>
+    <p>title: <%= post.title %></p>
+    <div>content: <%- post.content %></div>
+    <div>signature: <%- profile.signature %></div>
+    <form method="POST" action="/api/posts">
+        <input name="title" placeholder="title" />
+        <textarea name="content"></textarea>
+        <button type="submit">create</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,1 @@
+const express=require('express');const c=require('../controllers/customerController');const r=express.Router();r.get('/',c.exportCenter);r.get('/tenant_customers/:tid',c.tenantCustomers);r.get('/export_center',c.exportCenter);r.get('/customer/:id',c.detail);r.get('/api/tenants/:tid/customers',c.apiTenantCustomers);r.get('/api/customers/export',c.exportCustomers);module.exports=r;

@@ -1,0 +1,22 @@
+{
+    "project_name": "springboot_medium_example02",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_02.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {"critical": 1, "high": 3, "medium": 0},
+        "by_category": {
+            "Sensitive Data Exposure": 1,
+            "Data Minimization": 1,
+            "Sensitive Logging": 1,
+            "Missing Consent": 1
+        }
+    },
+    "issues": [
+        {"issue_id":"M02-001","location":{"file":"src/main/java/com/example/medium02/service/PolicyService.java","line":30,"class_or_function":"apply"},"category":"Data Minimization","description":"采集 religion 与 familyGeneticTags。","severity":"high","related_fields":["religion","familyGeneticTags"],"impact":"超范围采集。","code_snippet":"applicant.setReligion(religion); applicant.setFamilyGeneticTags(familyGeneticTags);","fixed_code_snippet":"// remove religion and familyGeneticTags collection"},
+        {"issue_id":"M02-002","location":{"file":"src/main/java/com/example/medium02/service/PolicyService.java","line":28,"class_or_function":"apply"},"category":"Sensitive Data Exposure","description":"idCard、bankAccount 明文存储。","severity":"critical","related_fields":["idCard","bankAccount","medicalHistory"],"impact":"身份与金融信息泄露。","code_snippet":"applicant.setIdCard(idCard); applicant.setBankAccount(bankAccount);","fixed_code_snippet":"applicant.setIdCard(encrypt(idCard)); applicant.setBankAccount(encrypt(bankAccount));"},
+        {"issue_id":"M02-003","location":{"file":"src/main/java/com/example/medium02/service/PolicyService.java","line":34,"class_or_function":"apply"},"category":"Sensitive Logging","description":"日志打印全部对象。","severity":"high","related_fields":["idCard","bankAccount","medicalHistory"],"impact":"日志泄露敏感数据。","code_snippet":"log.info(\"apply applicant={}\", applicant);","fixed_code_snippet":"log.info(\"apply applicant id={}\", applicant.getId());"},
+        {"issue_id":"M02-004","location":{"file":"src/main/resources/templates/policy_apply.html","line":2,"class_or_function":"form"},"category":"Missing Consent","description":"页面无授权选项。","severity":"high","related_fields":[],"impact":"授权证明缺失。","code_snippet":"<form method=\"post\" action=\"/policies/apply\">","fixed_code_snippet":"<input type=\"checkbox\" name=\"consent\" required> 同意数据处理"}
+    ]
+}

@@ -1,0 +1,46 @@
+{
+    "project_name": "springboot_easy_example02",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_02.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 1, "high": 2, "medium": 0},
+        "by_category": {"Sensitive Data Exposure": 1, "Data Minimization": 1, "Missing Consent": 1}
+    },
+    "issues": [
+        {
+            "issue_id": "E02-001",
+            "location": {"file": "src/main/java/com/example/easy02/controller/EventController.java", "line": 29, "class_or_function": "apply"},
+            "category": "Sensitive Data Exposure",
+            "description": "studentPhone 与 emergencyPhone 明文存储。",
+            "severity": "critical",
+            "related_fields": ["studentPhone", "emergencyPhone"],
+            "impact": "联系方式泄露。",
+            "code_snippet": "a.setStudentPhone(studentPhone); a.setEmergencyPhone(emergencyPhone);",
+            "fixed_code_snippet": "a.setStudentPhone(CryptoUtil.encrypt(studentPhone)); a.setEmergencyPhone(CryptoUtil.encrypt(emergencyPhone));"
+        },
+        {
+            "issue_id": "E02-002",
+            "location": {"file": "src/main/resources/templates/apply_form.html", "line": 8, "class_or_function": "form"},
+            "category": "Data Minimization",
+            "description": "采集 parentJob 和 annualIncome 与活动报名目的无关。",
+            "severity": "high",
+            "related_fields": ["parentJob", "annualIncome"],
+            "impact": "扩大不必要数据处理范围。",
+            "code_snippet": "<input name=\"parentJob\"/> <input name=\"annualIncome\"/>",
+            "fixed_code_snippet": "<input name=\"studentName\"/> <input name=\"studentPhone\"/> <input name=\"emergencyPhone\"/>"
+        },
+        {
+            "issue_id": "E02-003",
+            "location": {"file": "src/main/resources/templates/apply_form.html", "line": 4, "class_or_function": "form"},
+            "category": "Missing Consent",
+            "description": "报名页未展示隐私同意与授权记录。",
+            "severity": "high",
+            "related_fields": [],
+            "impact": "缺少合法授权依据。",
+            "code_snippet": "<form method=\"post\" action=\"/events/apply\">",
+            "fixed_code_snippet": "<input type=\"checkbox\" name=\"consent\" required> 我同意个人信息处理"
+        }
+    ]
+}

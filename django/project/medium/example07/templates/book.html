@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>预约登记页</title>
+</head>
+<body>
+    <h1>医疗预约系统</h1>
+    <form method="post" action="/appointment/book/">
+        {% csrf_token %}
+        <div><label>姓名: <input type="text" name="name"></label></div>
+        <div><label>身份证号: <input type="text" name="id_card"></label></div>
+        <div><label>手机号: <input type="text" name="phone"></label></div>
+        <div><label>病史: <textarea name="medical_history"></textarea></label></div>
+        <div><label>过敏史: <textarea name="allergies"></textarea></label></div>
+        <div><label>家属证件号: <input type="text" name="emergency_contact_id"></label></div>
+        <div><label>医生姓名: <input type="text" name="doctor_name"></label></div>
+        <div><label>预约日期: <input type="date" name="date"></label></div>
+        <div><label>就诊原因: <textarea name="reason"></textarea></label></div>
+        <button type="submit">提交预约</button>
+    </form>
+    <p><a href="/appointments/">预约列表</a></p>
+    <p><a href="/patients/">患者信息页</a></p>
+</body>
+</html>

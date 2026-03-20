@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"><body>
+<table>
+    <tr th:each="c : ${cases}">
+        <td th:text="${c.id}"></td><td th:text="${c.status}"></td><td th:text="${c.creditReport}"></td>
+    </tr>
+</table>
+</body></html>

@@ -1,0 +1,1070 @@
+{
+  "meta": {
+    "focus_fields": [
+      "category",
+      "location",
+      "description_impact",
+      "fixed_code_snippet"
+    ],
+    "weights": {
+      "category": 0.2,
+      "location": 0.25,
+      "description_impact": 0.3,
+      "fixed_code_snippet": 0.25
+    },
+    "api": {
+      "enabled": true,
+      "provider": "anthropic",
+      "model": "deepseek/deepseek-v3.2-251201"
+    },
+    "generated_at": "2026-03-19T21:20:43+08:00"
+  },
+  "summary": {
+    "golden_count": 10,
+    "prediction_count": 10,
+    "matched_example_count": 10,
+    "missing_prediction_example_count": 0,
+    "extra_prediction_example_count": 0,
+    "missing_prediction_examples": [],
+    "extra_prediction_examples": [],
+    "field_average_scores_with_missing_penalty": {
+      "category": 16.66,
+      "location": 16.66,
+      "description_impact": 16.66,
+      "fixed_code_snippet": 16.66
+    },
+    "overall_score_with_missing_penalty": 16.66
+  },
+  "examples": [
+    {
+      "example_key": "example01",
+      "project_name": "easy_01",
+      "golden_project_name": "easy_01",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 33.33,
+        "location": 33.33,
+        "description_impact": 33.33,
+        "fixed_code_snippet": 33.33
+      },
+      "example_total_score": 33.33,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 100.0,
+              "reason": "The predicted category matches the golden category exactly: 'Missing Consent'.",
+              "api_used": true
+            },
+            "location": {
+              "score": 100.0,
+              "reason": "The predicted location matches the golden location exactly: file 'core/models.py', line 6, class_or_function 'UserProfile'.",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 100.0,
+              "reason": "The predicted description and impact match the golden description and impact exactly.",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 100.0,
+              "reason": "The predicted fixed code snippet matches the golden fixed code snippet exactly.",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 100.0
+        }
+      ]
+    },
+    {
+      "example_key": "example02",
+      "project_name": "easy_02",
+      "golden_project_name": "easy_02",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 33.33,
+        "location": 33.33,
+        "description_impact": 33.33,
+        "fixed_code_snippet": 33.33
+      },
+      "example_total_score": 33.33,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 100.0,
+              "reason": "Category matches exactly: 'Data Minimization' in both golden and prediction.",
+              "api_used": true
+            },
+            "location": {
+              "score": 100.0,
+              "reason": "Location matches exactly: file 'core/models.py', line 7, class_or_function 'CandidateProfile' in both.",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 100.0,
+              "reason": "Description and impact match exactly: 'Collects marital status, religion and medical history irrelevant to resume submission.' and 'Excessive collection increases compliance risk.' in both.",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 100.0,
+              "reason": "Fixed code snippet matches exactly: '# remove unnecessary fields from payload' in both.",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 100.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example03",
+      "project_name": "easy_03",
+      "golden_project_name": "easy_03",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 33.33,
+        "location": 33.33,
+        "description_impact": 33.33,
+        "fixed_code_snippet": 33.33
+      },
+      "example_total_score": 33.33,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 100.0,
+              "reason": "The predicted category 'Sensitive Data Exposure' exactly matches the golden category.",
+              "api_used": true
+            },
+            "location": {
+              "score": 100.0,
+              "reason": "The predicted location (file: core/models.py, line: 6, class_or_function: StudentProfile) exactly matches the golden location.",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 100.0,
+              "reason": "The predicted description 'Sensitive fields are plaintext in database.' and impact 'Sensitive data leakage risk.' exactly match the golden description and impact.",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 100.0,
+              "reason": "The predicted fixed_code_snippet exactly matches the golden fixed_code_snippet.",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 100.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example04",
+      "project_name": "easy_04",
+      "golden_project_name": "easy_04",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 0.0,
+        "location": 0.0,
+        "description_impact": 0.0,
+        "fixed_code_snippet": 0.0
+      },
+      "example_total_score": 0.0,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example05",
+      "project_name": "easy_05",
+      "golden_project_name": "easy_05",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 0.0,
+        "location": 0.0,
+        "description_impact": 0.0,
+        "fixed_code_snippet": 0.0
+      },
+      "example_total_score": 0.0,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example06",
+      "project_name": "easy_06",
+      "golden_project_name": "easy_06",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 0.0,
+        "location": 0.0,
+        "description_impact": 0.0,
+        "fixed_code_snippet": 0.0
+      },
+      "example_total_score": 0.0,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example07",
+      "project_name": "easy_07",
+      "golden_project_name": "easy_07",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 33.33,
+        "location": 33.33,
+        "description_impact": 33.33,
+        "fixed_code_snippet": 33.33
+      },
+      "example_total_score": 33.33,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 100.0,
+              "reason": "The predicted category exactly matches the golden category: Sensitive Data Exposure.",
+              "api_used": true
+            },
+            "location": {
+              "score": 100.0,
+              "reason": "The predicted location (file, line, class_or_function) matches the golden location exactly.",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 100.0,
+              "reason": "The predicted description and impact are identical to the golden description and impact.",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 100.0,
+              "reason": "The predicted fixed code snippet matches the golden fixed code snippet exactly.",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 100.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example08",
+      "project_name": "easy_08",
+      "golden_project_name": "easy_08",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 0.0,
+        "location": 0.0,
+        "description_impact": 0.0,
+        "fixed_code_snippet": 0.0
+      },
+      "example_total_score": 0.0,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example09",
+      "project_name": "easy_09",
+      "golden_project_name": "easy_09",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 33.33,
+        "location": 33.33,
+        "description_impact": 33.33,
+        "fixed_code_snippet": 33.33
+      },
+      "example_total_score": 33.33,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 100.0,
+              "reason": "The predicted category 'Data Lifecycle' exactly matches the golden category 'Data Lifecycle'.",
+              "api_used": true
+            },
+            "location": {
+              "score": 100.0,
+              "reason": "The predicted location (file: core/models.py, line: 6, class_or_function: CouponUser) exactly matches the golden location.",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 100.0,
+              "reason": "The predicted description 'No retention or deletion strategy for coupon records.' and impact 'User data retained indefinitely.' exactly match the golden description and impact.",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 100.0,
+              "reason": "The predicted fixed_code_snippet '# fixed implementation' exactly matches the golden fixed_code_snippet.",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 100.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    },
+    {
+      "example_key": "example10",
+      "project_name": "easy_10",
+      "golden_project_name": "easy_10",
+      "issue_count": {
+        "golden": 3,
+        "prediction": 3,
+        "paired_records": 3
+      },
+      "field_average_scores": {
+        "category": 0.0,
+        "location": 0.0,
+        "description_impact": 0.0,
+        "fixed_code_snippet": 0.0
+      },
+      "example_total_score": 0.0,
+      "issues": [
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-001",
+          "prediction_issue_id": "DC-001",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-002",
+          "prediction_issue_id": "DC-002",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        },
+        {
+          "pair_type": "matched",
+          "golden_issue_id": "DC-003",
+          "prediction_issue_id": "DC-003",
+          "scores": {
+            "category": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "location": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "description_impact": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            },
+            "fixed_code_snippet": {
+              "score": 0.0,
+              "reason": "",
+              "api_used": true
+            }
+          },
+          "issue_total_score": 0.0
+        }
+      ]
+    }
+  ]
+}

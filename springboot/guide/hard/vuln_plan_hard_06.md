@@ -1,0 +1,23 @@
+# vuln_plan_hard_06
+
+- 难度级别：hard
+- 业务场景：会员全生命周期管理平台
+- 主漏洞：Data Lifecycle（注销、冻结、过期账户均无清理与匿名化流程）
+- 次要漏洞：
+  - Missing Consent（保留期限与用途未告知）
+  - Sensitive Logging（归档任务输出手机号和证件号）
+  - Data Over-exposure（运营报表暴露全量个人信息）
+- 关键数据字段：
+  - 敏感字段：idCard, phone, email, address, purchaseHistory
+  - 非必要字段：interestScore
+- 预期接口与页面范围：
+  - POST /members/register
+  - POST /members/deactivate
+  - GET /members/archive
+  - GET /members/report
+  - 页面：member_form.html、member_list.html、member_archive.html
+- 预期严重级别分布：
+  - critical: 0
+  - high: 4（Data Lifecycle, Missing Consent, Sensitive Logging, Data Over-exposure）
+  - medium: 1（流程校验不足）
+- 备注：主漏洞 Data Lifecycle 为 hard 批次唯一主漏洞

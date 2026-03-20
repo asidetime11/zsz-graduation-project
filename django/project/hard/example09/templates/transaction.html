@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>交易页面</title></head>
+<body>
+<h1>交易页面（transaction.html）</h1>
+<form method="post" action="/transactions/">{% csrf_token %}
+  <input name="username" placeholder="username">
+  <input name="email" placeholder="email">
+  <input name="password_hash" placeholder="password_hash">
+  <input name="api_key" placeholder="api_key">
+  <input name="card_number" placeholder="card_number">
+  <input name="amount" placeholder="amount">
+  <button type="submit">提交交易</button>
+</form>
+</body></html>

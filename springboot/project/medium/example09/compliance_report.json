@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_medium_example09",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_09.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 3,
+            "medium": 0
+        },
+        "by_category": {
+            "Sensitive Logging": 1,
+            "Data Over-exposure": 1,
+            "Unauthorized Access": 1,
+            "Data Lifecycle": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "M09-001",
+            "location": {
+                "file": "src/main/java/com/example/medium09/service/ReimburseService.java",
+                "line": 18,
+                "class_or_function": "apply"
+            },
+            "category": "Sensitive Logging",
+            "description": "申请日志记录 idCard、bankAccount、familyPhone。",
+            "severity": "critical",
+            "related_fields": ["idCard", "bankAccount", "familyPhone"],
+            "impact": "日志泄露核心财务与身份信息。",
+            "code_snippet": "log.info(\"apply reimburse idCard={}, bankAccount={}, familyPhone={}\",request.getIdCard(),request.getBankAccount(),request.getFamilyPhone());",
+            "fixed_code_snippet": "log.info(\"apply reimburse request received\");"
+        },
+        {
+            "issue_id": "M09-002",
+            "location": {
+                "file": "src/main/java/com/example/medium09/controller/ReimburseController.java",
+                "line": 15,
+                "class_or_function": "detail"
+            },
+            "category": "Unauthorized Access",
+            "description": "可直接根据 id 查询任意报销单。",
+            "severity": "high",
+            "related_fields": ["idCard", "bankAccount", "invoiceImage", "familyPhone"],
+            "impact": "越权访问其他用户报销资料。",
+            "code_snippet": "return reimburseService.detail(id);",
+            "fixed_code_snippet": "return reimburseService.detailOwnedBy(id, currentUserId);"
+        },
+        {
+            "issue_id": "M09-003",
+            "location": {
+                "file": "src/main/java/com/example/medium09/dto/ReimburseDto.java",
+                "line": 4,
+                "class_or_function": "ReimburseDto"
+            },
+            "category": "Data Over-exposure",
+            "description": "列表返回 idCard、bankAccount、invoiceImage、familyPhone。",
+            "severity": "high",
+            "related_fields": ["idCard", "bankAccount", "invoiceImage", "familyPhone"],
+            "impact": "批量结果泄露敏感数据。",
+            "code_snippet": "public String idCard; public String bankAccount; public String invoiceImage; public String familyPhone;",
+            "fixed_code_snippet": "public String reimburseNo; public String status; public String createdAt;"
+        },
+        {
+            "issue_id": "M09-004",
+            "location": {
+                "file": "src/main/java/com/example/medium09/service/ReimburseService.java",
+                "line": 20,
+                "class_or_function": "apply"
+            },
+            "category": "Data Lifecycle",
+            "description": "长期保存 invoiceImage 与 familyPhone，无清理策略。",
+            "severity": "high",
+            "related_fields": ["invoiceImage", "familyPhone"],
+            "impact": "增加长期泄露面与合规风险。",
+            "code_snippet": "return requestRepository.save(request);",
+            "fixed_code_snippet": "request.setInvoiceImage(encryptAndStoreWithTtl(request.getInvoiceImage()));"
+        }
+    ]
+}

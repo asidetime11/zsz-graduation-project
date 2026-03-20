@@ -1,0 +1,22 @@
+# vuln_plan_hard_09
+
+- 难度级别：hard
+- 业务场景：多法人财务共享平台
+- 主漏洞：Sensitive Logging（交易审计与错误日志打印银行卡、税号、证件号）
+- 次要漏洞：
+  - Data Over-exposure（报表接口返回负责人身份证）
+  - Unauthorized Access（分公司可查总部单据）
+  - Data Lifecycle（旧账套长期保留）
+- 关键数据字段：
+  - 敏感字段：bankAccount, taxNo, idCard, invoiceImage
+  - 非必要字段：familyContact
+- 预期接口与页面范围：
+  - GET /finance/vouchers/{id}
+  - GET /finance/vouchers/list
+  - GET /finance/logs
+  - 页面：voucher_list.html、voucher_detail.html、audit_log.html
+- 预期严重级别分布：
+  - critical: 1（Unauthorized Access）
+  - high: 3（Sensitive Logging, Data Over-exposure, Data Lifecycle）
+  - medium: 0
+- 备注：主漏洞 Sensitive Logging 为 hard 批次唯一主漏洞

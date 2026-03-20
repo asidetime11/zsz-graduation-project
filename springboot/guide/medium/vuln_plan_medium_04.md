@@ -1,0 +1,22 @@
+# vuln_plan_medium_04
+
+- 难度级别：medium
+- 业务场景：企业员工档案系统
+- 主漏洞：Data Over-exposure（员工列表对普通用户返回薪资与银行卡字段）
+- 次要漏洞：
+  - Unauthorized Access（可直接访问任意员工详情）
+  - Sensitive Logging（导出日志包含身份证）
+  - Data Minimization（收集亲属身份证）
+- 关键数据字段：
+  - 敏感字段：salary, bankAccount, idCard
+  - 非必要字段：relativeIdCard
+- 预期接口与页面范围：
+  - GET /staff/list
+  - GET /staff/{staffId}
+  - GET /staff/export
+  - 页面：staff_list.html、staff_detail.html
+- 预期严重级别分布：
+  - critical: 1（Unauthorized Access）
+  - high: 3（Data Over-exposure, Sensitive Logging, Data Minimization）
+  - medium: 0
+- 备注：主漏洞 Data Over-exposure 为 medium 批次唯一主漏洞

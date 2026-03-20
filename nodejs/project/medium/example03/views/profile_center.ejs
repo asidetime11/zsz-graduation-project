@@ -1,0 +1,13 @@
+<html>
+<head><title>profile_center</title></head>
+<body>
+    <h1>profile_center.ejs</h1>
+    <p>real_name: <%= profile.real_name %></p>
+    <p>id_card_masked: <%= profile.id_card_masked %></p>
+    <p>session_id: <%= profile.session_id %></p>
+    <form method="POST" action="/api/profile/signature">
+        <input name="signature" value="<%= profile.signature %>" />
+        <button type="submit">save signature</button>
+    </form>
+</body>
+</html>

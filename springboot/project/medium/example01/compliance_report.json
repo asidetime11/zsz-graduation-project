@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_medium_example01",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_01.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 2,
+            "high": 2,
+            "medium": 0
+        },
+        "by_category": {
+            "Sensitive Data Exposure": 1,
+            "Unauthorized Access": 1,
+            "Data Over-exposure": 1,
+            "Missing Consent": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "M01-001",
+            "location": {
+                "file": "src/main/java/com/example/medium01/service/OrderService.java",
+                "line": 34,
+                "class_or_function": "createOrder"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "idCard、phone、paymentCard 明文存储。",
+            "severity": "critical",
+            "related_fields": ["idCard", "phone", "paymentCard", "address"],
+            "impact": "证件与支付信息泄露。",
+            "code_snippet": "order.setIdCard(idCard); order.setPhone(phone); order.setPaymentCard(paymentCard);",
+            "fixed_code_snippet": "order.setIdCard(mask(idCard)); order.setPhone(mask(phone)); order.setPaymentCard(encrypt(paymentCard));"
+        },
+        {
+            "issue_id": "M01-002",
+            "location": {
+                "file": "src/main/java/com/example/medium01/service/OrderService.java",
+                "line": 40,
+                "class_or_function": "getOrderDetail"
+            },
+            "category": "Unauthorized Access",
+            "description": "按订单ID查询无归属校验。",
+            "severity": "critical",
+            "related_fields": ["orderId"],
+            "impact": "可查看他人订单。",
+            "code_snippet": "OrderRecord order = orderRepository.findById(orderId).orElseThrow();",
+            "fixed_code_snippet": "OrderRecord order = orderRepository.findByIdAndUserId(orderId, currentUserId).orElseThrow();"
+        },
+        {
+            "issue_id": "M01-003",
+            "location": {
+                "file": "src/main/java/com/example/medium01/service/OrderService.java",
+                "line": 45,
+                "class_or_function": "getOrderDetail"
+            },
+            "category": "Data Over-exposure",
+            "description": "订单详情返回用户全部字段。",
+            "severity": "high",
+            "related_fields": ["email", "userPhone", "userIdCard", "secondaryContact"],
+            "impact": "超范围暴露个人信息。",
+            "code_snippet": "dto.userPhone = order.getUser().getPhone(); dto.userIdCard = order.getUser().getIdCard();",
+            "fixed_code_snippet": "dto.userPhone = mask(order.getUser().getPhone()); dto.userIdCard = null;"
+        },
+        {
+            "issue_id": "M01-004",
+            "location": {
+                "file": "src/main/resources/templates/create_order.html",
+                "line": 6,
+                "class_or_function": "form"
+            },
+            "category": "Missing Consent",
+            "description": "创建订单未要求隐私同意。",
+            "severity": "high",
+            "related_fields": [],
+            "impact": "无法证明合法授权。",
+            "code_snippet": "<form method=\"post\" action=\"/orders/create\">",
+            "fixed_code_snippet": "<input type=\"checkbox\" name=\"consent\" required> 我同意隐私政策"
+        }
+    ]
+}

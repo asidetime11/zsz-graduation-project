@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Admin Policy</title></head>
+<body>
+<h1>Admin Policy</h1>
+<ul>
+    <% rules.forEach(function(rule){ %>
+        <li><a href="/rules/<%= rule.id %>"><%= rule.name %></a> - <%= rule.role %> - risk:<%= rule.risk_score %></li>
+    <% }) %>
+</ul>
+<h2>Recent Logs</h2>
+<ul>
+    <% logs.forEach(function(log){ %>
+        <li>#<%= log.id %> rule=<%= log.ruleId %> action=<%= log.action %></li>
+    <% }) %>
+</ul>
+</body>
+</html>

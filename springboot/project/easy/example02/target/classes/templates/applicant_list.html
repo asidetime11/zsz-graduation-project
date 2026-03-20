@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>报名列表</title></head><body>
+<h2>报名列表</h2>
+<table border="1">
+<tr><th>ID</th><th>姓名</th><th>学生手机号</th><th>紧急手机号</th><th>父母职业</th><th>年收入</th></tr>
+<tr th:each="a : ${applicants}">
+<td th:text="${a.id}"></td><td th:text="${a.studentName}"></td><td th:text="${a.studentPhone}"></td><td th:text="${a.emergencyPhone}"></td><td th:text="${a.parentJob}"></td><td th:text="${a.annualIncome}"></td>
+</tr></table>
+</body></html>

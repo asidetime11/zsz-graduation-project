@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>用户列表</title></head>
+<body>
+<h2>用户列表</h2>
+<table border="1">
+    <tr><th>ID</th><th>姓名</th><th>证件号</th><th>手机号</th><th>银行卡</th><th>家庭成员数量</th></tr>
+    <tr th:each="u : ${users}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.name}"></td>
+        <td th:text="${u.idCard}"></td>
+        <td th:text="${u.phone}"></td>
+        <td th:text="${u.bankAccount}"></td>
+        <td th:text="${u.familyMembers}"></td>
+    </tr>
+</table>
+</body>
+</html>

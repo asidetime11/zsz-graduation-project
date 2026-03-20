@@ -1,0 +1,66 @@
+{
+    "project_name": "springboot_hard_example10",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_10.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 4,
+            "high": 0,
+            "medium": 0
+        },
+        "by_category": {
+            "Hardcoded Secrets": 1,
+            "Sensitive Data Exposure": 1,
+            "SQL Injection": 1,
+            "Unauthorized Access": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H10-001",
+            "location": {"file": "src/main/java/com/example/hard10/security/SecretConfig.java", "line": 7, "class_or_function": "SecretConfig"},
+            "category": "Hardcoded Secrets",
+            "description": "JWT、数据库、对象存储密钥硬编码。",
+            "severity": "critical",
+            "related_fields": ["JWT_SECRET", "DB_PASSWORD", "OSS_ACCESS_KEY", "OSS_SECRET_KEY"],
+            "impact": "源码泄露导致全链路凭据泄漏。",
+            "code_snippet": "public static final String JWT_SECRET = \"jwt-prod-super-secret-2026\";",
+            "fixed_code_snippet": "@Value(\"${security.jwt.secret}\") private String jwtSecret;"
+        },
+        {
+            "issue_id": "H10-002",
+            "location": {"file": "src/main/java/com/example/hard10/entity/LoanApplication.java", "line": 12, "class_or_function": "LoanApplication"},
+            "category": "Sensitive Data Exposure",
+            "description": "征信报告与证件信息明文存储。",
+            "severity": "critical",
+            "related_fields": ["idCard", "creditReport", "bankCard", "phone"],
+            "impact": "数据库泄露可直接恢复高敏隐私。",
+            "code_snippet": "private String idCard; private String creditReport; private String bankCard;",
+            "fixed_code_snippet": "private String idCardCipher; private String creditReportCipher; private String bankCardCipher;"
+        },
+        {
+            "issue_id": "H10-003",
+            "location": {"file": "src/main/java/com/example/hard10/service/LoanApplicationService.java", "line": 29, "class_or_function": "search"},
+            "category": "SQL Injection",
+            "description": "审批检索拼接 SQL 与排序参数。",
+            "severity": "critical",
+            "related_fields": ["keyword", "orderBy", "status"],
+            "impact": "可注入条件读取或篡改查询结果。",
+            "code_snippet": "String sql = \"select * from loan_application ... order by \" + orderBy;",
+            "fixed_code_snippet": "entityManager.createNativeQuery(SQL, LoanApplication.class).setParameter(\"keyword\", \"%\" + keyword + \"%\");"
+        },
+        {
+            "issue_id": "H10-004",
+            "location": {"file": "src/main/java/com/example/hard10/service/LoanApplicationService.java", "line": 24, "class_or_function": "getById"},
+            "category": "Unauthorized Access",
+            "description": "按申请ID读取，未校验机构归属。",
+            "severity": "critical",
+            "related_fields": ["id", "orgCode"],
+            "impact": "跨机构可查看任意申请详情。",
+            "code_snippet": "return loanApplicationRepository.findById(id).orElseThrow();",
+            "fixed_code_snippet": "return loanApplicationRepository.findByIdAndOrgCode(id, orgCode).orElseThrow();"
+        }
+    ]
+}

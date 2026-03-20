@@ -1,0 +1,858 @@
+﻿{
+    "stack":  "nodejs",
+    "difficulty":  "medium",
+    "merged_at":  "2026-03-19T20:05:55+08:00",
+    "total_reports":  10,
+    "reports":  [
+                    {
+                        "example":  "example01",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example02",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example03",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example04",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example05",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example06",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example07",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example08",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example09",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example10",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    }
+                ]
+}

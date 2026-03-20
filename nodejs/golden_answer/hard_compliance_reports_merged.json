@@ -1,0 +1,980 @@
+﻿{
+    "stack":  "nodejs",
+    "difficulty":  "hard",
+    "merged_at":  "2026-03-19T20:05:55+08:00",
+    "total_reports":  10,
+    "reports":  [
+                    {
+                        "example":  "example01",
+                        "report":  {
+                                       "project_name":  "hard_example01_rule_engine",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Prototype Pollution to Privilege Escalation":  1,
+                                                                           "Broken Access Control":  1,
+                                                                           "Insufficient Input Validation":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "services/queryService.js",
+                                                                           "line":  3,
+                                                                           "class_or_function":  "deepMerge"
+                                                                       },
+                                                          "category":  "Prototype Pollution to Privilege Escalation",
+                                                          "description":  "Recursive merge accepts attacker-controlled keys and mutates shared object structures.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "role",
+                                                                                 "permission_set"
+                                                                             ],
+                                                          "impact":  "Privilege metadata can be overwritten via crafted JSON payload.",
+                                                          "code_snippet":  "deepMerge(target[key], source[key]);",
+                                                          "fixed_code_snippet":  "if ([\"__proto__\", \"constructor\", \"prototype\"].includes(key)) continue;"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "middleware/permissions.js",
+                                                                           "line":  2,
+                                                                           "class_or_function":  "canManagePolicy"
+                                                                       },
+                                                          "category":  "Broken Access Control",
+                                                          "description":  "Authorization relies on mutable global object property.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "permission_set"
+                                                                             ],
+                                                          "impact":  "Unauthorized users may access admin-only endpoints.",
+                                                          "code_snippet":  "|| {}.isAdmin === true;",
+                                                          "fixed_code_snippet":  "return req.user.role === \u0027admin\u0027 || (req.user.permission_set || []).includes(\u0027admin\u0027);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/ruleController.js",
+                                                                           "line":  26,
+                                                                           "class_or_function":  "previewRule"
+                                                                       },
+                                                          "category":  "Insufficient Input Validation",
+                                                          "description":  "Nested JSON payload is processed without key allow-list validation.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "risk_score",
+                                                                                 "profile_badge"
+                                                                             ],
+                                                          "impact":  "Unexpected fields can alter risk logic and display semantics.",
+                                                          "code_snippet":  "const preview = buildPreview(base, req.body);",
+                                                          "fixed_code_snippet":  "const preview = buildPreview(base, pick(req.body, [\u0027name\u0027, \u0027conditionTree\u0027]));"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "controllers/ruleController.js",
+                                                                           "line":  43,
+                                                                           "class_or_function":  "saveRule"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Audit store keeps full request payload including sensitive policy data.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "risk_score",
+                                                                                 "permission_set"
+                                                                             ],
+                                                          "impact":  "Operational logs may expose sensitive rule configuration.",
+                                                          "code_snippet":  "store.audits.push({ id: Date.now(), actor: req.user.id, payload });",
+                                                          "fixed_code_snippet":  "store.audits.push({ id: Date.now(), actor: req.user.id, ruleId: record.id });"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example02",
+                        "report":  {
+                                       "project_name":  "hard_example02_lowcode_script",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_02.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Unsafe Dynamic Code Execution":  1,
+                                                                           "Sandbox Escape Misconfiguration":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "services/scriptService.js",
+                                                                           "line":  5,
+                                                                           "class_or_function":  "runUserScript"
+                                                                       },
+                                                          "category":  "Unsafe Dynamic Code Execution",
+                                                          "description":  "User supplied code is executed through eval.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "user_submission"
+                                                                             ],
+                                                          "impact":  "Arbitrary command execution risk in application context.",
+                                                          "code_snippet":  "const fn = eval(wrapped);",
+                                                          "fixed_code_snippet":  "const action = allowedScripts[source]; if (!action) throw new Error(\u0027script_not_allowed\u0027); return action(input);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "services/scriptService.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "runInVm"
+                                                                       },
+                                                          "category":  "Sandbox Escape Misconfiguration",
+                                                          "description":  "Sandbox explicitly exposes process object.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "api_secret",
+                                                                                 "db_password"
+                                                                             ],
+                                                          "impact":  "Sandbox code can inspect environment and runtime internals.",
+                                                          "code_snippet":  "const sandbox = { ...context, process };",
+                                                          "fixed_code_snippet":  "const sandbox = { ...context };"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/formController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "runScript"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Secret material is added into API response metadata.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "api_secret",
+                                                                                 "db_password"
+                                                                             ],
+                                                          "impact":  "API consumers can obtain secret keys and passwords.",
+                                                          "code_snippet":  "const leaked = { api_secret: ..., db_password: ... };",
+                                                          "fixed_code_snippet":  "const leaked = { execution_id: Date.now() };"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "controllers/formController.js",
+                                                                           "line":  23,
+                                                                           "class_or_function":  "runScript"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Execution logs persist full script, output, and secret metadata.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "user_submission",
+                                                                                 "api_secret"
+                                                                             ],
+                                                          "impact":  "Stored logs become secondary leakage source.",
+                                                          "code_snippet":  "const log = { id: Date.now(), source, output, leaked };",
+                                                          "fixed_code_snippet":  "const log = { id: Date.now(), formId: 1, status: \u0027done\u0027 };"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example03",
+                        "report":  {
+                                       "project_name":  "hard_example03_consent_center",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_03.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Race Condition in Consent Revocation":  1,
+                                                                           "Eventual Consistency Gap":  1,
+                                                                           "Missing Idempotency":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/consentController.js",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "revokeConsent"
+                                                                       },
+                                                          "category":  "Race Condition in Consent Revocation",
+                                                          "description":  "Revoke executes asynchronously and returns success before state update.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "consent_status",
+                                                                                 "revoke_time"
+                                                                             ],
+                                                          "impact":  "Data processing may continue after user revocation request.",
+                                                          "code_snippet":  "setTimeout(() =\u003e revoke(req.user.id), 80);",
+                                                          "fixed_code_snippet":  "const row = revoke(req.user.id); return res.json({ ok: true, row });"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/consentController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "processData"
+                                                                       },
+                                                          "category":  "Eventual Consistency Gap",
+                                                          "description":  "Processing task reads stale consent state from local memory without confirmation.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "consent_status",
+                                                                                 "processing_job_id"
+                                                                             ],
+                                                          "impact":  "Processing jobs can be queued for revoked users.",
+                                                          "code_snippet":  "consent_status: store.consents[0].consent_status",
+                                                          "fixed_code_snippet":  "const latest = await consentRepository.getFresh(req.user.id);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/consentController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "processData"
+                                                                       },
+                                                          "category":  "Missing Idempotency",
+                                                          "description":  "Duplicate requests create multiple jobs for the same action.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "processing_job_id"
+                                                                             ],
+                                                          "impact":  "Repeated submissions amplify downstream data handling.",
+                                                          "code_snippet":  "const job = enqueueProcessing(req.user.id);",
+                                                          "fixed_code_snippet":  "if (await hasRecentJob(req.user.id, key)) return existing;"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  4,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Consent snapshots and event store retain sensitive operational state without minimization.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "consent_status",
+                                                                                 "revoke_time",
+                                                                                 "processing_job_id"
+                                                                             ],
+                                                          "impact":  "Internal records expose privacy status changes and processing identifiers.",
+                                                          "code_snippet":  "events: [], snapshots: []",
+                                                          "fixed_code_snippet":  "events: events.map(({ id, userId }) =\u003e ({ id, userId })), snapshots: []"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example04",
+                        "report":  {
+                                       "project_name":  "hard_example04_supply_chain",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_04.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Dependency Confusion / Supply Chain Attack":  1,
+                                                                           "Inadequate Dependency Pinning":  1,
+                                                                           "Missing Artifact Verification":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "services/buildService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "trigger"
+                                                                       },
+                                                          "category":  "Dependency Confusion / Supply Chain Attack",
+                                                          "description":  "Dependency source and namespace are not restricted to internal registry.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "build_artifact"
+                                                                             ],
+                                                          "impact":  "Malicious public package can be resolved and executed in build pipeline.",
+                                                          "code_snippet":  "const resolved=`${dep}@${version}`;",
+                                                          "fixed_code_snippet":  "const resolved = resolveInternalPackage(dep, version, process.env.INTERNAL_REGISTRY_URL);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Inadequate Dependency Pinning",
+                                                          "description":  "Dependency versions use broad ranges.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "build_artifact"
+                                                                             ],
+                                                          "impact":  "Unexpected upstream updates may alter build behavior.",
+                                                          "code_snippet":  "version:\u0027^1.0.0\u0027",
+                                                          "fixed_code_snippet":  "version:\u00271.0.3\u0027"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/buildController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "triggerBuild"
+                                                                       },
+                                                          "category":  "Missing Artifact Verification",
+                                                          "description":  "Build artifacts are returned without checksum/signature validation.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "build_artifact"
+                                                                             ],
+                                                          "impact":  "Tampered artifacts may enter downstream deployment.",
+                                                          "code_snippet":  "res.json({ok:true,build});",
+                                                          "fixed_code_snippet":  "res.json({ok:true,build,checksum:sha256(build.build_artifact)});"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "controllers/buildController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "triggerBuild"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Audit records include CI and npm secrets in plaintext.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "npm_token",
+                                                                                 "ci_secret"
+                                                                             ],
+                                                          "impact":  "Credential theft can compromise package publication and CI environment.",
+                                                          "code_snippet":  "store.audit.push({id:Date.now(),npm_token:...,ci_secret:...});",
+                                                          "fixed_code_snippet":  "store.audit.push({id:Date.now(),buildId:build.id});"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example05",
+                        "report":  {
+                                       "project_name":  "hard_example05_tenant_crm",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_05.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Tenant Isolation Failure":  1,
+                                                                           "Broken Object Scoping":  1,
+                                                                           "Export Without Authorization":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/customerController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "exportCustomers"
+                                                                       },
+                                                          "category":  "Tenant Isolation Failure",
+                                                          "description":  "Export endpoint reads all customer rows across tenants.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "tenant_id",
+                                                                                 "customer_phone",
+                                                                                 "customer_contract"
+                                                                             ],
+                                                          "impact":  "Cross-tenant personal and contract data disclosure.",
+                                                          "code_snippet":  "const rows=listAll();",
+                                                          "fixed_code_snippet":  "const rows=listByTenant(req.user.tenant_id);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/customerController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "detail"
+                                                                       },
+                                                          "category":  "Broken Object Scoping",
+                                                          "description":  "Object lookup ignores tenant scope.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "tenant_id"
+                                                                             ],
+                                                          "impact":  "Users can access records from other tenants by ID.",
+                                                          "code_snippet":  "find(x=\u003ex.id===Number(req.params.id))",
+                                                          "fixed_code_snippet":  "find(x=\u003ex.id===Number(req.params.id)\u0026\u0026x.tenant_id===req.user.tenant_id)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/customerController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "exportCustomers"
+                                                                       },
+                                                          "category":  "Export Without Authorization",
+                                                          "description":  "No role or tenant permission check before export.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "tenant_id"
+                                                                             ],
+                                                          "impact":  "Any authenticated user can trigger broad data exports.",
+                                                          "code_snippet":  "r.get(\u0027/api/customers/export\u0027,c.exportCustomers);",
+                                                          "fixed_code_snippet":  "r.get(\u0027/api/customers/export\u0027,requireRole(\u0027tenant_admin\u0027),c.exportCustomers);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Customer phone and contracts are stored and exported in plaintext.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "customer_phone",
+                                                                                 "customer_contract"
+                                                                             ],
+                                                          "impact":  "Data theft impact is amplified if exports are leaked.",
+                                                          "code_snippet":  "customer_phone:\u00271880000\u0027,customer_contract:\u0027C-001\u0027",
+                                                          "fixed_code_snippet":  "return { ...row, customer_phone: maskPhone(row.customer_phone), customer_contract: undefined };"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example06",
+                        "report":  {
+                                       "project_name":  "hard_example06_loan_workflow",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_06.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Business Logic Bypass in Approval Workflow":  1,
+                                                                           "Missing Step Integrity Check":  1,
+                                                                           "Privilege Abuse":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/loanController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "disburse"
+                                                                       },
+                                                          "category":  "Business Logic Bypass in Approval Workflow",
+                                                          "description":  "Disbursement does not verify approved state before release.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "loan_id",
+                                                                                 "approval_state",
+                                                                                 "amount"
+                                                                             ],
+                                                          "impact":  "Funds can be released by skipping mandatory workflow stages.",
+                                                          "code_snippet":  "const row=svc.disburse(req.body.loan_id);",
+                                                          "fixed_code_snippet":  "if(row.approval_state!==\u0027approved\u0027) return deny();"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/loanController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "approve"
+                                                                       },
+                                                          "category":  "Missing Step Integrity Check",
+                                                          "description":  "No signed transition token is validated between workflow steps.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "approval_state"
+                                                                             ],
+                                                          "impact":  "State tampering is possible through direct endpoint calls.",
+                                                          "code_snippet":  "const row=svc.approve(req.body.loan_id);",
+                                                          "fixed_code_snippet":  "verifyTransitionSignature(req.body.step_token);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "middleware/permissions.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "canOperate"
+                                                                       },
+                                                          "category":  "Privilege Abuse",
+                                                          "description":  "Single role can both approve and disburse.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "loan_id"
+                                                                             ],
+                                                          "impact":  "Separation-of-duty control is absent.",
+                                                          "code_snippet":  "[\u0027reviewer\u0027,\u0027disburser\u0027].includes(req.user.role)",
+                                                          "fixed_code_snippet":  "const canApprove = req.user.role === \u0027reviewer\u0027; const canDisburse = req.user.role === \u0027disburser\u0027;"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Borrower ID card data is kept in plaintext records and logs.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "borrower_id_card"
+                                                                             ],
+                                                          "impact":  "PII disclosure risk in storage and operational dumps.",
+                                                          "code_snippet":  "borrower_id_card:\u00273301********1234\u0027",
+                                                          "fixed_code_snippet":  "borrower_id_card: encrypt(req.body.borrower_id_card)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example07",
+                        "report":  {
+                                       "project_name":  "hard_example07_graphql_gateway",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_07.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "GraphQL Authorization Bypass via Nested Query":  1,
+                                                                           "Over-fetching Sensitive Data":  1,
+                                                                           "Introspection Exposure":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "middleware/permissions.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "allowNested"
+                                                                       },
+                                                          "category":  "GraphQL Authorization Bypass via Nested Query",
+                                                          "description":  "Nested field authorization always returns true.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "permission_scope"
+                                                                             ],
+                                                          "impact":  "Users can query data outside their permitted scope.",
+                                                          "code_snippet":  "module.exports={allowNested:(req)=\u003etrue};",
+                                                          "fixed_code_snippet":  "module.exports={allowNested:(req,field)=\u003ereq.user.permission_scope===\u0027admin\u0027||field===\u0027id\u0027};"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "services/graphqlService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "execute"
+                                                                       },
+                                                          "category":  "Over-fetching Sensitive Data",
+                                                          "description":  "Query resolver returns full user objects with sensitive fields.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "salary",
+                                                                                 "id_card",
+                                                                                 "medical_record"
+                                                                             ],
+                                                          "impact":  "Single request discloses excessive personal information.",
+                                                          "code_snippet":  "return store.users;",
+                                                          "fixed_code_snippet":  "return store.users.map(({id,name})=\u003e({id,name}));"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "services/graphqlService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "execute"
+                                                                       },
+                                                          "category":  "Introspection Exposure",
+                                                          "description":  "Introspection query is enabled in production endpoint.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "permission_scope"
+                                                                             ],
+                                                          "impact":  "Attackers can enumerate schema and target sensitive fields.",
+                                                          "code_snippet":  "if(query.includes(\u0027__schema\u0027)){return store.schemas;}",
+                                                          "fixed_code_snippet":  "if (process.env.NODE_ENV === \u0027production\u0027 \u0026\u0026 query.includes(\u0027__schema\u0027)) return [];"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Sensitive fields are persisted in plaintext and returned through views.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "salary",
+                                                                                 "id_card",
+                                                                                 "medical_record"
+                                                                             ],
+                                                          "impact":  "Data breach impact increases due to direct readability.",
+                                                          "code_snippet":  "salary:98000,id_card:\u0027...\u0027,medical_record:\u0027allergy\u0027",
+                                                          "fixed_code_snippet":  "return store.users.map(({ id, name, permission_scope }) =\u003e ({ id, name, permission_scope }));"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example08",
+                        "report":  {
+                                       "project_name":  "hard_example08_nosql_injection",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_08.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "NoSQL Injection Chain":  1,
+                                                                           "Insecure Query Builder":  1,
+                                                                           "Account Enumeration":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/authController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "login"
+                                                                       },
+                                                          "category":  "NoSQL Injection Chain",
+                                                          "description":  "Login query merges attacker-supplied operators into auth condition.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "username",
+                                                                                 "password_hash"
+                                                                             ],
+                                                          "impact":  "Authentication bypass via $ne/$regex payloads.",
+                                                          "code_snippet":  "Object.assign(query,req.body.filter||{});",
+                                                          "fixed_code_snippet":  "const query = { username: String(req.body.username), password_hash: String(req.body.password_hash) };"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "services/queryService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "matchUser"
+                                                                       },
+                                                          "category":  "Insecure Query Builder",
+                                                          "description":  "Operator keys are interpreted directly from input objects.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "username",
+                                                                                 "reset_token"
+                                                                             ],
+                                                          "impact":  "Query semantics can be altered to broaden match scope.",
+                                                          "code_snippet":  "if(typeof filter[k]===\u0027object\u0027\u0026\u0026filter[k].$ne!==undefined)",
+                                                          "fixed_code_snippet":  "if (typeof filter[k] === \u0027object\u0027) { throw new Error(\u0027invalid filter\u0027); }"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/authController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "login"
+                                                                       },
+                                                          "category":  "Account Enumeration",
+                                                          "description":  "Different response status and message reveal whether user exists.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "username"
+                                                                             ],
+                                                          "impact":  "Attackers can enumerate valid usernames.",
+                                                          "code_snippet":  "return res.status(404).json({ok:false,message:\u0027user_not_found\u0027});",
+                                                          "fixed_code_snippet":  "return res.status(401).json({ ok: false, message: \u0027invalid_credentials\u0027 });"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Password hashes, reset tokens and phone numbers are directly exposed in API and views.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "password_hash",
+                                                                                 "phone",
+                                                                                 "reset_token"
+                                                                             ],
+                                                          "impact":  "Compromised responses aid account takeover and privacy breach.",
+                                                          "code_snippet":  "res.json({ok:true,user});",
+                                                          "fixed_code_snippet":  "res.json({ ok: true, user: { id: user.id, username: user.username, nickname_style: user.nickname_style } });"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example09",
+                        "report":  {
+                                       "project_name":  "hard_example09_payment_webhook",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_09.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Webhook Replay Attack":  1,
+                                                                           "Weak Signature Verification":  1,
+                                                                           "Missing Nonce Store":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/paymentController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "webhook"
+                                                                       },
+                                                          "category":  "Webhook Replay Attack",
+                                                          "description":  "Replay protection window and unique event checks are missing.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "payment_id",
+                                                                                 "callback_timestamp"
+                                                                             ],
+                                                          "impact":  "Same callback can be replayed to create repeated ledger entries.",
+                                                          "code_snippet":  "svc.apply(p);store.payments.push(p);",
+                                                          "fixed_code_snippet":  "if (isReplay(p.payment_id, p.callback_timestamp)) return res.status(409).json({ ok: false });"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "services/paymentService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "verify"
+                                                                       },
+                                                          "category":  "Weak Signature Verification",
+                                                          "description":  "Signature check validates only static prefix.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "signature",
+                                                                                 "amount"
+                                                                             ],
+                                                          "impact":  "Forged callbacks may pass validation.",
+                                                          "code_snippet":  "payload.signature\u0026\u0026payload.signature.startsWith(\u0027sig-\u0027)",
+                                                          "fixed_code_snippet":  "return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Missing Nonce Store",
+                                                          "description":  "Nonce store exists but is never used for deduplication.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "signature",
+                                                                                 "callback_timestamp"
+                                                                             ],
+                                                          "impact":  "No replay nonce tracking enables repeated acceptance.",
+                                                          "code_snippet":  "nonceStore:[]",
+                                                          "fixed_code_snippet":  "if (store.nonceStore.includes(p.nonce)) return false; store.nonceStore.push(p.nonce);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Payment metadata with signature is retained in plaintext logs.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "signature",
+                                                                                 "payment_id",
+                                                                                 "amount"
+                                                                             ],
+                                                          "impact":  "Sensitive callback data leakage can aid signature abuse.",
+                                                          "code_snippet":  "payments.push(p)",
+                                                          "fixed_code_snippet":  "store.payments.push({ payment_id: p.payment_id, amount: p.amount, signature_hash: sha256(p.signature) });"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example10",
+                        "report":  {
+                                       "project_name":  "hard_example10_crypto_platform",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  4,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Cryptographic Key Management Failure":  1,
+                                                                           "Predictable IV Usage":  1,
+                                                                           "Insecure Backup Handling":  1,
+                                                                           "Sensitive Data Exposure":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "services/cryptoService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "encryptText"
+                                                                       },
+                                                          "category":  "Cryptographic Key Management Failure",
+                                                          "description":  "Master key is hardcoded and rotate operation reuses same key material.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "encrypted_id_card",
+                                                                                 "encrypted_phone",
+                                                                                 "master_key_id"
+                                                                             ],
+                                                          "impact":  "Historical data remains decryptable after supposed key rotation.",
+                                                          "code_snippet":  "const MASTER_KEY=\u0027hardcoded-master-key\u0027;",
+                                                          "fixed_code_snippet":  "const MASTER_KEY = await kmsClient.getKey(process.env.KMS_KEY_ID);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "services/cryptoService.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "encryptText"
+                                                                       },
+                                                          "category":  "Predictable IV Usage",
+                                                          "description":  "Fixed IV is reused for all encryption operations.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "encrypted_id_card",
+                                                                                 "encrypted_phone"
+                                                                             ],
+                                                          "impact":  "Ciphertext patterns become predictable and analyzable.",
+                                                          "code_snippet":  "const FIXED_IV=Buffer.from(\u00270000...\u0027,\u0027hex\u0027);",
+                                                          "fixed_code_snippet":  "const iv = crypto.randomBytes(16);"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "module.exports"
+                                                                       },
+                                                          "category":  "Insecure Backup Handling",
+                                                          "description":  "Backups contain plaintext legacy key values.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "master_key_id"
+                                                                             ],
+                                                          "impact":  "Backup leakage enables decryption of archived sensitive data.",
+                                                          "code_snippet":  "backups:[{id:1,old_key:\u0027legacy-key-plain\u0027}]",
+                                                          "fixed_code_snippet":  "backups:[{id:1,key_ref:\u0027legacy-key-2025-01\u0027}]"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "controllers/cryptoController.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "exportBackup"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Backup endpoint returns raw backup content without redaction.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "master_key_id"
+                                                                             ],
+                                                          "impact":  "Sensitive cryptographic metadata can be exfiltrated.",
+                                                          "code_snippet":  "res.json({ok:true,backup:store.backups});",
+                                                          "fixed_code_snippet":  "res.json({ ok: true, backup: store.backups.map(({ id, key_ref }) =\u003e ({ id, key_ref })) });"
+                                                      }
+                                                  ]
+                                   }
+                    }
+                ]
+}

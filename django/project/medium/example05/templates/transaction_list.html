@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>交易记录</title>
+</head>
+<body>
+    <h2>交易记录页</h2>
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户ID</th>
+                <th>金额</th>
+                <th>银行卡号</th>
+                <th>状态</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transactions %}
+            <tr>
+                <td>{{ t.id }}</td>
+                <td>{{ t.user }}</td>
+                <td>{{ t.amount }}</td>
+                <td>{{ t.card_number }}</td>
+                <td>{{ t.status }}</td>
+                <td>{{ t.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">返回支付页</a></p>
+</body>
+</html>

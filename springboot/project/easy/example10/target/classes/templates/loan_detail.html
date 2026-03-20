@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>贷款详情</title></head><body>
+<h2>贷款申请详情</h2>
+<div th:if="${loan != null}">
+<p>申请ID：<span th:text="${loan.id}"></span></p>
+<p>姓名：<span th:text="${loan.applicantName}"></span></p>
+<p>身份证：<span th:text="${loan.idCard}"></span></p>
+<p>银行卡：<span th:text="${loan.bankCard}"></span></p>
+<p>收入证明：<span th:text="${loan.incomeProof}"></span></p>
+<p>亲属联系方式：<span th:text="${loan.relativeContact}"></span></p>
+</div>
+</body></html>

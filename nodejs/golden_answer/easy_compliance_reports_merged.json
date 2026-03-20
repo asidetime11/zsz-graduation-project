@@ -1,0 +1,855 @@
+﻿{
+    "stack":  "nodejs",
+    "difficulty":  "easy",
+    "merged_at":  "2026-03-19T20:05:54+08:00",
+    "total_reports":  10,
+    "reports":  [
+                    {
+                        "example":  "example01",
+                        "report":  {
+                                       "project_name":  "easy_01",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_01.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  2,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "registerPatient"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "id_card, phone and medical_insurance_no are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "id_card",
+                                                                                 "phone",
+                                                                                 "medical_insurance_no",
+                                                                                 "emergency_contact"
+                                                                             ],
+                                                          "impact":  "Sensitive patient data can be leaked directly after datastore exposure.",
+                                                          "code_snippet":  "id_card: req.body.id_card || \u0027\u0027,\nphone: req.body.phone || \u0027\u0027,\nmedical_insurance_no: req.body.medical_insurance_no || \u0027\u0027",
+                                                          "fixed_code_snippet":  "id_card: encrypt(req.body.id_card), phone: encrypt(req.body.phone), medical_insurance_no: encrypt(req.body.medical_insurance_no)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "registerPatient"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "family_income and religion are collected though not necessary for appointment registration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "family_income",
+                                                                                 "religion"
+                                                                             ],
+                                                          "impact":  "Over-collection raises compliance and privacy exposure scope.",
+                                                          "code_snippet":  "family_income: req.body.family_income || \u0027\u0027,\nreligion: req.body.religion || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove non-essential fields from registration payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  7,
+                                                                           "class_or_function":  "registerPatient"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No consent flag or consent timestamp is captured before data collection.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "The service cannot prove lawful basis for collecting personal data.",
+                                                          "code_snippet":  "function registerPatient(req, res) {\n    const patient = {",
+                                                          "fixed_code_snippet":  "if (!req.body.consent) return res.status(400).json({ error: \u0027consent required\u0027 });"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example02",
+                        "report":  {
+                                       "project_name":  "easy_02",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_02.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  7,
+                                                                           "class_or_function":  "signupEvent"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No consent checkbox or consent timestamp is recorded during event signup.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "The system lacks legal proof for collecting student information.",
+                                                          "code_snippet":  "function signupEvent(req, res) {\n    signups.push({",
+                                                          "fixed_code_snippet":  "if (!req.body.consent) return res.status(400).json({ error: \u0027consent required\u0027 });"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "signupEvent"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Emergency contact phone is stored in plaintext.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "emergency_phone"
+                                                                             ],
+                                                          "impact":  "Contact data can be exposed directly if records leak.",
+                                                          "code_snippet":  "emergency_phone: req.body.emergency_phone || \u0027\u0027",
+                                                          "fixed_code_snippet":  "emergency_phone: encrypt(req.body.emergency_phone)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "signupEvent"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "parent_company is unnecessary for basic event signup.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "parent_company"
+                                                                             ],
+                                                          "impact":  "Unnecessary collection increases privacy risk and storage scope.",
+                                                          "code_snippet":  "parent_company: req.body.parent_company || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove parent_company from signup payload"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example03",
+                        "report":  {
+                                       "project_name":  "easy_03",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_03.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  1,
+                                                                           "medium":  2,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  0,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  1,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  1,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "updateProfile"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "marital_status, children_count and car_plate are over-collected for profile completion.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "marital_status",
+                                                                                 "children_count",
+                                                                                 "car_plate"
+                                                                             ],
+                                                          "impact":  "Collection scope exceeds necessity and increases compliance burden.",
+                                                          "code_snippet":  "marital_status: req.body.marital_status || \u0027\u0027,\nchildren_count: req.body.children_count || \u0027\u0027,\ncar_plate: req.body.car_plate || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove non-essential profile fields from update API"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  1,
+                                                                           "class_or_function":  "profiles"
+                                                                       },
+                                                          "category":  "Data Lifecycle",
+                                                          "description":  "No retention policy exists for stored profile data.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Data may be retained indefinitely without legal basis.",
+                                                          "code_snippet":  "const profiles = [];",
+                                                          "fixed_code_snippet":  "delete records older than retention period via scheduled cleanup"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "updateProfile"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "The system logs trailing digits from id_card in application logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id_card"
+                                                                             ],
+                                                          "impact":  "Log leakage can expose personal identifiers.",
+                                                          "code_snippet":  "console.log(\u0027profile audit\u0027, payload.id_card.slice(-6));",
+                                                          "fixed_code_snippet":  "log only request id and operation result without sensitive fields"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example04",
+                        "report":  {
+                                       "project_name":  "easy_04",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_04.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  0,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  1,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  19,
+                                                                           "class_or_function":  "deleteAddress"
+                                                                       },
+                                                          "category":  "Data Lifecycle",
+                                                          "description":  "Delete endpoint does not remove stored address records, causing unrestricted retention.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "receiver_phone",
+                                                                                 "full_address"
+                                                                             ],
+                                                          "impact":  "Historical personal address data may be retained indefinitely.",
+                                                          "code_snippet":  "function deleteAddress(req, res) {\n    res.json({ deleted: true, id: req.params.id });\n}",
+                                                          "fixed_code_snippet":  "remove target record from store and implement retention expiration"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  23,
+                                                                           "class_or_function":  "exportAddress"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Admin export returns full receiver_phone and full_address without masking.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "receiver_phone",
+                                                                                 "full_address"
+                                                                             ],
+                                                          "impact":  "Bulk export can disclose complete personal location and contact data.",
+                                                          "code_snippet":  "res.render(\u0027admin_export\u0027, { addresses });",
+                                                          "fixed_code_snippet":  "mask phone and address before export"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  6,
+                                                                           "class_or_function":  "createAddress"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "Address retention consent is not captured during submission.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "No legal proof exists for long-term address storage.",
+                                                          "code_snippet":  "function createAddress(req, res) {\n    addresses.push({",
+                                                          "fixed_code_snippet":  "require consent flag and store consent timestamp"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example05",
+                        "report":  {
+                                       "project_name":  "easy_05",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_05.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Minimization":  0,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  24,
+                                                                           "class_or_function":  "pushMarketing"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Job application phone data is reused for marketing push beyond original purpose.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone"
+                                                                             ],
+                                                          "impact":  "Secondary processing without purpose alignment may violate compliance obligations.",
+                                                          "code_snippet":  "const phones = resumes.map((x) =\u003e x.phone);",
+                                                          "fixed_code_snippet":  "filter only users who explicitly opted into marketing"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  13,
+                                                                           "class_or_function":  "submitResume"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Predictable resume_file URL allows direct access to private attachments.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "resume_file"
+                                                                             ],
+                                                          "impact":  "Attackers can enumerate and access resume files.",
+                                                          "code_snippet":  "resume_file: `/uploads/resume_${resumes.length + 1}.pdf`",
+                                                          "fixed_code_snippet":  "resume_file: `/uploads/${crypto.randomUUID()}.pdf` with signed access"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  23,
+                                                                           "class_or_function":  "pushMarketing"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "Marketing push executes without explicit consent for secondary purpose.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "No proof of authorization for promotional communication.",
+                                                          "code_snippet":  "function pushMarketing(req, res) {\n    const phones = resumes.map((x) =\u003e x.phone);",
+                                                          "fixed_code_snippet":  "require marketing_consent === true before push"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example06",
+                        "report":  {
+                                       "project_name":  "easy_06",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_06.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  1,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  0,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  1,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  7,
+                                                                           "class_or_function":  "getProfile"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Profile data is returned by user_id path parameter without ownership check.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "user_id"
+                                                                             ],
+                                                          "impact":  "Any user can enumerate IDs to read other users\u0027 personal profiles.",
+                                                          "code_snippet":  "const user = users.find((x) =\u003e x.user_id === Number(req.params.id));",
+                                                          "fixed_code_snippet":  "verify req.user.id matches req.params.id or require admin role"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "getProfile"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Access logs contain full user phone numbers.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone"
+                                                                             ],
+                                                          "impact":  "Log disclosure can expose contact data.",
+                                                          "code_snippet":  "console.log(\u0027profile access\u0027, user.phone);",
+                                                          "fixed_code_snippet":  "log masked value or omit phone from logs"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  6,
+                                                                           "class_or_function":  "getProfile"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No user consent check exists before sharing profile to customer service endpoint.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "Profile data may be processed without explicit authorization.",
+                                                          "code_snippet":  "function getProfile(req, res) {",
+                                                          "fixed_code_snippet":  "enforce profile_share_consent before returning profile data"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example07",
+                        "report":  {
+                                       "project_name":  "easy_07",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_07.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  0,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  1,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  1,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  16,
+                                                                           "class_or_function":  "createTicket"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Ticket creation logs include full name, phone and address.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "name",
+                                                                                 "phone",
+                                                                                 "address"
+                                                                             ],
+                                                          "impact":  "Sensitive personal data can leak through log systems.",
+                                                          "code_snippet":  "serviceLogs.push(`ticket ${ticket.name} ${ticket.phone} ${ticket.address}`);",
+                                                          "fixed_code_snippet":  "log only ticket id and status"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "models/dataStore.js",
+                                                                           "line":  2,
+                                                                           "class_or_function":  "serviceLogs"
+                                                                       },
+                                                          "category":  "Data Lifecycle",
+                                                          "description":  "Sensitive logs are stored without cleanup policy.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "serviceLogs"
+                                                                             ],
+                                                          "impact":  "Long-term retention increases leakage impact window.",
+                                                          "code_snippet":  "const serviceLogs = [];",
+                                                          "fixed_code_snippet":  "enforce log retention and scheduled deletion"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "createTicket"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "id_card_images and household_register_city are unnecessary for basic repair tickets.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id_card_images",
+                                                                                 "household_register_city"
+                                                                             ],
+                                                          "impact":  "Collecting extra identity data expands privacy risk.",
+                                                          "code_snippet":  "id_card_images: req.body.id_card_images || \u0027\u0027,\\nhousehold_register_city: req.body.household_register_city || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unrelated fields from ticket form"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example08",
+                        "report":  {
+                                       "project_name":  "easy_08",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_08.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  1,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  2,
+                                                                           "Data Minimization":  0,
+                                                                           "Missing Consent":  0,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "register"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Passwords are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "password"
+                                                                             ],
+                                                          "impact":  "Credential theft is straightforward when data store is leaked.",
+                                                          "code_snippet":  "password: req.body.password || \u0027\u0027",
+                                                          "fixed_code_snippet":  "password: await bcrypt.hash(req.body.password, 12)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  29,
+                                                                           "class_or_function":  "reset"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Password reset API returns full email address.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "email"
+                                                                             ],
+                                                          "impact":  "User account identifiers can be enumerated.",
+                                                          "code_snippet":  "res.json({ email: user ? user.email : \u0027\u0027 });",
+                                                          "fixed_code_snippet":  "return generic success message without exposing user identifiers"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  23,
+                                                                           "class_or_function":  "login"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Login endpoint has no request throttling and is brute-forceable.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "email",
+                                                                                 "password"
+                                                                             ],
+                                                          "impact":  "Attackers can attempt high-volume credential guessing.",
+                                                          "code_snippet":  "function login(req, res) {\n    const user = users.find((x) =\u003e x.email === req.body.email \u0026\u0026 x.password === req.body.password);",
+                                                          "fixed_code_snippet":  "apply IP/user rate limit and temporary lockout"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example09",
+                        "report":  {
+                                       "project_name":  "easy_09",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_09.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  1,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  0,
+                                                                           "Missing Consent":  0,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Data Lifecycle":  1,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "exportContacts"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Any user can export full enterprise contact list without authorization check.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "employee_no",
+                                                                                 "mobile",
+                                                                                 "email"
+                                                                             ],
+                                                          "impact":  "Mass contact data exfiltration becomes trivial.",
+                                                          "code_snippet":  "function exportContacts(req, res) {",
+                                                          "fixed_code_snippet":  "check admin permission before export"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "exportContacts"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Export output includes raw mobile and email without masking.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "mobile",
+                                                                                 "email"
+                                                                             ],
+                                                          "impact":  "Exported files disclose personal contact details directly.",
+                                                          "code_snippet":  "const csv = contacts.map((c) =\u003e `${c.employee_no},${c.name},${c.mobile},${c.email},${c.personal_wechat}`).join(\u0027\\n\u0027);",
+                                                          "fixed_code_snippet":  "mask c.mobile and c.email before composing export file"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "views/export_history.ejs",
+                                                                           "line":  4,
+                                                                           "class_or_function":  "export_history"
+                                                                       },
+                                                          "category":  "Data Lifecycle",
+                                                          "description":  "No export audit trail is persisted for investigation and accountability.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "Data export actions cannot be traced post-incident.",
+                                                          "code_snippet":  "\u003cp\u003e鏆傛棤瀹¤璁板綍\u003c/p\u003e",
+                                                          "fixed_code_snippet":  "persist exporter id, timestamp and scope for each export operation"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example10",
+                        "report":  {
+                                       "project_name":  "easy_10",
+                                       "difficulty_level":  "easy",
+                                       "source_vuln_plan":  "vuln_plan_easy_10.md",
+                                       "generated_date":  "2026-03-19",
+                                       "total_issues":  3,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  0,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  0,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "pushProfile"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User phone and order tags are pushed to third-party platform without notice.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "order_tags"
+                                                                             ],
+                                                          "impact":  "Users are unaware of external sharing of their personal data.",
+                                                          "code_snippet":  "res.json({ pushed: members.length, payload: members });",
+                                                          "fixed_code_snippet":  "send only minimum fields to third party after disclosure"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No dedicated consent is collected for third-party data sharing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+
+                                                                             ],
+                                                          "impact":  "External sharing may proceed without lawful authorization.",
+                                                          "code_snippet":  "function bindPoints(req, res) {\n    members.push({",
+                                                          "fixed_code_snippet":  "require partner_share_consent before storing profile"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "controllers/mainController.js",
+                                                                           "line":  14,
+                                                                           "class_or_function":  "bindPoints"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "house_type and child_age exceed the minimum data scope for points service.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "house_type",
+                                                                                 "child_age"
+                                                                             ],
+                                                          "impact":  "Over-collection widens privacy exposure for users.",
+                                                          "code_snippet":  "house_type: req.body.house_type || \u0027\u0027,\nchild_age: req.body.child_age || \u0027\u0027",
+                                                          "fixed_code_snippet":  "remove unnecessary demographic fields from points binding"
+                                                      }
+                                                  ]
+                                   }
+                    }
+                ]
+}

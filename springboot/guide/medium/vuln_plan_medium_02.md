@@ -1,0 +1,21 @@
+# vuln_plan_medium_02
+
+- 难度级别：medium
+- 业务场景：保险投保录入系统
+- 主漏洞：Data Minimization（采集与投保无关的宗教信仰与家庭病史扩展信息）
+- 次要漏洞：
+  - Sensitive Data Exposure（身份证与银行卡明文）
+  - Sensitive Logging（日志打印投保人全部信息）
+  - Missing Consent（未提供授权选项）
+- 关键数据字段：
+  - 敏感字段：idCard, bankAccount, medicalHistory
+  - 非必要字段：religion, familyGeneticTags
+- 预期接口与页面范围：
+  - POST /policies/apply
+  - GET /policies/applicants
+  - 页面：policy_apply.html、applicant_list.html
+- 预期严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 3（Data Minimization, Sensitive Logging, Missing Consent）
+  - medium: 0
+- 备注：主漏洞 Data Minimization 为 medium 批次唯一主漏洞

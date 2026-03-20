@@ -1,0 +1,11 @@
+<html>
+<head><title>beneficiary_manage</title></head>
+<body>
+    <h1>beneficiary_manage.ejs</h1>
+    <ul>
+        <% customers.forEach(function(c){ %>
+            <li><%= c.name %> - <%= c.policy_no %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+    "project_name": "springboot_easy_example03",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_03.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 1, "high": 2, "medium": 0},
+        "by_category": {"Sensitive Data Exposure": 1, "Missing Consent": 1, "Data Over-exposure": 1}
+    },
+    "issues": [
+        {
+            "issue_id": "E03-001",
+            "location": {"file": "src/main/java/com/example/easy03/controller/AppointmentController.java", "line": 29, "class_or_function": "book"},
+            "category": "Sensitive Data Exposure",
+            "description": "idCard 与 medicalHistory 明文存储。",
+            "severity": "critical",
+            "related_fields": ["idCard", "medicalHistory", "phone"],
+            "impact": "医疗隐私泄露。",
+            "code_snippet": "p.setIdCard(idCard); p.setMedicalHistory(medicalHistory);",
+            "fixed_code_snippet": "p.setIdCard(CryptoUtil.encrypt(idCard)); p.setMedicalHistory(CryptoUtil.encrypt(medicalHistory));"
+        },
+        {
+            "issue_id": "E03-002",
+            "location": {"file": "src/main/resources/templates/appointment_form.html", "line": 4, "class_or_function": "form"},
+            "category": "Missing Consent",
+            "description": "无隐私授权勾选和授权记录。",
+            "severity": "high",
+            "related_fields": [],
+            "impact": "无法证明合法处理依据。",
+            "code_snippet": "<form method=\"post\" action=\"/appointments/book\">",
+            "fixed_code_snippet": "<input type=\"checkbox\" name=\"consent\" required> 我同意医疗信息处理"
+        },
+        {
+            "issue_id": "E03-003",
+            "location": {"file": "src/main/resources/templates/patient_list.html", "line": 5, "class_or_function": "patients"},
+            "category": "Data Over-exposure",
+            "description": "列表页返回全部患者字段（证件号、病史等）。",
+            "severity": "high",
+            "related_fields": ["idCard", "medicalHistory", "phone"],
+            "impact": "扩大敏感信息暴露面。",
+            "code_snippet": "<td th:text=\"${p.idCard}\"></td><td th:text=\"${p.medicalHistory}\"></td>",
+            "fixed_code_snippet": "<td th:text=\"${p.name}\"></td><td th:text=\"${p.visitDate}\"></td>"
+        }
+    ]
+}

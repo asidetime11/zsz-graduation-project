@@ -1,0 +1,1 @@
+const store=require('../models/dataStore');function listByTenant(tid){return store.customers.filter(c=>c.tenant_id===tid);}function listAll(){return store.customers;}module.exports={listByTenant,listAll};

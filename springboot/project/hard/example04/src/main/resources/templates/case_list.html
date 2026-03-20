@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"><body>
+<table>
+    <tr th:each="c : ${cases}">
+        <td th:text="${c.caseNo}"></td>
+        <td th:text="${c.citizenProfile.idCard}"></td>
+        <td th:text="${c.citizenProfile.phone}"></td>
+        <td th:text="${c.citizenProfile.address}"></td>
+    </tr>
+</table>
+</body></html>

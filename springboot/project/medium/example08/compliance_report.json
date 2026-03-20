@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_medium_example08",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_08.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 0,
+            "high": 3,
+            "medium": 1
+        },
+        "by_category": {
+            "XSS": 1,
+            "Missing Consent": 1,
+            "Sensitive Logging": 1,
+            "Data Minimization": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "M08-001",
+            "location": {
+                "file": "src/main/java/com/example/medium08/service/TicketService.java",
+                "line": 22,
+                "class_or_function": "comment"
+            },
+            "category": "XSS",
+            "description": "评论 content 未过滤直接保存并回显。",
+            "severity": "high",
+            "related_fields": [],
+            "impact": "攻击者可注入脚本执行。",
+            "code_snippet": "return commentRepository.save(request);",
+            "fixed_code_snippet": "request.setContent(HtmlUtils.htmlEscape(request.getContent())); return commentRepository.save(request);"
+        },
+        {
+            "issue_id": "M08-002",
+            "location": {
+                "file": "src/main/java/com/example/medium08/controller/TicketController.java",
+                "line": 13,
+                "class_or_function": "comment"
+            },
+            "category": "Missing Consent",
+            "description": "提交评论前未验证用户授权同意。",
+            "severity": "high",
+            "related_fields": ["email", "phone", "homeAddress"],
+            "impact": "缺乏合法授权即处理个人信息。",
+            "code_snippet": "public TicketComment comment(@RequestParam Long ticketId,@RequestBody TicketComment comment)",
+            "fixed_code_snippet": "if (!request.isConsentGiven()) { throw new IllegalArgumentException(\"consent required\"); }"
+        },
+        {
+            "issue_id": "M08-003",
+            "location": {
+                "file": "src/main/java/com/example/medium08/service/TicketService.java",
+                "line": 21,
+                "class_or_function": "comment"
+            },
+            "category": "Sensitive Logging",
+            "description": "记录 email 与 phone 到日志。",
+            "severity": "high",
+            "related_fields": ["email", "phone"],
+            "impact": "日志系统泄露联系方式。",
+            "code_snippet": "log.info(\"ticket comment email={}, phone={}\",request.getEmail(),request.getPhone());",
+            "fixed_code_snippet": "log.info(\"ticket comment created, ticketId={}\", ticketId);"
+        },
+        {
+            "issue_id": "M08-004",
+            "location": {
+                "file": "src/main/java/com/example/medium08/entity/TicketComment.java",
+                "line": 13,
+                "class_or_function": "TicketComment"
+            },
+            "category": "Data Minimization",
+            "description": "评论场景采集 homeAddress 非必要。",
+            "severity": "medium",
+            "related_fields": ["homeAddress"],
+            "impact": "扩大数据处理范围。",
+            "code_snippet": "private String homeAddress;",
+            "fixed_code_snippet": "// remove homeAddress and keep only minimal contact information"
+        }
+    ]
+}

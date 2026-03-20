@@ -1,0 +1,7 @@
+<h1>用户信息页</h1>
+<ul>
+  {% for user in users %}
+    <li>{{ user.username }} - {{ user.email }} - {{ user.phone }} - {{ user.bio }}</li>
+  {% endfor %}
+</ul>
+<a href="/posts/search/">返回搜索</a>

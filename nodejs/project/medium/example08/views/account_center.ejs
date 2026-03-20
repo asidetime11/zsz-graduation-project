@@ -1,0 +1,13 @@
+<html>
+<head><title>account_center</title></head>
+<body>
+    <h1>account_center.ejs</h1>
+    <p>jwt_token: <%= jwt_token %></p>
+    <script>
+        localStorage.setItem('jwt_token', '<%= jwt_token %>');
+    </script>
+    <form method="POST" action="/api/auth/logout">
+        <button type="submit">logout</button>
+    </form>
+</body>
+</html>

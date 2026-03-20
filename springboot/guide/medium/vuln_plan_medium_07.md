@@ -1,0 +1,21 @@
+# vuln_plan_medium_07
+
+- 难度级别：medium
+- 业务场景：客户检索与筛选后台
+- 主漏洞：SQL Injection（多条件检索参数拼接 SQL）
+- 次要漏洞：
+  - Data Over-exposure（结果集返回所有字段）
+  - Unauthorized Access（无角色限制即可查询）
+  - Hardcoded Secrets（测试数据库口令硬编码）
+- 关键数据字段：
+  - 敏感字段：idCard, phone, email, bankAccount
+  - 非必要字段：customerTag
+- 预期接口与页面范围：
+  - GET /customers/search
+  - GET /customers/filter
+  - 页面：customer_search.html、customer_result.html
+- 预期严重级别分布：
+  - critical: 2（SQL Injection, Hardcoded Secrets）
+  - high: 2（Data Over-exposure, Unauthorized Access）
+  - medium: 0
+- 备注：主漏洞 SQL Injection 为 medium 批次唯一主漏洞

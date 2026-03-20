@@ -1,0 +1,12 @@
+<html>
+<head><title>contract_preview</title></head>
+<body>
+    <h1>contract_preview.ejs</h1>
+    <% if (contract) { %>
+        <p>docId: <%= contract.docId %></p>
+        <p>contract_no: <%= contract.contract_no %></p>
+        <p>signer_id_card: <%= contract.signer_id_card %></p>
+        <p>signer_phone: <%= contract.signer_phone %></p>
+    <% } %>
+</body>
+</html>

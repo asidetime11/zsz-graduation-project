@@ -1,0 +1,1235 @@
+﻿{
+    "difficulty":  "medium",
+    "merged_at":  "2026-03-19T20:04:40+08:00",
+    "total_reports":  10,
+    "reports":  [
+                    {
+                        "example":  "example01",
+                        "report":  {
+                                       "project_name":  "medium_example01",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  2,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Minimization":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  24,
+                                                                           "class_or_function":  "order_detail"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Order detail is queried by URL order_id_path without checking current user ownership.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "order_id_path"
+                                                                             ],
+                                                          "impact":  "Attackers can read other users\u0027 order data.",
+                                                          "code_snippet":  "order = Order.objects.get(id=order_id_path)",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  7,
+                                                                           "class_or_function":  "User"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Phone, id_card, passport_no and payment_card are stored as plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "id_card",
+                                                                                 "passport_no",
+                                                                                 "payment_card"
+                                                                             ],
+                                                          "impact":  "Database leak directly exposes user identity and payment details.",
+                                                          "code_snippet":  "phone = models.CharField(max_length=20)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "UserSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Serializer uses fields=\u0027__all__\u0027 and exposes all user/order fields to API.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields"
+                                                                             ],
+                                                          "impact":  "Sensitive attributes are returned even when not required by business need.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "Order"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "Order model stores passport_no, which is unrelated to normal order processing.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "passport_no"
+                                                                             ],
+                                                          "impact":  "Unnecessary data collection increases compliance and breach risk.",
+                                                          "code_snippet":  "passport_no = models.CharField(max_length=30, blank=True, default=\"\")",
+                                                          "fixed_code_snippet":  "# remove unnecessary fields from payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  47,
+                                                                           "class_or_function":  "create_order"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "No explicit consent record or verification before processing personal data.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "id_card",
+                                                                                 "passport_no",
+                                                                                 "payment_card"
+                                                                             ],
+                                                          "impact":  "Personal data processing lacks legal basis traceability.",
+                                                          "code_snippet":  "Order.objects.create(",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example02",
+                        "report":  {
+                                       "project_name":  "medium_example02",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_02.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  2,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Hardcoded Secrets":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "SQL Injection":  1,
+                                                                           "Data Minimization":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "XSS":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  15,
+                                                                           "class_or_function":  "PaymentInfo"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "card_number, cvv, expiry_date and api_token are stored in plaintext in database.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date",
+                                                                                 "api_token"
+                                                                             ],
+                                                          "impact":  "Database leakage reveals payment credentials directly.",
+                                                          "code_snippet":  "card_number = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "module scope"
+                                                                       },
+                                                          "category":  "Hardcoded Secrets",
+                                                          "description":  "Third-party payment gateway secret is hardcoded in source code.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "PAYMENT_GATEWAY_SECRET"
+                                                                             ],
+                                                          "impact":  "Leaked repository discloses gateway secret and allows unauthorized calls.",
+                                                          "code_snippet":  "PAYMENT_GATEWAY_SECRET = \"sk_test_very_hardcoded_secret_2026\"",
+                                                          "fixed_code_snippet":  "JWT_SECRET = os.getenv(\u0027JWT_SECRET\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  59,
+                                                                           "class_or_function":  "payment_search"
+                                                                       },
+                                                          "category":  "SQL Injection",
+                                                          "description":  "Card search API builds SQL using string interpolation with untrusted query parameter.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "card_number"
+                                                                             ],
+                                                          "impact":  "Attackers can manipulate SQL and read arbitrary payment rows.",
+                                                          "code_snippet":  "sql = f\"SELECT ... WHERE card_number LIKE \u0027%{card}%\u0027\"",
+                                                          "fixed_code_snippet":  "rows = Model.objects.filter(name__icontains=keyword).order_by(\u0027id\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "PaymentInfoSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Serializer uses fields=\u0027__all__\u0027 and returns sensitive card data fields.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields"
+                                                                             ],
+                                                          "impact":  "Clients receive unnecessary sensitive payment attributes.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  24,
+                                                                           "class_or_function":  "add_payment"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "Card binding flow records payment data without explicit user consent tracking.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "api_token"
+                                                                             ],
+                                                          "impact":  "Data processing lacks auditable legal consent evidence.",
+                                                          "code_snippet":  "PaymentInfo.objects.create(",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example03",
+                        "report":  {
+                                       "project_name":  "medium_example02",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_02.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  2,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Hardcoded Secrets":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "SQL Injection":  1,
+                                                                           "Data Minimization":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "XSS":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  15,
+                                                                           "class_or_function":  "PaymentInfo"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "card_number, cvv, expiry_date and api_token are stored in plaintext in database.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date",
+                                                                                 "api_token"
+                                                                             ],
+                                                          "impact":  "Database leakage reveals payment credentials directly.",
+                                                          "code_snippet":  "card_number = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "module scope"
+                                                                       },
+                                                          "category":  "Hardcoded Secrets",
+                                                          "description":  "Third-party payment gateway secret is hardcoded in source code.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "PAYMENT_GATEWAY_SECRET"
+                                                                             ],
+                                                          "impact":  "Leaked repository discloses gateway secret and allows unauthorized calls.",
+                                                          "code_snippet":  "PAYMENT_GATEWAY_SECRET = \"sk_test_very_hardcoded_secret_2026\"",
+                                                          "fixed_code_snippet":  "JWT_SECRET = os.getenv(\u0027JWT_SECRET\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  59,
+                                                                           "class_or_function":  "payment_search"
+                                                                       },
+                                                          "category":  "SQL Injection",
+                                                          "description":  "Card search API builds SQL using string interpolation with untrusted query parameter.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "card_number"
+                                                                             ],
+                                                          "impact":  "Attackers can manipulate SQL and read arbitrary payment rows.",
+                                                          "code_snippet":  "sql = f\"SELECT ... WHERE card_number LIKE \u0027%{card}%\u0027\"",
+                                                          "fixed_code_snippet":  "rows = Model.objects.filter(name__icontains=keyword).order_by(\u0027id\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "PaymentInfoSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Serializer uses fields=\u0027__all__\u0027 and returns sensitive card data fields.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields"
+                                                                             ],
+                                                          "impact":  "Clients receive unnecessary sensitive payment attributes.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  24,
+                                                                           "class_or_function":  "add_payment"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "Card binding flow records payment data without explicit user consent tracking.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "api_token"
+                                                                             ],
+                                                          "impact":  "Data processing lacks auditable legal consent evidence.",
+                                                          "code_snippet":  "PaymentInfo.objects.create(",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example04",
+                        "report":  {
+                                       "project_name":  "medium_example04",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_04.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  4,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "XSS":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Minimization":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "SQL Injection":  0,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0,
+                                                                           "Data Lifecycle":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "article_detail"
+                                                                       },
+                                                          "category":  "XSS",
+                                                          "description":  "Comment content is rendered in template with safe filter.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "content"
+                                                                             ],
+                                                          "impact":  "Stored XSS can execute attacker scripts in readers\u0027 browsers.",
+                                                          "code_snippet":  "{{ c.content|safe }}",
+                                                          "fixed_code_snippet":  "# fixed implementation"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  7,
+                                                                           "class_or_function":  "UserProfile"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "phone and id_card are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "id_card"
+                                                                             ],
+                                                          "impact":  "Sensitive personal data is exposed if database leaks.",
+                                                          "code_snippet":  "id_card = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "UserProfile"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "occupation and medical_history are unnecessary for comment business.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "occupation",
+                                                                                 "medical_history"
+                                                                             ],
+                                                          "impact":  "Collecting unnecessary data increases compliance burden.",
+                                                          "code_snippet":  "medical_history = models.TextField()",
+                                                          "fixed_code_snippet":  "# remove unnecessary fields from payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  26,
+                                                                           "class_or_function":  "create_comment"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "marketing_agree defaults to True without explicit opt-in.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "marketing_agree"
+                                                                             ],
+                                                          "impact":  "No valid consent trace for marketing data processing.",
+                                                          "code_snippet":  "\"marketing_agree\": True",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "UserProfileSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "User list serializer returns all fields including sensitive ones.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields"
+                                                                             ],
+                                                          "impact":  "API exposes more personal data than required.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example05",
+                        "report":  {
+                                       "project_name":  "medium_example05",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_05.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  2,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Hardcoded Secrets":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Sensitive Logging":  1,
+                                                                           "Data Minimization":  0,
+                                                                           "Missing Consent":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  35,
+                                                                           "class_or_function":  "pay"
+                                                                       },
+                                                          "category":  "Hardcoded Secrets",
+                                                          "description":  "Stripe API key is hardcoded in view logic and sensitive keys are also fixed in settings.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "stripe_api_key",
+                                                                                 "STRIPE_API_KEY",
+                                                                                 "PAYMENT_DB_PASSWORD",
+                                                                                 "PAYMENT_ENCRYPTION_KEY"
+                                                                             ],
+                                                          "impact":  "Leaked source code directly exposes production-like secrets and enables unauthorized third-party payment operations.",
+                                                          "code_snippet":  "stripe_api_key = \"sk_live_medium05_hardcoded_in_view_001\"",
+                                                          "fixed_code_snippet":  "JWT_SECRET = os.getenv(\u0027JWT_SECRET\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "UserProfile"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "User phone and bank_account are stored in plaintext without masking or encryption.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "bank_account"
+                                                                             ],
+                                                          "impact":  "Database leakage can disclose financial account and contact data.",
+                                                          "code_snippet":  "bank_account = models.CharField(max_length=64)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  60,
+                                                                           "class_or_function":  "admin_users"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Admin user listing endpoint lacks any authentication/authorization check.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "username",
+                                                                                 "email",
+                                                                                 "phone",
+                                                                                 "bank_account"
+                                                                             ],
+                                                          "impact":  "Any unauthenticated caller can enumerate sensitive user profile data.",
+                                                          "code_snippet":  "def admin_users(request: HttpRequest) -\u003e HttpResponse:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "TransactionSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Transaction API serializer returns all model fields including card_number.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "card_number",
+                                                                                 "fields"
+                                                                             ],
+                                                          "impact":  "Downstream clients receive unnecessary sensitive data, increasing disclosure risk.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  39,
+                                                                           "class_or_function":  "pay"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Payment log records full card number and amount in plaintext.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "card_number",
+                                                                                 "amount"
+                                                                             ],
+                                                          "impact":  "Compromised logs expose payment details and can violate compliance requirements.",
+                                                          "code_snippet":  "logger.warning(\"payment_request card=%s amount=%s\", card_number, amount)",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example06",
+                        "report":  {
+                                       "project_name":  "medium_example06",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_06.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  1,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Data Over-exposure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Data Minimization":  1,
+                                                                           "Data Lifecycle":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "SurveyResponseSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Survey results serializer uses fields=\u0027__all__\u0027, returning all response fields including IP and sensitive profile linkage.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields",
+                                                                                 "ip_address",
+                                                                                 "id_card"
+                                                                             ],
+                                                          "impact":  "Result API discloses unnecessary personal and behavioral attributes to clients.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "UserProfile"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "phone and id_card are stored in plaintext without encryption or masking.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "id_card"
+                                                                             ],
+                                                          "impact":  "A database leak directly exposes identity and contact data.",
+                                                          "code_snippet":  "id_card = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  44,
+                                                                           "class_or_function":  "survey_submit"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "System records IP and behavior data during submission without explicit consent evidence.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "ip_address"
+                                                                             ],
+                                                          "impact":  "Personal data processing lacks legal basis traceability.",
+                                                          "code_snippet":  "ip_address=user_ip",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  42,
+                                                                           "class_or_function":  "survey_submit"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "family_income is collected though not required for questionnaire functionality.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "family_income"
+                                                                             ],
+                                                          "impact":  "Collecting excessive data increases compliance and breach risk.",
+                                                          "code_snippet":  "family_income=request.POST.get(\"family_income\", \"\")",
+                                                          "fixed_code_snippet":  "# remove unnecessary fields from payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  51,
+                                                                           "class_or_function":  "survey_results"
+                                                                       },
+                                                          "category":  "Data Lifecycle",
+                                                          "description":  "All historical survey responses are returned with no retention or deletion policy.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "submitted_at"
+                                                                             ],
+                                                          "impact":  "Data may be retained indefinitely beyond legitimate business purpose.",
+                                                          "code_snippet":  "SurveyResponse.objects.select_related(\"user\", \"survey\").all().order_by(\"-submitted_at\")",
+                                                          "fixed_code_snippet":  "# fixed implementation"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example07",
+                        "report":  {
+                                       "project_name":  "medium_example07",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_07.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  2,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Missing Consent":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Minimization":  1,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Sensitive Logging":  1,
+                                                                           "Data Over-exposure":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "PatientProfile"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "marketing_agree and data_collection_consent default to True without consent timestamp/content or withdrawal flow.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "marketing_agree",
+                                                                                 "data_collection_consent"
+                                                                             ],
+                                                          "impact":  "System cannot prove valid consent or support consent revocation.",
+                                                          "code_snippet":  "marketing_agree = models.BooleanField(default=True)",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  6,
+                                                                           "class_or_function":  "PatientProfile"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "id_card, medical_history and allergies are stored directly in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "id_card",
+                                                                                 "medical_history",
+                                                                                 "allergies"
+                                                                             ],
+                                                          "impact":  "Medical and identity data can be directly disclosed if data storage is compromised.",
+                                                          "code_snippet":  "id_card = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  10,
+                                                                           "class_or_function":  "PatientProfile"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "emergency_contact_id is collected though not required for basic appointment booking.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "emergency_contact_id"
+                                                                             ],
+                                                          "impact":  "Over-collection expands sensitive data scope unnecessarily.",
+                                                          "code_snippet":  "emergency_contact_id = models.CharField(max_length=64)",
+                                                          "fixed_code_snippet":  "# remove unnecessary fields from payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  49,
+                                                                           "class_or_function":  "appointments"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Appointment list only checks logged-in state and exposes all patients\u0027 appointments to any authenticated user.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "patient"
+                                                                             ],
+                                                          "impact":  "Ordinary users can access other patients\u0027 medical booking records.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "appointment_book"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Booking endpoint logs complete request body containing sensitive medical history.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "medical_history",
+                                                                                 "id_card"
+                                                                             ],
+                                                          "impact":  "Application logs may leak protected health information.",
+                                                          "code_snippet":  "logger.warning(\"appointment_request=%s\", request.POST.dict())",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example08",
+                        "report":  {
+                                       "project_name":  "medium_example08",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_08.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  2,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Data Minimization":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "SQL Injection":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  27,
+                                                                           "class_or_function":  "activity_signup"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "Signup form collects passport_no, medical_history, marital_status, religion and family_income unrelated to community activity participation.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "passport_no",
+                                                                                 "medical_history",
+                                                                                 "marital_status",
+                                                                                 "religion",
+                                                                                 "family_income"
+                                                                             ],
+                                                          "impact":  "Unnecessary personal data collection raises privacy and compliance risk.",
+                                                          "code_snippet":  "passport_no=request.POST.get(\"passport_no\", \"\")",
+                                                          "fixed_code_snippet":  "# remove unnecessary fields from payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  19,
+                                                                           "class_or_function":  "Participant"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "passport_no and phone are stored in plaintext without protection.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "passport_no",
+                                                                                 "phone"
+                                                                             ],
+                                                          "impact":  "Sensitive identifiers can be directly exposed from data storage.",
+                                                          "code_snippet":  "passport_no = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "ParticipantSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Participant list serializer exposes all fields including sensitive identifiers.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields",
+                                                                                 "passport_no",
+                                                                                 "phone"
+                                                                             ],
+                                                          "impact":  "API consumers receive more personal data than required.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  42,
+                                                                           "class_or_function":  "activities"
+                                                                       },
+                                                          "category":  "SQL Injection",
+                                                          "description":  "Search endpoint builds SQL query by direct string concatenation.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "q"
+                                                                             ],
+                                                          "impact":  "Attackers can manipulate SQL to read or tamper backend data.",
+                                                          "code_snippet":  "raw_sql = f\"SELECT * FROM core_activity WHERE name LIKE \u0027%{keyword}%\u0027\"",
+                                                          "fixed_code_snippet":  "rows = Model.objects.filter(name__icontains=keyword).order_by(\u0027id\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  33,
+                                                                           "class_or_function":  "activity_signup"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "System stores extra personal attributes without recording explicit consent.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "activity",
+                                                                                 "passport_no",
+                                                                                 "religion"
+                                                                             ],
+                                                          "impact":  "No auditable legal basis for processing additional personal attributes.",
+                                                          "code_snippet":  "activity=activity",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example09",
+                        "report":  {
+                                       "project_name":  "medium_example08",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_08.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  2,
+                                                                           "high":  3,
+                                                                           "medium":  0,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Data Minimization":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "SQL Injection":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Unauthorized Access":  0,
+                                                                           "Data Lifecycle":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  27,
+                                                                           "class_or_function":  "activity_signup"
+                                                                       },
+                                                          "category":  "Data Minimization",
+                                                          "description":  "Signup form collects passport_no, medical_history, marital_status, religion and family_income unrelated to community activity participation.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "passport_no",
+                                                                                 "medical_history",
+                                                                                 "marital_status",
+                                                                                 "religion",
+                                                                                 "family_income"
+                                                                             ],
+                                                          "impact":  "Unnecessary personal data collection raises privacy and compliance risk.",
+                                                          "code_snippet":  "passport_no=request.POST.get(\"passport_no\", \"\")",
+                                                          "fixed_code_snippet":  "# remove unnecessary fields from payload"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  19,
+                                                                           "class_or_function":  "Participant"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "passport_no and phone are stored in plaintext without protection.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "passport_no",
+                                                                                 "phone"
+                                                                             ],
+                                                          "impact":  "Sensitive identifiers can be directly exposed from data storage.",
+                                                          "code_snippet":  "passport_no = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "ParticipantSerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Participant list serializer exposes all fields including sensitive identifiers.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "fields",
+                                                                                 "passport_no",
+                                                                                 "phone"
+                                                                             ],
+                                                          "impact":  "API consumers receive more personal data than required.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  42,
+                                                                           "class_or_function":  "activities"
+                                                                       },
+                                                          "category":  "SQL Injection",
+                                                          "description":  "Search endpoint builds SQL query by direct string concatenation.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "q"
+                                                                             ],
+                                                          "impact":  "Attackers can manipulate SQL to read or tamper backend data.",
+                                                          "code_snippet":  "raw_sql = f\"SELECT * FROM core_activity WHERE name LIKE \u0027%{keyword}%\u0027\"",
+                                                          "fixed_code_snippet":  "rows = Model.objects.filter(name__icontains=keyword).order_by(\u0027id\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  33,
+                                                                           "class_or_function":  "activity_signup"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "System stores extra personal attributes without recording explicit consent.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "activity",
+                                                                                 "passport_no",
+                                                                                 "religion"
+                                                                             ],
+                                                          "impact":  "No auditable legal basis for processing additional personal attributes.",
+                                                          "code_snippet":  "activity=activity",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example10",
+                        "report":  {
+                                       "project_name":  "medium_example10",
+                                       "difficulty_level":  "medium",
+                                       "source_vuln_plan":  "vuln_plan_medium_10.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  5,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  2,
+                                                                           "high":  2,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Data Lifecycle":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Data Over-exposure":  1,
+                                                                           "Missing Consent":  1,
+                                                                           "Unauthorized Access":  1,
+                                                                           "Data Minimization":  0,
+                                                                           "SQL Injection":  0,
+                                                                           "XSS":  0,
+                                                                           "Sensitive Logging":  0,
+                                                                           "Hardcoded Secrets":  0
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  83,
+                                                                           "class_or_function":  "delete_user"
+                                                                       },
+                                                          "category":  "Data Lifecycle",
+                                                          "description":  "Deleting user profile does not delete or anonymize existing activity logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "user_id_path",
+                                                                                 "UserActivity.user"
+                                                                             ],
+                                                          "impact":  "Behavioral traces remain indefinitely after account deletion.",
+                                                          "code_snippet":  "# Data Lifecycle: 鍒犻櫎鐢ㄦ埛鏃讹紝琛屼负璁板綍涓嶆竻闄や篃涓嶅尶鍚嶅寲",
+                                                          "fixed_code_snippet":  "# fixed implementation"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "UserProfile"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "phone and id_card are stored in plaintext in user profile.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "phone",
+                                                                                 "id_card"
+                                                                             ],
+                                                          "impact":  "Any database leak directly discloses identity and contact data.",
+                                                          "code_snippet":  "id_card = models.CharField(max_length=32)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/serializers.py",
+                                                                           "line":  9,
+                                                                           "class_or_function":  "UserActivitySerializer.Meta"
+                                                                       },
+                                                          "category":  "Data Over-exposure",
+                                                          "description":  "Activity API returns all fields including ip_address and full user_agent.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "ip_address",
+                                                                                 "user_agent",
+                                                                                 "fields"
+                                                                             ],
+                                                          "impact":  "Excessive client visibility of tracking data increases privacy risk.",
+                                                          "code_snippet":  "fields = \"__all__\"",
+                                                          "fixed_code_snippet":  "serializer = SafeSerializer(queryset, many=True)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  45,
+                                                                           "class_or_function":  "track"
+                                                                       },
+                                                          "category":  "Missing Consent",
+                                                          "description":  "Tracking endpoint stores IP and user agent without dedicated user consent record.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "ip_address",
+                                                                                 "user_agent"
+                                                                             ],
+                                                          "impact":  "Personal behavior tracking lacks auditable lawful basis.",
+                                                          "code_snippet":  "# Missing Consent: 杩借釜琛屼负鍓嶆湭璁板綍鍗曠嫭鐭ユ儏鍚屾剰",
+                                                          "fixed_code_snippet":  "if not consent: return JsonResponse({\u0027error\u0027:\u0027consent required\u0027}, status=400); consent_at = timezone.now()"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  66,
+                                                                           "class_or_function":  "activities"
+                                                                       },
+                                                          "category":  "Unauthorized Access",
+                                                          "description":  "Activities endpoint exposes all users\u0027 behavior logs without ownership checks.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "activities",
+                                                                                 "user"
+                                                                             ],
+                                                          "impact":  "Any authenticated or implied session can read all user tracking data.",
+                                                          "code_snippet":  "records = UserActivity.objects.select_related(\"user\").all().order_by(\"-timestamp\")",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      }
+                                                  ]
+                                   }
+                    }
+                ]
+}

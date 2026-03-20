@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>管理员页面</title></head>
+<body>
+<h1>管理员页面（admin.html）</h1>
+<form method="post" action="/admin-page/">{% csrf_token %}
+  <input name="username" placeholder="username">
+  <input name="company" placeholder="company">
+  <input name="name" placeholder="name">
+  <input name="id_card" placeholder="id_card">
+  <input name="ssn" placeholder="ssn">
+  <input name="phone" placeholder="phone">
+  <input name="salary" placeholder="salary">
+  <input name="bank_account" placeholder="bank_account">
+  <input name="home_address" placeholder="home_address">
+  <textarea name="medical_info" placeholder="medical_info"></textarea>
+  <button type="submit">创建员工</button>
+</form>
+<pre>{% for e in employees %}{{ e.id }} {{ e.name }} {{ e.bank_account }}
+{% endfor %}</pre>
+</body></html>

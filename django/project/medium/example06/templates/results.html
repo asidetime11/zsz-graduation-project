@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>调查结果页</title>
+</head>
+<body>
+    <h2>问卷调查结果</h2>
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户ID</th>
+                <th>问卷ID</th>
+                <th>答案</th>
+                <th>家庭收入</th>
+                <th>提交时间</th>
+                <th>IP地址</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in responses %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.user }}</td>
+                <td>{{ r.survey }}</td>
+                <td>{{ r.answers }}</td>
+                <td>{{ r.family_income }}</td>
+                <td>{{ r.submitted_at }}</td>
+                <td>{{ r.ip_address }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">返回问卷页</a></p>
+</body>
+</html>

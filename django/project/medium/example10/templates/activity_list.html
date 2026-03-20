@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>活动记录页</title>
+</head>
+<body>
+  <h1>活动记录页</h1>
+  <form method="get" action="/activities/">
+    <label>按行为筛选：<input type="text" name="action"></label>
+    <button type="submit">查询</button>
+  </form>
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>ID</th><th>用户ID</th><th>action</th><th>ip_address</th><th>user_agent</th><th>timestamp</th><th>session_id</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in activities %}
+      <tr>
+        <td>{{ a.id }}</td>
+        <td>{{ a.user }}</td>
+        <td>{{ a.action }}</td>
+        <td>{{ a.ip_address }}</td>
+        <td>{{ a.user_agent }}</td>
+        <td>{{ a.timestamp }}</td>
+        <td>{{ a.session_id }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><a href="/users/manage/">用户管理页</a> | <a href="/stats/">数据统计页</a></p>
+</body>
+</html>

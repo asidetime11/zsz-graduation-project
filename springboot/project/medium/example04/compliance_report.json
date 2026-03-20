@@ -1,0 +1,15 @@
+{
+    "project_name": "springboot_medium_example04",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_04.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {"by_severity": {"critical": 1, "high": 3, "medium": 0}, "by_category": {"Data Over-exposure": 1, "Unauthorized Access": 1, "Sensitive Logging": 1, "Data Minimization": 1}},
+    "issues": [
+        {"issue_id":"M04-001","location":{"file":"src/main/java/com/example/medium04/service/StaffService.java","line":12,"class_or_function":"list"},"category":"Data Over-exposure","description":"列表返回 salary 与 bankAccount。","severity":"high","related_fields":["salary","bankAccount"],"impact":"员工敏感数据泄露。","code_snippet":"d.salary=s.getSalary(); d.bankAccount=s.getBankAccount();","fixed_code_snippet":"d.salary=null; d.bankAccount=mask(s.getBankAccount());"},
+        {"issue_id":"M04-002","location":{"file":"src/main/java/com/example/medium04/controller/StaffController.java","line":12,"class_or_function":"detail"},"category":"Unauthorized Access","description":"任意 ID 可访问详情。","severity":"critical","related_fields":["staffId"],"impact":"越权查看档案。","code_snippet":"return service.detail(staffId);","fixed_code_snippet":"return service.detailOwnedBy(staffId,currentUserId);"},
+        {"issue_id":"M04-003","location":{"file":"src/main/java/com/example/medium04/service/StaffService.java","line":14,"class_or_function":"export"},"category":"Sensitive Logging","description":"导出日志包含身份证。","severity":"high","related_fields":["idCard"],"impact":"日志泄露身份信息。","code_snippet":"log.info(\"export idCard={}\",s.getIdCard());","fixed_code_snippet":"log.info(\"export staffId={}\",s.getId());"},
+        {"issue_id":"M04-004","location":{"file":"src/main/java/com/example/medium04/entity/Staff.java","line":4,"class_or_function":"Staff"},"category":"Data Minimization","description":"采集 relativeIdCard 非必要。","severity":"high","related_fields":["relativeIdCard"],"impact":"扩大数据处理范围。","code_snippet":"private String relativeIdCard;","fixed_code_snippet":"// remove relativeIdCard field"
+        }
+    ]
+}

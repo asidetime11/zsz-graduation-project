@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>订阅用户</title></head><body>
+<h2>订阅用户列表</h2>
+<table border="1"><tr><th>ID</th><th>姓名</th><th>手机号</th><th>地址</th><th>取消状态</th></tr>
+<tr th:each="u : ${users}"><td th:text="${u.id}"></td><td th:text="${u.name}"></td><td th:text="${u.phone}"></td><td th:text="${u.address}"></td><td th:text="${u.canceled}"></td></tr>
+</table>
+<form method="post" action="/subscriptions/cancel">
+<input name="id" placeholder="输入ID注销"/><button type="submit">注销</button>
+</form>
+</body></html>

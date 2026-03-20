@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Intel Result</h2>
+<table>
+    <tr><th>id</th><th>title</th><th>supplier</th></tr>
+    <tr th:each="r : ${rows}">
+        <td th:text="${r.id}"></td>
+        <td th:text="${r.title}"></td>
+        <td th:text="${r.supplier != null ? r.supplier.supplierName : ''}"></td>
+    </tr>
+</table>
+</body>
+</html>

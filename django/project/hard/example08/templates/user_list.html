@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>用户列表</title></head>
+<body>
+  <h1>用户列表</h1>
+  <p>org_id: {{ org_id }}</p>
+  <ul>
+    {% for u in users %}
+      <li>
+        {{ u.id }} - {{ u.username }} - {{ u.email }}
+        <a href="/users/user_id_path/?org_id={{ u.org }}&user_id={{ u.id }}">详情</a>
+      </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

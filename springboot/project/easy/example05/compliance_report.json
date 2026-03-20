@@ -1,0 +1,16 @@
+{
+    "project_name": "springboot_easy_example05",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_05.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 1, "high": 2, "medium": 0},
+        "by_category": {"Unauthorized Access": 1, "Data Over-exposure": 1, "Sensitive Logging": 1}
+    },
+    "issues": [
+        {"issue_id": "E05-001", "location": {"file": "src/main/java/com/example/easy05/controller/EmployeeController.java", "line": 24, "class_or_function": "detail"}, "category": "Unauthorized Access", "description": "按员工ID直接查询详情且无归属校验。", "severity": "critical", "related_fields": ["id"], "impact": "任意用户可访问他人信息。", "code_snippet": "repository.findById(id)", "fixed_code_snippet": "if (!employee.getOwnerUserId().equals(currentUserId)) { return \"error/403\"; }"},
+        {"issue_id": "E05-002", "location": {"file": "src/main/resources/templates/employee_detail.html", "line": 7, "class_or_function": "detail"}, "category": "Data Over-exposure", "description": "详情页直接返回薪资和银行卡。", "severity": "high", "related_fields": ["salary", "bankAccount"], "impact": "敏感薪酬与金融信息暴露。", "code_snippet": "<span th:text=\"${employee.salary}\"></span>", "fixed_code_snippet": "<span th:if=\"${isHr}\" th:text=\"${employee.salary}\"></span>"},
+        {"issue_id": "E05-003", "location": {"file": "src/main/java/com/example/easy05/controller/EmployeeController.java", "line": 27, "class_or_function": "detail"}, "category": "Sensitive Logging", "description": "日志打印完整身份证号。", "severity": "high", "related_fields": ["idCard"], "impact": "日志泄露身份证。", "code_snippet": "log.info(\"employee detail query idCard={}\", employee.getIdCard());", "fixed_code_snippet": "log.info(\"employee detail query employeeId={}\", employee.getId());"}
+    ]
+}

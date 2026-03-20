@@ -1,0 +1,1 @@
+const express=require('express');const c=require('../controllers/graphqlController');const r=express.Router();r.get('/',c.playground);r.get('/graphql_playground',c.playground);r.get('/user_data_view',c.dataView);r.get('/graphql_detail',c.detail);r.post('/graphql',c.graphql);module.exports=r;

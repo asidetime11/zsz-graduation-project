@@ -1,0 +1,10 @@
+server:
+  port: 8203
+spring:
+  datasource:
+    url: jdbc:h2:mem:medium03db
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update

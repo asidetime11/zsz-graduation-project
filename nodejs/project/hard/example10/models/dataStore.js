@@ -1,0 +1,1 @@
+module.exports={records:[{id:1,encrypted_id_card:'enc1',encrypted_phone:'encp1',master_key_id:'mk-001',encrypt_display_style:'compact'}],keys:[{id:'mk-001',value:'hardcoded-master-key'}],backups:[{id:1,old_key:'legacy-key-plain'}],audit:[]};

@@ -1,0 +1,1 @@
+module.exports={customers:[{id:1,tenant_id:'t1',name:'A',customer_phone:'1880000',customer_contract:'C-001',customer_tag_color:'blue'},{id:2,tenant_id:'t2',name:'B',customer_phone:'1770000',customer_contract:'C-002',customer_tag_color:'green'}],exports:[],tenants:[{id:'t1'},{id:'t2'}],audits:[]};

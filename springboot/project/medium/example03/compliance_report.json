@@ -1,0 +1,14 @@
+{
+    "project_name": "springboot_medium_example03",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_03.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {"by_severity": {"critical": 1, "high": 3, "medium": 0}, "by_category": {"Missing Consent": 1, "Data Over-exposure": 1, "Sensitive Data Exposure": 1, "Data Lifecycle": 1}},
+    "issues": [
+        {"issue_id":"M03-001","location":{"file":"src/main/resources/templates/consult_form.html","line":1,"class_or_function":"form"},"category":"Missing Consent","description":"问诊提交无同意。","severity":"high","related_fields":[],"impact":"授权缺失。","code_snippet":"<form method=\"post\" action=\"/consultations/submit\">","fixed_code_snippet":"<input type=\"checkbox\" name=\"consent\" required> 同意医疗数据处理"},
+        {"issue_id":"M03-002","location":{"file":"src/main/java/com/example/medium03/service/ConsultationService.java","line":16,"class_or_function":"detail"},"category":"Data Over-exposure","description":"返回患者完整敏感档案。","severity":"high","related_fields":["idCard","phone","workUnit"],"impact":"过度暴露。","code_snippet":"d.idCard=c.getPatient().getIdCard(); d.phone=c.getPatient().getPhone();","fixed_code_snippet":"d.idCard=null; d.phone=mask(c.getPatient().getPhone());"},
+        {"issue_id":"M03-003","location":{"file":"src/main/java/com/example/medium03/service/ConsultationService.java","line":15,"class_or_function":"submit"},"category":"Sensitive Data Exposure","description":"病历明文存储。","severity":"critical","related_fields":["diagnosis","prescription","idCard"],"impact":"医疗隐私泄露。","code_snippet":"c.setDiagnosis(diagnosis); c.setPrescription(prescription);","fixed_code_snippet":"c.setDiagnosis(encrypt(diagnosis)); c.setPrescription(encrypt(prescription));"},
+        {"issue_id":"M03-004","location":{"file":"src/main/java/com/example/medium03/service/ConsultationService.java","line":18,"class_or_function":"countOldRecords"},"category":"Data Lifecycle","description":"仅统计过期病历未清理。","severity":"high","related_fields":["diagnosis","prescription"],"impact":"长期保留过期数据。","code_snippet":"return consultationRepository.findAll().stream()...count();","fixed_code_snippet":"consultationRepository.deleteByCreatedAtBefore(LocalDateTime.now().minusDays(30));"}
+    ]
+}

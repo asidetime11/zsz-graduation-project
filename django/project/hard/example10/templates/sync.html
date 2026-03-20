@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>数据同步页</title></head>
+<body>
+  <h1>同步到第三方</h1>
+  <form method="post" action="/profile/sync/">
+    {% csrf_token %}
+    <label>user_id: <input name="user_id"></label><br>
+    <label>endpoint: <input name="endpoint" value="https://ad.example.com/sync"></label><br>
+    <label>triggered_by: <input name="triggered_by" value="operator"></label><br>
+    <button type="submit">同步</button>
+  </form>
+</body>
+</html>

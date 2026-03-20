@@ -1,0 +1,8 @@
+<html>
+<head><title>openapi_console</title></head>
+<body>
+    <h1>openapi_console.ejs</h1>
+    <button onclick="fetch('/api/me').then(r=>r.json()).then(d=>alert(JSON.stringify(d)))">GET /api/me</button>
+    <button onclick="fetch('/api/me/orders').then(r=>r.json()).then(d=>alert(JSON.stringify(d)))">GET /api/me/orders</button>
+</body>
+</html>

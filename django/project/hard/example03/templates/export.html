@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>导出任务页</title>
+</head>
+<body>
+    <h1>导出任务页</h1>
+    <p>
+        <a href="/admin-page/">管理员页面</a> |
+        <a href="/notifications/">通知记录</a>
+    </p>
+
+    <form method="post" action="/export/start/">
+        {% csrf_token %}
+        <label>用户名：<input type="text" name="username" required></label><br><br>
+        <label>档案姓名（可选）：<input type="text" name="name"></label><br><br>
+        <label>扩展导出内容：<input type="text" name="extra" value="all-columns"></label><br><br>
+        <button type="submit">发起导出</button>
+    </form>
+
+    <h3>最近任务</h3>
+    <ul>
+        {% for task in tasks %}
+        <li>#{{ task.id }} - {{ task.user.username }} - {{ task.status }} - <a href="/export/status/{{ task.id }}/">查看</a></li>
+        {% empty %}
+        <li>暂无任务</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

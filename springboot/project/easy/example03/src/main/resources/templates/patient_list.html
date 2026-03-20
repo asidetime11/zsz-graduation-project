@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>患者列表</title></head><body>
+<h2>患者列表</h2>
+<table border="1">
+<tr><th>ID</th><th>姓名</th><th>证件号</th><th>病史</th><th>电话</th><th>职业</th></tr>
+<tr th:each="p : ${patients}">
+<td th:text="${p.id}"></td><td th:text="${p.name}"></td><td th:text="${p.idCard}"></td><td th:text="${p.medicalHistory}"></td><td th:text="${p.phone}"></td><td th:text="${p.occupation}"></td>
+</tr></table>
+</body></html>

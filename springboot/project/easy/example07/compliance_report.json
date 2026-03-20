@@ -1,0 +1,16 @@
+{
+    "project_name": "springboot_easy_example07",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_07.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 1, "high": 2, "medium": 0},
+        "by_category": {"SQL Injection": 1, "Data Over-exposure": 1, "Sensitive Logging": 1}
+    },
+    "issues": [
+        {"issue_id": "E07-001", "location": {"file": "src/main/java/com/example/easy07/controller/CustomerController.java", "line": 33, "class_or_function": "search"}, "category": "SQL Injection", "description": "kw 直接拼接进 SQL。", "severity": "critical", "related_fields": ["kw"], "impact": "攻击者可构造注入语句读取/篡改数据。", "code_snippet": "\"... like '%\" + kw + \"%'\"", "fixed_code_snippet": "Query query = entityManager.createNativeQuery(\"select * from customer where name like :kw\"); query.setParameter(\"kw\", \"%\" + kw + \"%\");"},
+        {"issue_id": "E07-002", "location": {"file": "src/main/resources/templates/customer_list.html", "line": 4, "class_or_function": "customers"}, "category": "Data Over-exposure", "description": "搜索结果返回全部字段。", "severity": "high", "related_fields": ["idCard", "phone", "bankAccount"], "impact": "批量暴露敏感字段。", "code_snippet": "<td th:text=\"${c.idCard}\"></td>", "fixed_code_snippet": "<td th:text=\"${c.name}\"></td><td th:text=\"${c.level}\"></td>"},
+        {"issue_id": "E07-003", "location": {"file": "src/main/java/com/example/easy07/controller/CustomerController.java", "line": 32, "class_or_function": "search"}, "category": "Sensitive Logging", "description": "日志记录原始查询参数。", "severity": "high", "related_fields": ["kw"], "impact": "日志中包含潜在敏感检索词。", "code_snippet": "log.info(\"search kw={}\", kw);", "fixed_code_snippet": "log.info(\"search resultCount={}\", customers.size());"}
+    ]
+}

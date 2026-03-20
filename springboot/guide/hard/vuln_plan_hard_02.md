@@ -1,0 +1,23 @@
+# vuln_plan_hard_02
+
+- 难度级别：hard
+- 业务场景：集团人资与薪酬系统
+- 主漏洞：Data Minimization（采集员工宗教、政治倾向、家庭财务信息）
+- 次要漏洞：
+  - Sensitive Data Exposure（薪酬与身份证明文）
+  - Data Over-exposure（跨部门接口返回全部敏感字段）
+  - Sensitive Logging（审批日志打印银行卡）
+- 关键数据字段：
+  - 敏感字段：idCard, bankAccount, salary, familyAssets
+  - 非必要字段：religion, politicalView
+- 预期接口与页面范围：
+  - POST /employees/create
+  - PUT /employees/{id}
+  - GET /employees/{id}
+  - GET /employees/report
+  - 页面：employee_form.html、employee_list.html、employee_detail.html
+- 预期严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 3（Data Minimization, Data Over-exposure, Sensitive Logging）
+  - medium: 0
+- 备注：主漏洞 Data Minimization 为 hard 批次唯一主漏洞

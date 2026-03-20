@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Archive List</h2>
+<table>
+    <tr><th>memberId</th><th>idCard</th><th>phone</th><th>reason</th></tr>
+    <tr th:each="a : ${archives}">
+        <td th:text="${a.memberId}"></td>
+        <td th:text="${a.idCard}"></td>
+        <td th:text="${a.phone}"></td>
+        <td th:text="${a.reason}"></td>
+    </tr>
+</table>
+</body>
+</html>

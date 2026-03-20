@@ -1,0 +1,1 @@
+package com.example.medium04; import org.springframework.boot.*; import org.springframework.boot.autoconfigure.*; @SpringBootApplication public class Medium04Application{ public static void main(String[] args){ SpringApplication.run(Medium04Application.class,args);} }

@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_hard_example03",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_03.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 3,
+            "high": 1,
+            "medium": 0
+        },
+        "by_category": {
+            "Missing Consent": 1,
+            "Sensitive Data Exposure": 1,
+            "Hardcoded Secrets": 1,
+            "Unauthorized Access": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H03-001",
+            "location": {
+                "file": "src/main/java/com/example/hard03/service/CreditCaseService.java",
+                "line": 37,
+                "class_or_function": "apply"
+            },
+            "category": "Missing Consent",
+            "description": "征信、通讯录、设备指纹采集前未进行授权校验。",
+            "severity": "high",
+            "related_fields": ["creditReport", "contacts", "deviceFingerprint"],
+            "impact": "无合法授权依据处理高敏数据。",
+            "code_snippet": "consent.setCreditReportConsent(false); ... c.setCreditReport(creditReport);",
+            "fixed_code_snippet": "if (!consent.isCreditReportConsent() || !consent.isContactsConsent() || !consent.isDeviceFingerprintConsent()) { throw new IllegalStateException(\"consent required\"); }"
+        },
+        {
+            "issue_id": "H03-002",
+            "location": {
+                "file": "src/main/java/com/example/hard03/entity/CreditCase.java",
+                "line": 10,
+                "class_or_function": "CreditCase"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "creditReport 明文存储。",
+            "severity": "critical",
+            "related_fields": ["creditReport"],
+            "impact": "征信报告泄露可直接影响个人金融安全。",
+            "code_snippet": "private String creditReport;",
+            "fixed_code_snippet": "private String creditReportCipher;"
+        },
+        {
+            "issue_id": "H03-003",
+            "location": {
+                "file": "src/main/java/com/example/hard03/service/CreditCaseService.java",
+                "line": 16,
+                "class_or_function": "RISK_VENDOR_KEY"
+            },
+            "category": "Hardcoded Secrets",
+            "description": "第三方风控密钥硬编码在源码。",
+            "severity": "critical",
+            "related_fields": [],
+            "impact": "密钥泄露后可被伪造调用。",
+            "code_snippet": "private static final String RISK_VENDOR_KEY = \"RISK-SECRET-KEY-3P-778899\";",
+            "fixed_code_snippet": "@Value(\"${risk.vendor.key}\") private String riskVendorKey;"
+        },
+        {
+            "issue_id": "H03-004",
+            "location": {
+                "file": "src/main/java/com/example/hard03/service/CreditCaseService.java",
+                "line": 52,
+                "class_or_function": "detail"
+            },
+            "category": "Unauthorized Access",
+            "description": "客户经理访问案件详情未校验组归属。",
+            "severity": "critical",
+            "related_fields": ["id"],
+            "impact": "可查看其他组案件信息。",
+            "code_snippet": "return creditCaseRepository.findById(id).orElseThrow();",
+            "fixed_code_snippet": "return creditCaseRepository.findByIdAndManagerGroup_GroupName(id, currentGroup).orElseThrow();"
+        }
+    ]
+}

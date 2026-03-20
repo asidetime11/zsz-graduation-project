@@ -1,0 +1,11 @@
+<h1>发帖</h1>
+<form method="post" action="/posts/create/">
+  {% csrf_token %}
+  <input type="text" name="username" placeholder="用户名"><br>
+  <input type="email" name="email" placeholder="邮箱"><br>
+  <input type="text" name="phone" placeholder="手机号"><br>
+  <textarea name="bio" placeholder="简介"></textarea><br>
+  <input type="text" name="title" placeholder="标题"><br>
+  <textarea name="content" placeholder="内容"></textarea><br>
+  <button type="submit">提交</button>
+</form>

@@ -1,0 +1,16 @@
+<html>
+<head><title>otp_login</title></head>
+<body>
+    <h1>otp_login.ejs</h1>
+    <form method="POST" action="/api/auth/send-otp">
+        <input name="phone" placeholder="phone" />
+        <input name="referrer_phone" placeholder="referrer_phone" />
+        <button type="submit">send otp</button>
+    </form>
+    <form method="POST" action="/api/auth/otp-login">
+        <input name="phone" placeholder="phone" />
+        <input name="otp_code" placeholder="otp_code" />
+        <button type="submit">login</button>
+    </form>
+</body>
+</html>

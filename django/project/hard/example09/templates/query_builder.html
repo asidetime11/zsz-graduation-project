@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>查询构建页</title></head>
+<body>
+  <h1>动态查询构建</h1>
+  <form method="get" action="/analytics/query/">
+    <label>metric: <input name="metric" value="COUNT(*)"></label><br>
+    <label>group_by: <input name="group_by" value="user_id"></label><br>
+    <label>having: <input name="having" value="1=1"></label><br>
+    <button type="submit">执行</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "project_name": "springboot_easy_example09",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_09.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 0, "high": 3, "medium": 0},
+        "by_category": {"Sensitive Logging": 1, "Data Minimization": 1, "Missing Consent": 1}
+    },
+    "issues": [
+        {"issue_id": "E09-001", "location": {"file": "src/main/java/com/example/easy09/controller/TicketController.java", "line": 29, "class_or_function": "create"}, "category": "Sensitive Logging", "description": "日志打印身份证、手机号、地址。", "severity": "high", "related_fields": ["idCard", "phone", "address"], "impact": "日志系统泄露敏感信息。", "code_snippet": "log.info(\"create ticket idCard={}, phone={}, address={}\", ...)", "fixed_code_snippet": "log.info(\"create ticket userId={}, ticketType={}\", userId, ticketType);"},
+        {"issue_id": "E09-002", "location": {"file": "src/main/resources/templates/ticket_form.html", "line": 9, "class_or_function": "form"}, "category": "Data Minimization", "description": "采集 familyAddress 与工单处理无关。", "severity": "high", "related_fields": ["familyAddress"], "impact": "扩大数据收集边界。", "code_snippet": "<input name=\"familyAddress\"/>", "fixed_code_snippet": "<input name=\"contactPhone\"/>"},
+        {"issue_id": "E09-003", "location": {"file": "src/main/resources/templates/ticket_form.html", "line": 4, "class_or_function": "form"}, "category": "Missing Consent", "description": "无日志告知与同意。", "severity": "high", "related_fields": [], "impact": "用户未授权日志处理。", "code_snippet": "<form method=\"post\" action=\"/tickets/create\">", "fixed_code_snippet": "<input type=\"checkbox\" name=\"logConsent\" required> 我同意工单日志处理"}
+    ]
+}

@@ -1,0 +1,18 @@
+<html>
+<head><title>policy_edit</title></head>
+<body>
+    <h1>policy_edit.ejs</h1>
+    <form method="POST" action="/api/policy/update-beneficiary">
+        <input name="policy_no" placeholder="policy_no" />
+        <input name="beneficiary_name" placeholder="beneficiary_name" />
+        <input name="beneficiary_id_card" placeholder="beneficiary_id_card" />
+        <input name="beneficiary_hobby" placeholder="beneficiary_hobby" />
+        <button type="submit">update</button>
+    </form>
+    <ul>
+        <% policies.forEach(function(p){ %>
+            <li><%= p.policy_no %> - <%= p.beneficiary_name %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

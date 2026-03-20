@@ -1,0 +1,10 @@
+<!doctype html>
+<html><body>
+<h2>通讯录</h2>
+<ul>
+<% contacts.forEach(function(c){ %>
+<li><%= c.employee_no %> | <%= c.name %> | <%= c.mobile %> | <%= c.email %></li>
+<% }) %>
+</ul>
+<a href="/api/contacts/export">导出</a>
+</body></html>

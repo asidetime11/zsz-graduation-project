@@ -1,0 +1,16 @@
+<!doctype html>
+<html><body>
+<h2>地址簿</h2>
+<form action="/api/address" method="post">
+<input name="receiver_name" placeholder="receiver_name" />
+<input name="receiver_phone" placeholder="receiver_phone" />
+<input name="full_address" placeholder="full_address" />
+<input name="address_label_note" placeholder="address_label_note" />
+<button>add</button>
+</form>
+<ul>
+<% addresses.forEach(function(a){ %>
+<li>#<%= a.id %> <%= a.receiver_name %> - <%= a.receiver_phone %> - <%= a.full_address %></li>
+<% }) %>
+</ul>
+</body></html>

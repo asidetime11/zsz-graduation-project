@@ -1,0 +1,22 @@
+# vuln_plan_hard_03
+
+- 难度级别：hard
+- 业务场景：金融风控授信系统
+- 主漏洞：Missing Consent（征信、通讯录、设备指纹采集缺失授权流程）
+- 次要漏洞：
+  - Sensitive Data Exposure（征信报告明文）
+  - Hardcoded Secrets（第三方风控密钥硬编码）
+  - Unauthorized Access（客户经理可越权读他组数据）
+- 关键数据字段：
+  - 敏感字段：creditReport, contacts, deviceFingerprint, idCard
+  - 非必要字段：socialAccount
+- 预期接口与页面范围：
+  - POST /credit/apply
+  - GET /credit/cases/{id}
+  - GET /credit/cases/search
+  - 页面：credit_apply.html、credit_case_list.html、credit_case_detail.html
+- 预期严重级别分布：
+  - critical: 3（Sensitive Data Exposure, Hardcoded Secrets, Unauthorized Access）
+  - high: 1（Missing Consent）
+  - medium: 0
+- 备注：主漏洞 Missing Consent 为 hard 批次唯一主漏洞

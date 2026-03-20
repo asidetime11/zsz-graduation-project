@@ -1,0 +1,11 @@
+<html>
+<head><title>contract_list</title></head>
+<body>
+    <h1>contract_list.ejs</h1>
+    <ul>
+        <% contracts.forEach(function(c){ %>
+            <li><a href="/contract_preview/<%= c.docId %>"><%= c.docId %></a></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

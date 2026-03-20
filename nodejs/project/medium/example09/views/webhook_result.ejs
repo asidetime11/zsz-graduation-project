@@ -1,0 +1,11 @@
+<html>
+<head><title>webhook_result</title></head>
+<body>
+    <h1>webhook_result.ejs</h1>
+    <ul>
+        <% logs.forEach(function(l){ %>
+            <li>config_id=<%= l.config_id %> result=<%= l.result %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

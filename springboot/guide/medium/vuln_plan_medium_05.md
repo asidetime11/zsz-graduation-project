@@ -1,0 +1,22 @@
+# vuln_plan_medium_05
+
+- 难度级别：medium
+- 业务场景：物流运单管理平台
+- 主漏洞：Unauthorized Access（通过运单号直接查看他人运单详情）
+- 次要漏洞：
+  - Sensitive Data Exposure（收件人手机号与地址明文）
+  - Data Over-exposure（列表返回备注与证件字段）
+  - SQL Injection（关键字筛选拼接查询）
+- 关键数据字段：
+  - 敏感字段：receiverPhone, receiverAddress, idCard
+  - 非必要字段：extraRemark
+- 预期接口与页面范围：
+  - GET /shipments/{shipmentId}
+  - GET /shipments/list
+  - GET /shipments/search
+  - 页面：shipment_list.html、shipment_detail.html
+- 预期严重级别分布：
+  - critical: 2（Unauthorized Access, SQL Injection）
+  - high: 2（Sensitive Data Exposure, Data Over-exposure）
+  - medium: 0
+- 备注：主漏洞 Unauthorized Access 为 medium 批次唯一主漏洞

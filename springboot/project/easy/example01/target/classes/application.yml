@@ -1,0 +1,14 @@
+server:
+  port: 8101
+spring:
+  datasource:
+    url: jdbc:h2:mem:easy01db
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true

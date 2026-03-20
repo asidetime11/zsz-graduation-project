@@ -1,0 +1,13 @@
+{
+    "name": "medium-example04",
+    "version": "1.0.0",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "cookie-parser": "^1.4.7",
+        "ejs": "^3.1.10",
+        "express": "^4.21.2"
+    }
+}

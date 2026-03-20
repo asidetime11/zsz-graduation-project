@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>交易记录页</title>
+</head>
+<body>
+    <h1>交易记录页</h1>
+    <p>
+        <a href="/accounts/create/">开户</a> |
+        <a href="/accounts/">账户列表</a>
+    </p>
+
+    <form method="post" action="/transactions/">
+        {% csrf_token %}
+        <label>转出账户 ID：<input type="number" name="from_account" required></label><br><br>
+        <label>转入账户 ID：<input type="number" name="to_account" required></label><br><br>
+        <label>金额：<input type="text" name="amount" required></label><br><br>
+        <label>卡号：<input type="text" name="card_number" required></label><br><br>
+        <label>CVV：<input type="text" name="cvv" required></label><br><br>
+        <button type="submit">提交转账</button>
+    </form>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr><th>ID</th><th>From</th><th>To</th><th>Amount</th><th>Card</th><th>Status</th><th>Created</th></tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td>{{ tx.id }}</td>
+                <td>{{ tx.from_account.username }}</td>
+                <td>{{ tx.to_account.username }}</td>
+                <td>{{ tx.amount }}</td>
+                <td>{{ tx.card_number }}</td>
+                <td>{{ tx.status }}</td>
+                <td>{{ tx.created_at }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">暂无交易记录</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

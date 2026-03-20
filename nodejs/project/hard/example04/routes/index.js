@@ -1,0 +1,1 @@
+const express=require('express');const c=require('../controllers/buildController');const r=express.Router();r.get('/',c.pipeline);r.get('/build_pipeline',c.pipeline);r.get('/dependency_dashboard',c.dashboard);r.get('/build_detail',c.detail);r.post('/api/build/trigger',c.triggerBuild);r.get('/api/build/history',c.history);module.exports=r;

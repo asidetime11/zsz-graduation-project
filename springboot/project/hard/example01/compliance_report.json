@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_hard_example01",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_01.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 3,
+            "high": 1,
+            "medium": 0
+        },
+        "by_category": {
+            "Sensitive Data Exposure": 1,
+            "Unauthorized Access": 1,
+            "SQL Injection": 1,
+            "Data Over-exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H01-001",
+            "location": {
+                "file": "src/main/java/com/example/hard01/service/PatientService.java",
+                "line": 35,
+                "class_or_function": "createPatient"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "患者 idCard、phone、diagnosis、prescription、insuranceNo 明文持久化。",
+            "severity": "critical",
+            "related_fields": ["idCard", "phone", "diagnosis", "prescription", "insuranceNo"],
+            "impact": "医疗敏感信息批量泄露风险高。",
+            "code_snippet": "patient.setIdCard(idCard); patient.setDiagnosis(diagnosis); patient.setPrescription(prescription);",
+            "fixed_code_snippet": "patient.setIdCard(mask(idCard)); patient.setDiagnosis(encrypt(diagnosis)); patient.setPrescription(encrypt(prescription));"
+        },
+        {
+            "issue_id": "H01-002",
+            "location": {
+                "file": "src/main/java/com/example/hard01/service/PatientService.java",
+                "line": 52,
+                "class_or_function": "getPatient"
+            },
+            "category": "Unauthorized Access",
+            "description": "医生按 patientId 获取详情，缺少患者归属校验。",
+            "severity": "critical",
+            "related_fields": ["id"],
+            "impact": "任意医生可越权查看他人患者数据。",
+            "code_snippet": "Patient patient = patientRepository.findById(patientId).orElseThrow();",
+            "fixed_code_snippet": "Patient patient = patientRepository.findByIdAndDoctors_Id(patientId, currentDoctorId).orElseThrow();"
+        },
+        {
+            "issue_id": "H01-003",
+            "location": {
+                "file": "src/main/java/com/example/hard01/service/PatientService.java",
+                "line": 67,
+                "class_or_function": "search"
+            },
+            "category": "SQL Injection",
+            "description": "检索 SQL 通过字符串拼接 keyword 与 regionCode。",
+            "severity": "critical",
+            "related_fields": ["keyword", "regionCode"],
+            "impact": "可篡改查询条件并读取额外患者信息。",
+            "code_snippet": "\"where p.name like '%\" + keyword + \"%' and h.region_code = '\" + regionCode + \"' \"",
+            "fixed_code_snippet": "entityManager.createNativeQuery(\"... where p.name like :keyword and h.region_code=:regionCode\", Patient.class).setParameter(\"keyword\", \"%\" + keyword + \"%\").setParameter(\"regionCode\", regionCode);"
+        },
+        {
+            "issue_id": "H01-004",
+            "location": {
+                "file": "src/main/java/com/example/hard01/service/PatientService.java",
+                "line": 55,
+                "class_or_function": "getPatient"
+            },
+            "category": "Data Over-exposure",
+            "description": "详情接口回传 diagnosis、prescription、insuranceNo 等全字段。",
+            "severity": "high",
+            "related_fields": ["diagnosis", "prescription", "insuranceNo", "employerAddress"],
+            "impact": "超范围共享导致数据最小化原则失效。",
+            "code_snippet": "dto.diagnosis = patient.getDiagnosis(); dto.prescription = patient.getPrescription(); dto.insuranceNo = patient.getInsuranceNo();",
+            "fixed_code_snippet": "dto.diagnosis = null; dto.prescription = null; dto.insuranceNo = mask(patient.getInsuranceNo());"
+        }
+    ]
+}

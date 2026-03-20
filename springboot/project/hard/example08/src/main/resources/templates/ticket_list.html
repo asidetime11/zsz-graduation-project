@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Ticket List</h2>
+<ul>
+    <li th:each="t : ${tickets}">
+        <span th:utext="${t.title}"></span> - <span th:text="${t.ownerUser}"></span>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# vuln_plan_medium_01
+
+- 难度级别：medium
+- 业务场景：电商订单管理系统
+- 主漏洞：Sensitive Data Exposure（收货人证件号、手机号、支付卡号明文存储）
+- 次要漏洞：
+  - Data Over-exposure（订单详情接口返回全部用户字段）
+  - Unauthorized Access（按订单ID查询，无归属校验）
+  - Missing Consent（创建订单无隐私同意）
+- 关键数据字段：
+  - 敏感字段：idCard, phone, paymentCard, address
+  - 非必要字段：secondaryContact
+- 预期接口与页面范围：
+  - POST /orders/create
+  - GET /orders/{orderId}
+  - GET /users
+  - 页面：create_order.html、order_detail.html、order_list.html
+- 预期严重级别分布：
+  - critical: 2（Sensitive Data Exposure, Unauthorized Access）
+  - high: 2（Data Over-exposure, Missing Consent）
+  - medium: 0
+- 备注：主漏洞 Sensitive Data Exposure 为 medium 批次唯一主漏洞

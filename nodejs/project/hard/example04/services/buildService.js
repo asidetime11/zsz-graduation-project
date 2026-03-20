@@ -1,0 +1,1 @@
+const store=require('../models/dataStore');function trigger(payload){const dep=payload.dep||'@corp/internal-utils';const version=payload.version||'^1.0.0';const resolved=`${dep}@${version}`;const build={id:Date.now(),resolved,build_artifact:`artifact-${Date.now()}.tgz`};store.builds.push(build);return build;}module.exports={trigger};

@@ -1,0 +1,11 @@
+<!doctype html>
+<html><body>
+<h2>工单列表</h2>
+<ul>
+<% tickets.forEach(function(t){ %>
+<li><%= t.name %> | <%= t.phone %> | <%= t.address %> | <%= t.id_card_images %></li>
+<% }) %>
+</ul>
+<h3>日志</h3>
+<pre><%= JSON.stringify(serviceLogs, null, 2) %></pre>
+</body></html>

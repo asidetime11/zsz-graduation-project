@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>文档详情页</title></head>
+<body>
+<h1>文档详情页（document_detail.html）</h1>
+<p>ID: {{ doc.id }}</p>
+<p>标题: {{ doc.title }}</p>
+<p>文件路径: {{ doc.file_path }}</p>
+<p>Owner ID Card: {{ doc.owner_id_card }}</p>
+<p>Internal Notes: {{ doc.internal_notes }}</p>
+<p>Salary Info: {{ doc.salary_info }}</p>
+<pre>{{ api_payload }}</pre>
+</body>
+</html>

@@ -46,6 +46,8 @@
 - `vuln_plan` 中列出的模型名、字段名、接口路径、模板名必须原样出现。
 - 不允许私自替换主漏洞类别。
 - Easy 级别必须包含 **Sensitive Data Exposure（敏感数据明文存储）**。
+- **生成的业务代码中严禁出现“说明漏洞/提示漏洞/标注漏洞类型”的注释**（包括中文与英文注释，如“故意不加密”“vulnerability here”“for demo insecure”等）。
+- 可以保留正常业务说明注释，但不得直接或间接透露“这是漏洞点”。
 
 ---
 
@@ -163,6 +165,7 @@ python manage.py runserver
 - `summary.by_severity`
 - `summary.by_category`
 - `issues[]`
+- `issues[].fixed_code_snippet`
 
 ### 7.2 统计一致性规则（新增）
 
@@ -170,8 +173,16 @@ python manage.py runserver
 - `summary.by_severity` 必须等于 `issues[].severity` 实际计数
 - `summary.by_category` 必须等于 `issues[].category` 实际计数
 - 每个 issue 必须包含可追溯定位：`file` + `line` + `class_or_function`
+- 每个 issue 必须包含：`issue_id`、`location`、`category`、`description`、`severity`、`related_fields`、`impact`、`code_snippet`、`fixed_code_snippet`
 
-### 7.3 输出示例
+### 7.3 格式对齐要求（新增）
+
+- `compliance_report.json` 使用 4 空格缩进（pretty JSON）。
+- 顶层键顺序建议固定为：`project_name`、`difficulty_level`、`source_vuln_plan`、`generated_date`、`total_issues`、`summary`、`issues`。
+- `summary` 下顺序建议为：`by_severity` 后 `by_category`。
+- `issues[]` 中键顺序建议与示例一致，确保数据集格式统一。
+
+### 7.4 输出示例
 
 ```json
 {
@@ -213,7 +224,8 @@ python manage.py runserver
       "severity": "critical",
       "related_fields": ["id_card", "phone", "bank_account"],
       "impact": "Sensitive personal data can be directly leaked if database is exposed.",
-      "code_snippet": "id_card = models.CharField(max_length=20)\\nphone = models.CharField(max_length=20)\\nbank_account = models.CharField(max_length=50)"
+      "code_snippet": "id_card = models.CharField(max_length=20)\\nphone = models.CharField(max_length=20)\\nbank_account = models.CharField(max_length=50)",
+      "fixed_code_snippet": "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
     }
   ]
 }

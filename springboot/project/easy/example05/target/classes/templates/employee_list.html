@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>员工列表</title></head><body>
+<h2>员工列表</h2>
+<table border="1"><tr><th>ID</th><th>姓名</th><th>详情</th></tr>
+<tr th:each="e : ${employees}"><td th:text="${e.id}"></td><td th:text="${e.name}"></td><td><a th:href="@{'/employees/' + ${e.id}}">查看</a></td></tr>
+</table></body></html>

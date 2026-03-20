@@ -1,0 +1,9 @@
+<!doctype html>
+<html><body>
+<h2>资料审核</h2>
+<ul>
+<% profiles.forEach(function(p){ %>
+<li><%= p.real_name %> | <%= p.id_card %> | <%= p.marital_status %> | <%= p.children_count %> | <%= p.car_plate %></li>
+<% }) %>
+</ul>
+</body></html>

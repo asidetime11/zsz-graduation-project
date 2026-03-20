@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>活动列表页</title>
+</head>
+<body>
+    <h2>活动列表</h2>
+    <form method="get" action="/activities/">
+        <label>搜索活动: <input type="text" name="q" value="{{ request.GET.q }}"></label>
+        <button type="submit">查询</button>
+    </form>
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>活动名</th>
+                <th>日期</th>
+                <th>地点</th>
+                <th>人数上限</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in activities %}
+            <tr>
+                <td>{{ a.id }}</td>
+                <td>{{ a.name }}</td>
+                <td>{{ a.date }}</td>
+                <td>{{ a.location }}</td>
+                <td>{{ a.max_participants }}</td>
+                <td>{{ a.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">返回报名页</a></p>
+</body>
+</html>

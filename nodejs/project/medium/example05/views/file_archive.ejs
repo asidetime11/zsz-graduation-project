@@ -1,0 +1,20 @@
+<html>
+<head><title>file_archive</title></head>
+<body>
+    <h1>file_archive.ejs</h1>
+    <ul>
+        <% files.forEach(function(f){ %>
+            <li>
+                employee_id: <%= f.employee_id %> |
+                <a href="/uploads/<%= f.id_card_front %>"><%= f.id_card_front %></a>
+            </li>
+        <% }) %>
+    </ul>
+    <h2>employees</h2>
+    <ul>
+        <% employees.forEach(function(e){ %>
+            <li><%= e.id %> - <%= e.name %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# vuln_plan_hard_04
+
+- 难度级别：hard
+- 业务场景：政务一网通办信息共享平台
+- 主漏洞：Data Over-exposure（跨部门共享接口返回住址、证件、联系方式全量字段）
+- 次要漏洞：
+  - Unauthorized Access（按业务号直接读取）
+  - Data Lifecycle（历史办件无限期保留）
+  - Sensitive Logging（审计日志记录证件全号）
+- 关键数据字段：
+  - 敏感字段：idCard, phone, address, householdNo
+  - 非必要字段：familyMemberCount
+- 预期接口与页面范围：
+  - GET /cases/{caseId}
+  - GET /cases/share
+  - GET /cases/archive
+  - 页面：case_list.html、case_detail.html、case_audit.html
+- 预期严重级别分布：
+  - critical: 1（Unauthorized Access）
+  - high: 3（Data Over-exposure, Data Lifecycle, Sensitive Logging）
+  - medium: 0
+- 备注：主漏洞 Data Over-exposure 为 hard 批次唯一主漏洞

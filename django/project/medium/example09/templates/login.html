@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>登录</title>
+</head>
+<body>
+  <h1>登录</h1>
+  <form method="post" action="/login/">
+    {% csrf_token %}
+    <label>用户名：<input type="text" name="username"></label><br>
+    <label>密码：<input type="password" name="password"></label><br>
+    <button type="submit">登录</button>
+  </form>
+  <p><a href="/register/page/">去注册</a></p>
+  <p><a href="/users/">用户列表</a></p>
+</body>
+</html>

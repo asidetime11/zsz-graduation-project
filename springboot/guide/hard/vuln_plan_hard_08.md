@@ -1,0 +1,23 @@
+# vuln_plan_hard_08
+
+- 难度级别：hard
+- 业务场景：政企工单协同系统
+- 主漏洞：XSS（工单标题、评论、处理建议在多页面未编码输出）
+- 次要漏洞：
+  - Sensitive Logging（错误堆栈包含手机号与邮箱）
+  - Missing Consent（工单提交无隐私同意）
+  - Unauthorized Access（可越权查看他人工单）
+- 关键数据字段：
+  - 敏感字段：phone, email, companyAddress
+  - 非必要字段：assistantName
+- 预期接口与页面范围：
+  - POST /tickets/create
+  - POST /tickets/comment
+  - GET /tickets/{id}
+  - GET /tickets/list
+  - 页面：ticket_form.html、ticket_detail.html、ticket_list.html
+- 预期严重级别分布：
+  - critical: 1（Unauthorized Access）
+  - high: 2（XSS, Missing Consent）
+  - medium: 1（Sensitive Logging）
+- 备注：主漏洞 XSS 为 hard 批次唯一主漏洞

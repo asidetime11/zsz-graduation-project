@@ -1,0 +1,14 @@
+<html>
+<head><title>file_upload</title></head>
+<body>
+    <h1>file_upload.ejs</h1>
+    <form method="POST" action="/api/files/upload" enctype="multipart/form-data">
+        <input name="employee_id" placeholder="employee_id" />
+        <input type="file" name="id_card_front" />
+        <input name="id_card_back" placeholder="id_card_back" />
+        <input name="labor_contract" placeholder="labor_contract" />
+        <input name="avatar_frame_style" placeholder="avatar_frame_style" />
+        <button type="submit">upload</button>
+    </form>
+</body>
+</html>

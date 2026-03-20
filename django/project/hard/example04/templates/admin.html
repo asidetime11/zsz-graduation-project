@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>管理员页面</title></head>
+<body>
+<h1>管理员页面（admin.html）</h1>
+<form method="post" action="/admin-page/">
+  {% csrf_token %}
+  <input name="username" placeholder="username">
+  <input name="org_name" placeholder="organization">
+  <input name="id_card" placeholder="id_card">
+  <input name="ssn" placeholder="ssn">
+  <input name="bank_account" placeholder="bank_account">
+  <input name="phone" placeholder="phone">
+  <button type="submit">创建样例数据</button>
+</form>
+<h2>最近缓存记录</h2>
+<pre>{% for r in records %}{{ r.cache_key }} | {{ r.created_at }}
+{% endfor %}</pre>
+</body>
+</html>

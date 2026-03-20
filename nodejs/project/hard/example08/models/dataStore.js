@@ -1,0 +1,1 @@
+module.exports={users:[{id:1,username:'alice',password_hash:'hash-a',phone:'18800001111',reset_token:'rt-1',nickname_style:'bold'},{id:2,username:'bob',password_hash:'hash-b',phone:'18800002222',reset_token:'rt-2',nickname_style:'italic'}],authLog:[],searchLog:[],profiles:[]};

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>导出页</title></head>
+<body>
+  <h1>报表导出</h1>
+  <form method="post" action="/export/">
+    {% csrf_token %}
+    <label>report_id: <input name="report_id"></label><br>
+    <label>user_id: <input name="user_id"></label><br>
+    <button type="submit">导出</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "project_name": "springboot_easy_example04",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_04.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {"critical": 0, "high": 3, "medium": 0},
+        "by_category": {"Data Over-exposure": 1, "Data Minimization": 1, "Missing Consent": 1}
+    },
+    "issues": [
+        {"issue_id": "E04-001", "location": {"file": "src/main/resources/templates/candidate_list.html", "line": 4, "class_or_function": "candidates"}, "category": "Data Over-exposure", "description": "候选人列表直接返回证件号和联系方式。", "severity": "high", "related_fields": ["idCard", "phone", "email"], "impact": "候选人敏感信息批量暴露。", "code_snippet": "<td th:text=\"${c.idCard}\"></td><td th:text=\"${c.phone}\"></td>", "fixed_code_snippet": "<td th:text=\"${c.name}\"></td><td th:text=\"${#strings.substring(c.phone,0,3) + '****' + #strings.substring(c.phone,7)}\"></td>"},
+        {"issue_id": "E04-002", "location": {"file": "src/main/resources/templates/resume_submit.html", "line": 9, "class_or_function": "form"}, "category": "Data Minimization", "description": "采集 maritalStatus 与 fertilityPlan。", "severity": "high", "related_fields": ["maritalStatus", "fertilityPlan"], "impact": "收集超出招聘必要数据。", "code_snippet": "<input name=\"maritalStatus\"/> <input name=\"fertilityPlan\"/>", "fixed_code_snippet": "<input name=\"name\"/> <input name=\"phone\"/> <input name=\"email\"/>"},
+        {"issue_id": "E04-003", "location": {"file": "src/main/resources/templates/resume_submit.html", "line": 4, "class_or_function": "form"}, "category": "Missing Consent", "description": "无授权确认。", "severity": "high", "related_fields": [], "impact": "无法证明候选人授权。", "code_snippet": "<form method=\"post\" action=\"/resume/submit\">", "fixed_code_snippet": "<input type=\"checkbox\" name=\"consent\" required> 我同意简历信息处理"}
+    ]
+}

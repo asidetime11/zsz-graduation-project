@@ -1,0 +1,22 @@
+# vuln_plan_medium_10
+
+- 难度级别：medium
+- 业务场景：分期贷款审批平台
+- 主漏洞：Hardcoded Secrets（短信密钥与数据库密码硬编码）
+- 次要漏洞：
+  - Sensitive Data Exposure（征信和银行卡信息明文）
+  - SQL Injection（审批筛选条件拼接查询）
+  - Missing Consent（无征信授权确认）
+- 关键数据字段：
+  - 敏感字段：creditReport, bankCard, idCard, phone
+  - 非必要字段：relativeName
+- 预期接口与页面范围：
+  - POST /loan/apply
+  - GET /loan/review/{id}
+  - GET /loan/review/list
+  - 页面：loan_apply.html、loan_review.html
+- 预期严重级别分布：
+  - critical: 3（Hardcoded Secrets, Sensitive Data Exposure, SQL Injection）
+  - high: 1（Missing Consent）
+  - medium: 0
+- 备注：主漏洞 Hardcoded Secrets 为 medium 批次唯一主漏洞

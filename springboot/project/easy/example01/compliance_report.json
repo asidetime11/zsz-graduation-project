@@ -1,0 +1,66 @@
+{
+    "project_name": "springboot_easy_example01",
+    "difficulty_level": "easy",
+    "source_vuln_plan": "vuln_plan_easy_01.md",
+    "generated_date": "2026-03-19",
+    "total_issues": 3,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 2,
+            "medium": 0
+        },
+        "by_category": {
+            "Sensitive Data Exposure": 1,
+            "Data Minimization": 1,
+            "Missing Consent": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "E01-001",
+            "location": {
+                "file": "src/main/java/com/example/easy01/controller/UserController.java",
+                "line": 33,
+                "class_or_function": "register"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "idCard、phone、bankAccount 明文入库且未做任何保护。",
+            "severity": "critical",
+            "related_fields": ["idCard", "phone", "bankAccount"],
+            "impact": "敏感身份与金融信息泄露风险高。",
+            "code_snippet": "user.setIdCard(idCard); user.setPhone(phone); user.setBankAccount(bankAccount);",
+            "fixed_code_snippet": "user.setIdCard(CryptoUtil.encrypt(idCard)); user.setPhone(CryptoUtil.encrypt(phone)); user.setBankAccount(CryptoUtil.encrypt(bankAccount));"
+        },
+        {
+            "issue_id": "E01-002",
+            "location": {
+                "file": "src/main/java/com/example/easy01/controller/UserController.java",
+                "line": 29,
+                "class_or_function": "register"
+            },
+            "category": "Data Minimization",
+            "description": "采集 familyMembers 与注册核心目的无关。",
+            "severity": "high",
+            "related_fields": ["familyMembers"],
+            "impact": "增加不必要个人信息处理范围。",
+            "code_snippet": "@RequestParam Integer familyMembers",
+            "fixed_code_snippet": "public String register(@RequestParam String name, @RequestParam String idCard, @RequestParam String phone, @RequestParam String bankAccount) {"
+        },
+        {
+            "issue_id": "E01-003",
+            "location": {
+                "file": "src/main/resources/templates/register.html",
+                "line": 6,
+                "class_or_function": "form"
+            },
+            "category": "Missing Consent",
+            "description": "页面无同意条款勾选项，无法追踪授权。",
+            "severity": "high",
+            "related_fields": [],
+            "impact": "无法证明用户授权合法性。",
+            "code_snippet": "<form method=\"post\" action=\"/register\">",
+            "fixed_code_snippet": "<input type=\"checkbox\" name=\"consent\" required> 我已阅读并同意隐私政策"
+        }
+    ]
+}

@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_medium_example06",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_06.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 3,
+            "medium": 0
+        },
+        "by_category": {
+            "Data Lifecycle": 1,
+            "Missing Consent": 1,
+            "Sensitive Logging": 1,
+            "Sensitive Data Exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "M06-001",
+            "location": {
+                "file": "src/main/java/com/example/medium06/service/MemberService.java",
+                "line": 27,
+                "class_or_function": "cancel"
+            },
+            "category": "Data Lifecycle",
+            "description": "注销仅改状态，phone/idCard/address/interestTags 长期保留。",
+            "severity": "critical",
+            "related_fields": ["phone", "idCard", "address", "interestTags"],
+            "impact": "超出必要保存周期，增加泄露风险。",
+            "code_snippet": "m.setStatus(\"CANCELED\");",
+            "fixed_code_snippet": "m.setPhone(null); m.setIdCard(null); m.setAddress(null); m.setInterestTags(null);"
+        },
+        {
+            "issue_id": "M06-002",
+            "location": {
+                "file": "src/main/java/com/example/medium06/controller/MemberController.java",
+                "line": 13,
+                "class_or_function": "register"
+            },
+            "category": "Missing Consent",
+            "description": "注册流程未校验用户同意。",
+            "severity": "high",
+            "related_fields": ["phone", "idCard", "address", "interestTags"],
+            "impact": "个人信息处理缺少合法性基础。",
+            "code_snippet": "public Member register(@RequestBody Member member)",
+            "fixed_code_snippet": "if (!request.isConsentGiven()) { throw new IllegalArgumentException(\"consent required\"); }"
+        },
+        {
+            "issue_id": "M06-003",
+            "location": {
+                "file": "src/main/java/com/example/medium06/service/MemberService.java",
+                "line": 21,
+                "class_or_function": "register"
+            },
+            "category": "Sensitive Logging",
+            "description": "日志输出 phone 与 idCard。",
+            "severity": "high",
+            "related_fields": ["phone", "idCard"],
+            "impact": "日志系统泄露敏感标识。",
+            "code_snippet": "log.info(\"register phone={}, idCard={}\",member.getPhone(),member.getIdCard());",
+            "fixed_code_snippet": "log.info(\"register member created, memberId={}\", saved.getId());"
+        },
+        {
+            "issue_id": "M06-004",
+            "location": {
+                "file": "src/main/java/com/example/medium06/service/MemberService.java",
+                "line": 36,
+                "class_or_function": "history"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "history 接口返回 idCard 与完整 address。",
+            "severity": "high",
+            "related_fields": ["idCard", "address"],
+            "impact": "历史查询结果可直接获取敏感信息。",
+            "code_snippet": "d.idCard=m.getIdCard();d.address=m.getAddress();",
+            "fixed_code_snippet": "d.idCard = maskIdCard(m.getIdCard()); d.address = maskAddress(m.getAddress());"
+        }
+    ]
+}

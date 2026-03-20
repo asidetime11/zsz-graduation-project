@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>创建文档页</title></head>
+<body>
+<h1>创建文档页（create_doc.html）</h1>
+<form method="post" action="/documents/create/">
+  {% csrf_token %}
+  <input name="username" placeholder="username">
+  <input name="org_name" placeholder="org_name">
+  <input name="dept_name" placeholder="dept_name">
+  <input name="title" placeholder="title">
+  <input name="file_path" placeholder="file_path(可空)">
+  <input name="owner_id_card" placeholder="owner_id_card">
+  <input name="salary_info" placeholder="salary_info">
+  <textarea name="internal_notes" placeholder="internal_notes"></textarea>
+  <button type="submit">提交</button>
+</form>
+</body>
+</html>

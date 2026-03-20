@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>问卷填写页</title>
+</head>
+<body>
+    <h1>在线问卷调查系统</h1>
+    <form method="post" action="/survey/submit/">
+        {% csrf_token %}
+        <div><label>用户名: <input type="text" name="username"></label></div>
+        <div><label>邮箱: <input type="email" name="email"></label></div>
+        <div><label>手机号: <input type="text" name="phone"></label></div>
+        <div><label>身份证号: <input type="text" name="id_card"></label></div>
+        <div>
+            <label>问卷:</label>
+            <select name="survey_id">
+                {% for s in surveys %}
+                <option value="{{ s.id }}">{{ s.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div><label>问卷答案: <textarea name="answers"></textarea></label></div>
+        <div><label>家庭收入: <input type="text" name="family_income"></label></div>
+        <button type="submit">提交问卷</button>
+    </form>
+    <p><a href="/survey/results/">查看调查结果</a></p>
+    <p><a href="/users/profile/">查看用户信息</a></p>
+</body>
+</html>

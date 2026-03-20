@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"><body>
+<h3>Archive Cases</h3>
+<ul>
+    <li th:each="a : ${archive}" th:text="${a.caseNo} + ' ' + ${a.closedAt}"></li>
+</ul>
+</body></html>

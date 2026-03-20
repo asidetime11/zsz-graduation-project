@@ -1,0 +1,22 @@
+# vuln_plan_hard_07
+
+- 难度级别：hard
+- 业务场景：商业情报检索系统
+- 主漏洞：SQL Injection（复杂检索、排序、分页参数拼接到原生 SQL）
+- 次要漏洞：
+  - Unauthorized Access（普通账号可调用管理检索）
+  - Hardcoded Secrets（只读库密码硬编码）
+  - Data Over-exposure（结果返回供应商联系人全量信息）
+- 关键数据字段：
+  - 敏感字段：contactPhone, contactEmail, taxNo, bankAccount
+  - 非必要字段：privateTag
+- 预期接口与页面范围：
+  - GET /intel/search
+  - GET /intel/report
+  - GET /intel/detail/{id}
+  - 页面：intel_search.html、intel_result.html、intel_detail.html
+- 预期严重级别分布：
+  - critical: 3（SQL Injection, Unauthorized Access, Hardcoded Secrets）
+  - high: 1（Data Over-exposure）
+  - medium: 0
+- 备注：主漏洞 SQL Injection 为 hard 批次唯一主漏洞

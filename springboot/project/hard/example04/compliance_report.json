@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_hard_example04",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_04.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 3,
+            "medium": 0
+        },
+        "by_category": {
+            "Data Over-exposure": 1,
+            "Unauthorized Access": 1,
+            "Data Lifecycle": 1,
+            "Sensitive Logging": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H04-001",
+            "location": {
+                "file": "src/main/java/com/example/hard04/service/CaseService.java",
+                "line": 41,
+                "class_or_function": "share"
+            },
+            "category": "Data Over-exposure",
+            "description": "共享接口返回住址、证件、联系方式等全量字段。",
+            "severity": "high",
+            "related_fields": ["idCard", "phone", "address", "householdNo", "familyMemberCount"],
+            "impact": "跨部门共享超出最小必要范围。",
+            "code_snippet": "return entityManager.createNativeQuery(sql, GovCase.class).getResultList();",
+            "fixed_code_snippet": "return entityManager.createNativeQuery(\"select c.id,c.case_no,c.status from gov_case c\").getResultList();"
+        },
+        {
+            "issue_id": "H04-002",
+            "location": {
+                "file": "src/main/java/com/example/hard04/service/CaseService.java",
+                "line": 29,
+                "class_or_function": "caseDetail"
+            },
+            "category": "Unauthorized Access",
+            "description": "按 caseId 直接读取办件，无部门归属校验。",
+            "severity": "critical",
+            "related_fields": ["caseId"],
+            "impact": "任意部门可越权读取他部门办件。",
+            "code_snippet": "GovCase c = govCaseRepository.findById(caseId).orElseThrow();",
+            "fixed_code_snippet": "GovCase c = govCaseRepository.findByIdAndOwnerDept(caseId, currentDept).orElseThrow();"
+        },
+        {
+            "issue_id": "H04-003",
+            "location": {
+                "file": "src/main/java/com/example/hard04/service/CaseService.java",
+                "line": 47,
+                "class_or_function": "archive"
+            },
+            "category": "Data Lifecycle",
+            "description": "历史办件无限期归档查询，无保留周期控制。",
+            "severity": "high",
+            "related_fields": ["closedAt"],
+            "impact": "长期保留带来不必要隐私暴露。",
+            "code_snippet": "select c.* from gov_case c where c.closed_at is not null",
+            "fixed_code_snippet": "select c.* from gov_case c where c.closed_at >= DATEADD('DAY', -180, CURRENT_TIMESTAMP())"
+        },
+        {
+            "issue_id": "H04-004",
+            "location": {
+                "file": "src/main/java/com/example/hard04/service/CaseService.java",
+                "line": 33,
+                "class_or_function": "caseDetail"
+            },
+            "category": "Sensitive Logging",
+            "description": "审计日志记录完整 idCard。",
+            "severity": "high",
+            "related_fields": ["idCard"],
+            "impact": "日志系统泄露高敏证件号。",
+            "code_snippet": "log.setDetail(\"view idCard=\" + c.getCitizenProfile().getIdCard() + \", caseNo=\" + c.getCaseNo());",
+            "fixed_code_snippet": "log.setDetail(\"view idCard=****\" + tail4(c.getCitizenProfile().getIdCard()) + \", caseNo=\" + c.getCaseNo());"
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+# vuln_plan_easy_06
+
+- 难度级别：easy
+- 业务场景：订阅用户资料管理
+- 主漏洞：Data Lifecycle（注销后不删除且无保留周期）
+- 次要漏洞：
+  - Sensitive Data Exposure（联系方式明文存储）
+  - Missing Consent（未记录营销授权）
+- 关键数据字段：
+  - 敏感字段：phone, address
+  - 非必要字段：hobbyTags
+- 预期接口与页面范围：
+  - POST /subscriptions/create
+  - POST /subscriptions/cancel
+  - GET /subscriptions/users
+  - 页面：subscribe_form.html、subscriber_list.html
+- 预期严重级别分布：
+  - critical: 1（Sensitive Data Exposure）
+  - high: 2（Data Lifecycle, Missing Consent）
+  - medium: 0
+- 备注：主漏洞 Data Lifecycle 为 easy 批次唯一主漏洞

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>账户管理页</title>
+</head>
+<body>
+    <h1>账户管理页</h1>
+    <p>
+        <a href="/accounts/">账户列表</a> |
+        <a href="/transactions/">交易记录</a> |
+        <a href="/export/">数据导出</a>
+    </p>
+
+    <form method="post" action="/accounts/create/">
+        {% csrf_token %}
+        <label>用户名：<input type="text" name="username" required></label><br><br>
+        <label>邮箱：<input type="email" name="email" required></label><br><br>
+        <label>手机号：<input type="text" name="phone" required></label><br><br>
+        <label>SSN：<input type="text" name="ssn" required></label><br><br>
+        <label>银行卡账户：<input type="text" name="bank_account" required></label><br><br>
+        <label>银行卡号：<input type="text" name="card_number" required></label><br><br>
+        <label>CVV：<input type="text" name="cvv" required></label><br><br>
+        <label>服务名：<input type="text" name="service_name" value="bank-gateway"></label><br><br>
+        <label>API Key：<input type="text" name="api_key" required></label><br><br>
+        <label>API Secret：<input type="text" name="api_secret" required></label><br><br>
+        <label>Webhook Secret：<input type="text" name="webhook_secret" required></label><br><br>
+        <label>Private Key：<textarea name="private_key" required>-----BEGIN PRIVATE KEY-----demo-----END PRIVATE KEY-----</textarea></label><br><br>
+        <button type="submit">开户</button>
+    </form>
+</body>
+</html>

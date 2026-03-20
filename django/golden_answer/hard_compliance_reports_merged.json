@@ -1,0 +1,1557 @@
+﻿{
+    "difficulty":  "hard",
+    "merged_at":  "2026-03-19T20:04:41+08:00",
+    "total_reports":  10,
+    "reports":  [
+                    {
+                        "example":  "example01",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example02",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example03",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example04",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example05",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example06",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example07",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example08",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example09",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    },
+                    {
+                        "example":  "example10",
+                        "report":  {
+                                       "project_name":  "hard_example01",
+                                       "difficulty_level":  "hard",
+                                       "source_vuln_plan":  "vuln_plan_hard_01.md",
+                                       "generated_date":  "2026-03-18",
+                                       "total_issues":  7,
+                                       "summary":  {
+                                                       "by_severity":  {
+                                                                           "critical":  3,
+                                                                           "high":  3,
+                                                                           "medium":  1,
+                                                                           "low":  0
+                                                                       },
+                                                       "by_category":  {
+                                                                           "Multi-tenant Isolation Failure":  1,
+                                                                           "Sensitive Data Exposure":  1,
+                                                                           "Fine-grained Authorization":  1,
+                                                                           "Sensitive Data in Cache":  1,
+                                                                           "Data Export":  1,
+                                                                           "Cache Pollution":  1,
+                                                                           "Sensitive Logging":  1
+                                                                       }
+                                                   },
+                                       "issues":  [
+                                                      {
+                                                          "issue_id":  "DC-001",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  22,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Multi-tenant Isolation Failure",
+                                                          "description":  "Report query does not filter by current user\u0027s organization, causing cross-tenant data exposure.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization",
+                                                                                 "title"
+                                                                             ],
+                                                          "impact":  "Any authenticated tenant user can view reports from other organizations.",
+                                                          "code_snippet":  "reports = Report.objects.filter(title__icontains=keyword).select_related(\"organization\", \"created_by\").order_by(\"-id\")",
+                                                          "fixed_code_snippet":  "qs = qs.filter(organization=request.user.organization)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-002",
+                                                          "location":  {
+                                                                           "file":  "core/models.py",
+                                                                           "line":  8,
+                                                                           "class_or_function":  "Organization"
+                                                                       },
+                                                          "category":  "Sensitive Data Exposure",
+                                                          "description":  "Organization api_key/webhook_secret and PaymentCard details are stored in plaintext.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "api_key",
+                                                                                 "webhook_secret",
+                                                                                 "card_number",
+                                                                                 "cvv",
+                                                                                 "expiry_date"
+                                                                             ],
+                                                          "impact":  "Database compromise directly leaks secrets and payment data.",
+                                                          "code_snippet":  "api_key = models.CharField(max_length=200)",
+                                                          "fixed_code_snippet":  "id_card = encrypt_field(id_card); phone = encrypt_field(phone); bank_account = mask_value(bank_account)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-003",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  17,
+                                                                           "class_or_function":  "report_list"
+                                                                       },
+                                                          "category":  "Fine-grained Authorization",
+                                                          "description":  "Only global authentication is checked; object-level organization ownership is not validated.",
+                                                          "severity":  "critical",
+                                                          "related_fields":  [
+                                                                                 "organization"
+                                                                             ],
+                                                          "impact":  "Users can access resources outside their tenant boundary.",
+                                                          "code_snippet":  "if not request.user.is_authenticated:",
+                                                          "fixed_code_snippet":  "obj = Model.objects.get(id=obj_id, owner=request.user)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-004",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  21,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Sensitive Data in Cache",
+                                                          "description":  "Analytics result with report data is cached without expiration.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "data",
+                                                                                 "created_at"
+                                                                             ],
+                                                          "impact":  "Sensitive report data may persist indefinitely in cache.",
+                                                          "code_snippet":  "cache.set(cache_key, reports)",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-005",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  82,
+                                                                           "class_or_function":  "export_view"
+                                                                       },
+                                                          "category":  "Data Export",
+                                                          "description":  "Export endpoint has no authorization check and exports all tenant reports.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id",
+                                                                                 "data"
+                                                                             ],
+                                                          "impact":  "Unauthorized parties can download sensitive cross-tenant data.",
+                                                          "code_snippet":  "csv_content = export_all_tenant_reports_csv()",
+                                                          "fixed_code_snippet":  "if not request.user.is_staff: return JsonResponse({\u0027error\u0027:\u0027forbidden\u0027}, status=403); export_qs = qs.filter(org=request.user.org).values(\u0027id\u0027,\u0027name\u0027)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-006",
+                                                          "location":  {
+                                                                           "file":  "core/services.py",
+                                                                           "line":  11,
+                                                                           "class_or_function":  "get_cached_analytics_data"
+                                                                       },
+                                                          "category":  "Cache Pollution",
+                                                          "description":  "Cache key misses organization_id prefix, enabling cache collisions between tenants.",
+                                                          "severity":  "high",
+                                                          "related_fields":  [
+                                                                                 "organization_id"
+                                                                             ],
+                                                          "impact":  "One tenant may read cached analytics belonging to another tenant.",
+                                                          "code_snippet":  "cache_key = f\"analytics:{keyword}\"",
+                                                          "fixed_code_snippet":  "cache_key = f\u0027org:{request.user.organization_id}:key\u0027; cache.set(cache_key, data, timeout=300)"
+                                                      },
+                                                      {
+                                                          "issue_id":  "DC-007",
+                                                          "location":  {
+                                                                           "file":  "core/views.py",
+                                                                           "line":  73,
+                                                                           "class_or_function":  "analytics_view"
+                                                                       },
+                                                          "category":  "Sensitive Logging",
+                                                          "description":  "Analytics logs include report IDs that should not be exposed in routine logs.",
+                                                          "severity":  "medium",
+                                                          "related_fields":  [
+                                                                                 "id"
+                                                                             ],
+                                                          "impact":  "Logs can leak internal identifiers and facilitate unauthorized enumeration.",
+                                                          "code_snippet":  "logger.info(\"analytics report ids: %s\", [item[\"id\"] for item in analytics])",
+                                                          "fixed_code_snippet":  "logger.info(\u0027operation done user_id=%s\u0027, request.user.id)"
+                                                      }
+                                                  ]
+                                   }
+                    }
+                ]
+}

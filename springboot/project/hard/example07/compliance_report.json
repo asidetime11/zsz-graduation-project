@@ -1,0 +1,78 @@
+{
+    "project_name": "springboot_hard_example07",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_07.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 5,
+    "summary": {
+        "by_severity": {
+            "critical": 3,
+            "high": 1,
+            "medium": 1
+        },
+        "by_category": {
+            "SQL Injection": 1,
+            "Unauthorized Access": 1,
+            "Hardcoded Secrets": 1,
+            "Data Over-exposure": 1,
+            "Sensitive Data Exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H07-001",
+            "location": {"file": "src/main/java/com/example/hard07/service/IntelService.java", "line": 23, "class_or_function": "search"},
+            "category": "SQL Injection",
+            "description": "检索、排序、分页拼接原生 SQL。",
+            "severity": "critical",
+            "related_fields": ["keyword", "sortBy", "page", "size"],
+            "impact": "可注入查询与排序读取任意情报。",
+            "code_snippet": "String sql = \"...\" + keyword + \"... order by \" + sortBy;",
+            "fixed_code_snippet": "entityManager.createNativeQuery(SQL, IntelRecord.class).setParameter(\"keyword\", \"%\" + keyword + \"%\");"
+        },
+        {
+            "issue_id": "H07-002",
+            "location": {"file": "src/main/java/com/example/hard07/service/IntelService.java", "line": 31, "class_or_function": "report"},
+            "category": "Unauthorized Access",
+            "description": "管理报表未做角色限制。",
+            "severity": "critical",
+            "related_fields": ["ownerOrg"],
+            "impact": "普通账号可调用管理检索。",
+            "code_snippet": "return intelRecordRepository.findAll();",
+            "fixed_code_snippet": "if (!currentUser.isAdmin()) { throw new AccessDeniedException(\"forbidden\"); }"
+        },
+        {
+            "issue_id": "H07-003",
+            "location": {"file": "src/main/java/com/example/hard07/service/IntelService.java", "line": 16, "class_or_function": "IntelService"},
+            "category": "Hardcoded Secrets",
+            "description": "只读库密码硬编码在服务类中。",
+            "severity": "critical",
+            "related_fields": ["readonlyDbPassword"],
+            "impact": "源码泄露即导致数据库口令泄露。",
+            "code_snippet": "private final String readonlyDbPassword = \"readonly_2026_pwd\";",
+            "fixed_code_snippet": "@Value(\"${readonly.db.password}\") private String readonlyDbPassword;"
+        },
+        {
+            "issue_id": "H07-004",
+            "location": {"file": "src/main/java/com/example/hard07/service/IntelService.java", "line": 31, "class_or_function": "report"},
+            "category": "Data Over-exposure",
+            "description": "报表返回供应商联系人与账户全量字段。",
+            "severity": "high",
+            "related_fields": ["contactPhone", "contactEmail", "taxNo", "bankAccount", "privateTag"],
+            "impact": "联系人与财务信息被过度暴露。",
+            "code_snippet": "return intelRecordRepository.findAll();",
+            "fixed_code_snippet": "return intelRecordRepository.findSummaryByOrg(ownerOrg);"
+        },
+        {
+            "issue_id": "H07-005",
+            "location": {"file": "src/main/java/com/example/hard07/entity/Supplier.java", "line": 11, "class_or_function": "Supplier"},
+            "category": "Sensitive Data Exposure",
+            "description": "税号与银行账户明文存储。",
+            "severity": "medium",
+            "related_fields": ["taxNo", "bankAccount"],
+            "impact": "数据库泄露将直接暴露供应商敏感信息。",
+            "code_snippet": "private String taxNo; private String bankAccount;",
+            "fixed_code_snippet": "private String taxNoCipher; private String bankAccountCipher;"
+        }
+    ]
+}

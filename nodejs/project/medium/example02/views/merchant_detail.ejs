@@ -1,0 +1,18 @@
+<html>
+<head><title>merchant_detail</title></head>
+<body>
+    <h1>merchant_detail.ejs</h1>
+    <% if (merchant) { %>
+        <p>merchant_name: <%= merchant.merchant_name %></p>
+        <p>legal_person_id: <%= merchant.legal_person_id %></p>
+        <p>bank_account: <%= merchant.bank_account %></p>
+        <p>office_decoration_level: <%= merchant.office_decoration_level %></p>
+    <% } %>
+    <h2>reviews</h2>
+    <ul>
+        <% reviews.forEach(function(r){ %>
+            <li><%= r.reviewer %> - <%= r.decision %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

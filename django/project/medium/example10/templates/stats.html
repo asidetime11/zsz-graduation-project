@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>数据统计页</title>
+</head>
+<body>
+  <h1>数据统计页</h1>
+  <p>用户总数：{{ total_users }}</p>
+  <p>行为记录总数：{{ total_activities }}</p>
+
+  <h2>记录行为</h2>
+  <form method="post" action="/track/">
+    {% csrf_token %}
+    <label>用户：
+      <select name="user_id">
+        {% for u in users %}
+        <option value="{{ u.id }}">{{ u.username }}</option>
+        {% endfor %}
+      </select>
+    </label><br>
+    <label>行为：<input type="text" name="action" value="click_button"></label><br>
+    <label>session_id：<input type="text" name="session_id" value="sess-demo"></label><br>
+    <button type="submit">提交追踪</button>
+  </form>
+
+  <p><a href="/activities/">查看活动记录</a> | <a href="/users/manage/">用户管理页</a></p>
+</body>
+</html>

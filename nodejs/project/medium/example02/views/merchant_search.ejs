@@ -1,0 +1,15 @@
+<html>
+<head><title>merchant_search</title></head>
+<body>
+    <h1>merchant_search.ejs</h1>
+    <form method="GET" action="/api/merchants/search">
+        <input name="q" placeholder="merchant_name" />
+        <button type="submit">search</button>
+    </form>
+    <ul>
+        <% merchants.forEach(function(m){ %>
+            <li><a href="/merchant_detail/<%= m.id %>"><%= m.merchant_name %></a></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

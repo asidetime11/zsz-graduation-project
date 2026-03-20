@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>发表评论页</title></head>
+<body>
+  <h1>发表评论</h1>
+  <form method="post" action="/comments/create/">
+    {% csrf_token %}
+    <label>用户名：<input name="username" required></label><br><br>
+    <label>邮箱：<input name="email" required></label><br><br>
+    <label>手机号：<input name="phone" required></label><br><br>
+    <label>身份证：<input name="id_card" required></label><br><br>
+    <label>职业：<input name="occupation"></label><br><br>
+    <label>病史：<textarea name="medical_history"></textarea></label><br><br>
+    <label>文章ID：<input name="article_id" value="{% if latest_article %}{{ latest_article.id }}{% else %}1{% endif %}"></label><br><br>
+    <label>评论内容：<textarea name="content" required></textarea></label><br><br>
+    <button type="submit">提交评论</button>
+  </form>
+</body>
+</html>

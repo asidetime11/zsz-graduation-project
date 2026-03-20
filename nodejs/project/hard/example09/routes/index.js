@@ -1,0 +1,1 @@
+const express=require('express');const c=require('../controllers/paymentController');const r=express.Router();r.get('/',c.paymentLog);r.get('/payment_log',c.paymentLog);r.get('/reconcile',c.reconcilePage);r.get('/payment_detail',c.detail);r.post('/api/payment/webhook',c.webhook);r.get('/api/payment/reconcile',c.reconcile);module.exports=r;

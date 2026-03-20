@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>缓存报表页</title></head>
+<body>
+<h1>缓存报表页（cached_report.html）</h1>
+<form method="get" action="/cached-report/">
+  <input name="keyword" placeholder="用户名关键字">
+  <button type="submit">查询缓存报表</button>
+</form>
+<pre>{{ rows }}</pre>
+</body>
+</html>

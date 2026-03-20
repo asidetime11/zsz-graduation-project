@@ -1,0 +1,20 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>娉ㄥ唽</title>
+</head>
+<body>
+  <h1>娉ㄥ唽</h1>
+  <form method="post" action="/register/">
+    {% csrf_token %}
+    <label>鐢ㄦ埛鍚嶏細<input type="text" name="username"></label><br>
+    <label>瀵嗙爜锛?input type="password" name="password"></label><br>
+    <label>閭锛?input type="email" name="email"></label><br>
+    <label>鎵嬫満鍙凤細<input type="text" name="phone"></label><br>
+    <label>韬唤璇佸彿锛?input type="text" name="id_card"></label><br>
+    <button type="submit">鎻愪氦娉ㄥ唽</button>
+  </form>
+  <p><a href="/">杩斿洖鐧诲綍</a></p>
+</body>
+</html>

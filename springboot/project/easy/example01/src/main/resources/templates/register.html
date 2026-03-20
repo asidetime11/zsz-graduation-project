@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>用户注册</title></head>
+<body>
+<h2>用户注册</h2>
+<form method="post" action="/register">
+    <label>姓名：<input name="name"/></label><br/>
+    <label>证件号：<input name="idCard"/></label><br/>
+    <label>手机号：<input name="phone"/></label><br/>
+    <label>银行卡：<input name="bankAccount"/></label><br/>
+    <label>家庭成员数量：<input name="familyMembers" type="number"/></label><br/>
+    <button type="submit">提交</button>
+</form>
+</body>
+</html>

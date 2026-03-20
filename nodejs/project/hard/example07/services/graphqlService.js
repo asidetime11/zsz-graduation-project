@@ -1,0 +1,1 @@
+const store=require('../models/dataStore');function execute(query){if(query.includes('users')){return store.users;}if(query.includes('__schema')){return store.schemas;}return [];}module.exports={execute};

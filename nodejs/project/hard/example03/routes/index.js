@@ -1,0 +1,12 @@
+const express = require('express');
+const { withUser } = require('../middleware/permissions');
+const c = require('../controllers/consentController');
+const router = express.Router();
+router.use(withUser);
+router.get('/', c.consentCenter);
+router.get('/consent_center', c.consentCenter);
+router.get('/processing_queue', c.queueView);
+router.get('/consent_detail', c.detail);
+router.post('/api/consent/revoke', c.revokeConsent);
+router.post('/api/data/process', c.processData);
+module.exports = router;

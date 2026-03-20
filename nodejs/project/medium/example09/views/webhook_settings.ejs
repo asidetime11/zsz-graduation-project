@@ -1,0 +1,21 @@
+<html>
+<head><title>webhook_settings</title></head>
+<body>
+    <h1>webhook_settings.ejs</h1>
+    <form method="POST" action="/api/webhook/config">
+        <input name="callback_url" placeholder="callback_url" />
+        <input name="access_token" placeholder="access_token" />
+        <input name="order_id" placeholder="order_id" />
+        <input name="callback_alias" placeholder="callback_alias" />
+        <button type="submit">save</button>
+    </form>
+    <form method="POST" action="/api/webhook/test">
+        <button type="submit">test webhook</button>
+    </form>
+    <ul>
+        <% configs.forEach(function(c){ %>
+            <li><%= c.callback_url %> - <%= c.order_id %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>

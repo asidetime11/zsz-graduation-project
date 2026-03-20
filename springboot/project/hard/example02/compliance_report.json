@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_hard_example02",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_02.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 3,
+            "medium": 0
+        },
+        "by_category": {
+            "Data Minimization": 1,
+            "Sensitive Data Exposure": 1,
+            "Data Over-exposure": 1,
+            "Sensitive Logging": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H02-001",
+            "location": {
+                "file": "src/main/java/com/example/hard02/service/EmployeeService.java",
+                "line": 35,
+                "class_or_function": "update"
+            },
+            "category": "Data Minimization",
+            "description": "流程采集并更新 religion、politicalView、familyAssets 非必要信息。",
+            "severity": "high",
+            "related_fields": ["religion", "politicalView", "familyAssets"],
+            "impact": "扩大采集范围引发合规争议。",
+            "code_snippet": "e.setFamilyAssets(req.getFamilyAssets()); e.setReligion(req.getReligion()); e.setPoliticalView(req.getPoliticalView());",
+            "fixed_code_snippet": "e.setFamilyAssets(null); e.setReligion(null); e.setPoliticalView(null);"
+        },
+        {
+            "issue_id": "H02-002",
+            "location": {
+                "file": "src/main/java/com/example/hard02/entity/Employee.java",
+                "line": 14,
+                "class_or_function": "Employee"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "idCard、bankAccount、salary 明文字段直接存储。",
+            "severity": "critical",
+            "related_fields": ["idCard", "bankAccount", "salary"],
+            "impact": "薪酬与身份信息可被直接读取。",
+            "code_snippet": "private String idCard; private String bankAccount; private String salary;",
+            "fixed_code_snippet": "private String idCardMasked; private String bankAccountCipher; private String salaryCipher;"
+        },
+        {
+            "issue_id": "H02-003",
+            "location": {
+                "file": "src/main/java/com/example/hard02/service/EmployeeService.java",
+                "line": 50,
+                "class_or_function": "report"
+            },
+            "category": "Data Over-exposure",
+            "description": "跨部门报表返回 Employee 全量字段。",
+            "severity": "high",
+            "related_fields": ["idCard", "bankAccount", "salary", "familyAssets"],
+            "impact": "部门间敏感字段过度共享。",
+            "code_snippet": "return entityManager.createNativeQuery(sql, Employee.class).getResultList();",
+            "fixed_code_snippet": "return entityManager.createNativeQuery(sql).unwrap(org.hibernate.query.NativeQuery.class).setTupleTransformer((t,a)->Map.of(\"id\",t[0],\"name\",t[1]));"
+        },
+        {
+            "issue_id": "H02-004",
+            "location": {
+                "file": "src/main/java/com/example/hard02/service/EmployeeService.java",
+                "line": 43,
+                "class_or_function": "update"
+            },
+            "category": "Sensitive Logging",
+            "description": "审批日志记录 bankAccount 与 salary。",
+            "severity": "high",
+            "related_fields": ["bankAccount", "salary"],
+            "impact": "日志系统成为敏感数据扩散源。",
+            "code_snippet": "log.setLogContent(\"update bankAccount=\" + req.getBankAccount() + \", salary=\" + req.getSalary());",
+            "fixed_code_snippet": "log.setLogContent(\"update bankAccount=****\" + tail4(req.getBankAccount()) + \", salary=updated\");"
+        }
+    ]
+}

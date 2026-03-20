@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>任务状态页</title>
+</head>
+<body>
+    <h1>任务状态页</h1>
+    <p><a href="/export/start/">返回导出任务页</a></p>
+
+    <p>任务ID：{{ task.id }}</p>
+    <p>任务用户：{{ task.user.username }}</p>
+    <p>任务状态：{{ task.status }}</p>
+    <p>导出文件路径（可预测）：{{ task.file_path }}</p>
+    <p>原始任务载荷：{{ task.task_payload }}</p>
+
+    <h3>API 返回预览</h3>
+    <pre>{{ api_payload }}</pre>
+</body>
+</html>

@@ -9,6 +9,7 @@ __pycache__/
 # virtual env
 venv/
 .env/
+.env
 
 # system files
 .DS_Store

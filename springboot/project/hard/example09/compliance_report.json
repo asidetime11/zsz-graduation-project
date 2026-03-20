@@ -1,0 +1,78 @@
+{
+    "project_name": "springboot_hard_example09",
+    "difficulty_level": "hard",
+    "source_vuln_plan": "vuln_plan_hard_09.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 5,
+    "summary": {
+        "by_severity": {
+            "critical": 1,
+            "high": 3,
+            "medium": 1
+        },
+        "by_category": {
+            "Sensitive Logging": 1,
+            "Data Over-exposure": 1,
+            "Unauthorized Access": 1,
+            "Data Lifecycle": 1,
+            "Sensitive Data Exposure": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "H09-001",
+            "location": {"file": "src/main/java/com/example/hard09/service/FinanceService.java", "line": 24, "class_or_function": "voucherDetail"},
+            "category": "Sensitive Logging",
+            "description": "日志打印银行卡、税号、证件号。",
+            "severity": "high",
+            "related_fields": ["bankAccount", "taxNo", "idCard"],
+            "impact": "日志系统成为敏感数据泄漏面。",
+            "code_snippet": "log.setContent(\"voucher detail bankAccount=\" + v.getBankAccount() + ...);",
+            "fixed_code_snippet": "log.setContent(\"voucher detail id=\" + v.getId());"
+        },
+        {
+            "issue_id": "H09-002",
+            "location": {"file": "src/main/java/com/example/hard09/controller/FinanceController.java", "line": 24, "class_or_function": "detail"},
+            "category": "Unauthorized Access",
+            "description": "分公司请求可读取任意ID凭证，无公司校验。",
+            "severity": "critical",
+            "related_fields": ["id", "companyCode"],
+            "impact": "分公司可查询总部单据。",
+            "code_snippet": "return financeService.voucherDetail(id);",
+            "fixed_code_snippet": "return financeService.voucherDetailWithScope(id, company);"
+        },
+        {
+            "issue_id": "H09-003",
+            "location": {"file": "src/main/resources/templates/voucher_detail.html", "line": 6, "class_or_function": "voucher_detail"},
+            "category": "Data Over-exposure",
+            "description": "详情页展示身份证与发票影像字段。",
+            "severity": "high",
+            "related_fields": ["idCard", "invoiceImage"],
+            "impact": "报表与详情暴露高敏字段。",
+            "code_snippet": "<div th:text=\"${voucher.idCard}\"></div>",
+            "fixed_code_snippet": "<div th:text=\"${#strings.substring(voucher.idCard,0,4) + '****'}\"></div>"
+        },
+        {
+            "issue_id": "H09-004",
+            "location": {"file": "src/main/java/com/example/hard09/service/FinanceService.java", "line": 42, "class_or_function": "keepOldLedger"},
+            "category": "Data Lifecycle",
+            "description": "旧账套只记录保留动作，没有过期清理。",
+            "severity": "high",
+            "related_fields": ["invoiceImage", "idCard", "taxNo"],
+            "impact": "历史账套长期保留导致合规风险。",
+            "code_snippet": "log.setContent(\"closed ledger retained forever: \" + setName);",
+            "fixed_code_snippet": "ledgerPurgeService.purgeClosedLedgers(retentionMonths);"
+        },
+        {
+            "issue_id": "H09-005",
+            "location": {"file": "src/main/java/com/example/hard09/entity/Voucher.java", "line": 12, "class_or_function": "Voucher"},
+            "category": "Sensitive Data Exposure",
+            "description": "银行卡、税号、证件号明文存储。",
+            "severity": "medium",
+            "related_fields": ["bankAccount", "taxNo", "idCard", "invoiceImage"],
+            "impact": "数据库泄露可直接读取身份和财务信息。",
+            "code_snippet": "private String bankAccount; private String taxNo; private String idCard;",
+            "fixed_code_snippet": "private String bankAccountCipher; private String taxNoCipher; private String idCardCipher;"
+        }
+    ]
+}

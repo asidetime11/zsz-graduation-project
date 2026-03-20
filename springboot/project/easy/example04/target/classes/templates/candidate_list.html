@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><title>候选人列表</title></head><body>
+<h2>候选人列表</h2>
+<table border="1"><tr><th>姓名</th><th>证件号</th><th>电话</th><th>邮箱</th><th>婚育情况</th><th>生育计划</th></tr>
+<tr th:each="c : ${candidates}"><td th:text="${c.name}"></td><td th:text="${c.idCard}"></td><td th:text="${c.phone}"></td><td th:text="${c.email}"></td><td th:text="${c.maritalStatus}"></td><td th:text="${c.fertilityPlan}"></td></tr>
+</table></body></html>

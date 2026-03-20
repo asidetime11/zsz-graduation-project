@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Patient List</title></head>
+<body>
+<h2>患者列表</h2>
+<ul>
+    <% patients.forEach(function(p){ %>
+    <li><%= p.name %> | <%= p.id_card %> | <%= p.phone %> | <%= p.medical_insurance_no %> | <%= p.family_income %> | <%= p.religion %></li>
+    <% }) %>
+</ul>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<!doctype html>
+<html><body>
+<h2>报名管理</h2>
+<ul>
+<% signups.forEach(function(s){ %>
+<li><%= s.student_id %> | <%= s.phone %> | <%= s.emergency_phone %> | <%= s.parent_company %></li>
+<% }) %>
+</ul>
+</body></html>

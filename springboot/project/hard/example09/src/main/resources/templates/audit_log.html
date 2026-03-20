@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Audit Log</h2>
+<ul>
+    <li th:each="l : ${logs}" th:text="${l.content}"></li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# vuln_plan_hard_10
+
+- 难度级别：hard
+- 业务场景：综合信贷中台
+- 主漏洞：Hardcoded Secrets（JWT 密钥、数据库密码、对象存储密钥硬编码）
+- 次要漏洞：
+  - Sensitive Data Exposure（征信与身份证明文）
+  - SQL Injection（审批检索拼接 SQL）
+  - Unauthorized Access（按申请ID读取，无机构校验）
+- 关键数据字段：
+  - 敏感字段：idCard, creditReport, bankCard, phone
+  - 非必要字段：contactTimePreference
+- 预期接口与页面范围：
+  - POST /applications/create
+  - GET /applications/{id}
+  - GET /applications/search
+  - GET /applications/export
+  - 页面：application_form.html、application_detail.html、application_list.html
+- 预期严重级别分布：
+  - critical: 4（Hardcoded Secrets, Sensitive Data Exposure, SQL Injection, Unauthorized Access）
+  - high: 0
+  - medium: 0
+- 备注：主漏洞 Hardcoded Secrets 为 hard 批次唯一主漏洞

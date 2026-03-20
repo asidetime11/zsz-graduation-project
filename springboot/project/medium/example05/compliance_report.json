@@ -1,0 +1,82 @@
+{
+    "project_name": "springboot_medium_example05",
+    "difficulty_level": "medium",
+    "source_vuln_plan": "vuln_plan_medium_05.md",
+    "generated_date": "2026-03-20",
+    "total_issues": 4,
+    "summary": {
+        "by_severity": {
+            "critical": 2,
+            "high": 2,
+            "medium": 0
+        },
+        "by_category": {
+            "Unauthorized Access": 1,
+            "Sensitive Data Exposure": 1,
+            "Data Over-exposure": 1,
+            "SQL Injection": 1
+        }
+    },
+    "issues": [
+        {
+            "issue_id": "M05-001",
+            "location": {
+                "file": "src/main/java/com/example/medium05/controller/ShipmentController.java",
+                "line": 14,
+                "class_or_function": "detail"
+            },
+            "category": "Unauthorized Access",
+            "description": "按 shipmentId 直接返回运单详情，无所有权校验。",
+            "severity": "critical",
+            "related_fields": ["receiverPhone", "receiverAddress", "idCard", "extraRemark"],
+            "impact": "可越权访问他人运单和个人信息。",
+            "code_snippet": "return shipmentService.getShipment(shipmentId);",
+            "fixed_code_snippet": "return shipmentService.getShipmentOwnedBy(shipmentId, currentUserId);"
+        },
+        {
+            "issue_id": "M05-002",
+            "location": {
+                "file": "src/main/java/com/example/medium05/service/ShipmentService.java",
+                "line": 22,
+                "class_or_function": "search"
+            },
+            "category": "SQL Injection",
+            "description": "字符串拼接构造 SQL。",
+            "severity": "critical",
+            "related_fields": ["receiverAddress", "extraRemark"],
+            "impact": "攻击者可注入任意查询条件。",
+            "code_snippet": "String sql=\"select * from shipment where receiver_address like '%\"+keyword+\"%'\";",
+            "fixed_code_snippet": "Query q = entityManager.createNativeQuery(\"select * from shipment where receiver_address like :kw\", Shipment.class).setParameter(\"kw\", \"%\" + keyword + \"%\");"
+        },
+        {
+            "issue_id": "M05-003",
+            "location": {
+                "file": "src/main/java/com/example/medium05/service/ShipmentService.java",
+                "line": 30,
+                "class_or_function": "toDto"
+            },
+            "category": "Sensitive Data Exposure",
+            "description": "DTO 直接返回 idCard。",
+            "severity": "high",
+            "related_fields": ["idCard"],
+            "impact": "身份证号在接口返回中泄露。",
+            "code_snippet": "d.idCard=s.getIdCard();",
+            "fixed_code_snippet": "d.idCard = maskIdCard(s.getIdCard());"
+        },
+        {
+            "issue_id": "M05-004",
+            "location": {
+                "file": "src/main/java/com/example/medium05/dto/ShipmentDto.java",
+                "line": 4,
+                "class_or_function": "ShipmentDto"
+            },
+            "category": "Data Over-exposure",
+            "description": "列表和搜索返回过多敏感字段。",
+            "severity": "high",
+            "related_fields": ["receiverPhone", "receiverAddress", "idCard", "extraRemark"],
+            "impact": "扩大敏感信息暴露面。",
+            "code_snippet": "public String receiverPhone; public String receiverAddress; public String idCard; public String extraRemark;",
+            "fixed_code_snippet": "public String receiverPhoneMasked; public String region;"
+        }
+    ]
+}
